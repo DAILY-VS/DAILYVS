@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if poll.active %}
+    <h3>{{ poll.text }}</h3>
+    {% else %}
+    <h3>No</h3>
+    {% endif %}
+    <h3>전체 투표수 {{ poll.get_vote_count }} </h3>
+    {% for choice in poll.get_result_dict %}
+    
+    {{choice.text}}: {{choice.percentage}}%
+
+    {% endfor %}
+    {% for choice in poll.choice_set.all %}
+    <ul>
+        <li>{{ choice.choice_text }}{{ choice.get_vote_count }}</li>
+    </ul>
+    {% endfor %}
+    <a href="{% url 'vote:list' %}" role="button">리스트 페이지 가기</a>
+</body>
+</html>

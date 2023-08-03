@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <ul>
+    {% for poll in polls %}
+    <li><a href="{% url 'vote:detail' poll.id %}">{{ poll.text}}
+        {% if not poll.active%} 
+        {% endif %}
+        </a>
+    </li>
+    </ul>
+    {% endfor %}
+</body>
+</html>
