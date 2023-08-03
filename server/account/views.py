@@ -28,3 +28,11 @@ def signup(request):
     return render(request, 'templates/account/signup.html', {'form' : form})
   
 
+<<<<<<< HEAD
+=======
+# Create your views here.
+
+
+def login(request):
+    return render(request, "account/login.html")
+>>>>>>> develop
