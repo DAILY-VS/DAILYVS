@@ -1,2 +1,5 @@
-# DaliyVS
-DaliyVS
+# DailyVS
+
+---
+
+- 매일매일 투표하는 즐거움
