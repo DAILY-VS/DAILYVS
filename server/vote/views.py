@@ -5,13 +5,16 @@ from vote.models import *
 
 
 def main(request):
+    
     return render(request, "vote/main.html")
 
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 
+
+
 def calcstat(request):
-    mbtis = ['ISTJ', 'ISFJ', 'INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
+    mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
 
     print('User')
     user_poll = UserVote.objects.filter(choice__poll__pk=1)
