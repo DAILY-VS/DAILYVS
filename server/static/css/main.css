@@ -1,0 +1,20 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-container {
+  height: 300px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.editor-pick-container {
+  height: 270px;
+  background-color: white;
+}
+
+.vote-list-container {
+  height: 400px;
+  background-color: black;
+}
