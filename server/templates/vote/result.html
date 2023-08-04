@@ -1,0 +1,10 @@
+{% extends 'vote/base.html' %} {% load static %} {% block content %}
+<section class="result-container">
+  <div class="result-title">가정부 로봇 이야기</div>
+  <div class="graph-information">그래프 정보</div>
+  <div class="graph-container">{% include 'vote/result/chart.html' %}</div>
+  <button>공유하기</button>
+  <div class="graph-category-container">카테고리 공간</div>
+  <div class="comment-container">댓글 공간</div>
+</section>
+{% endblock %}

@@ -3,4 +3,8 @@ from . import views
 
 app_name = "vote"
 
-urlpatterns = [path("", views.main, name="main")]
+urlpatterns = [
+    path("", views.main, name="main"),
+    path("detail/", views.detail, name="detail"),
+    path("result/", views.result, name="result"),
+]
