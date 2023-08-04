@@ -6,6 +6,41 @@
     <title>Document</title>
   </head>
   <body>
-    login 입니다.
+    <form action="{% url 'account:login' %}" method="post">
+      {% csrf_token %}
+      <!-- form -->
+<div>
+  <form method="post" action="/login/">
+      {% csrf_token %}
+      <table>
+          <tr>
+          <td>
+              <label for="username">userID</label>
+          </td>
+          <td>
+              <input type="text" name="username" id="username">
+          </td>
+          </tr>
+      
+          <tr>
+          <td>
+              <label for="password">비밀번호</label>
+          </td>
+          <td>
+              <input type="password" name="password" id="password">
+          </td>
+          </tr>
+          <tr>
+          <td colspan="2" class="login-btn-td">
+              <button type="submit" class="login-btn hover-black">로그인</button>
+          </td>
+          </tr>
+      </table>
+  </form>
+</div>
+
+<div class="login__forgot-pw"><a href="{% url 'account:logout' %}">로그아웃</a></div>        
+<div class="login__signup">Not a member? <a href="{% url 'account:signup' %}">Create an account</a></div>
+   
   </body>
 </html>

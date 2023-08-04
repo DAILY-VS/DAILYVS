@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
+    <a href="{% url 'account:login' %}"> 로그인 </a>
+    <a href="{% url 'account:logout' %}"> 로그아웃 </a>
+    <a href="{% url 'account:signup' %}"> 회원가입 </a>
+
     <ul>
     {% for poll in polls %}
     <li><a href="{% url 'vote:detail' poll.id %}">{{ poll.text}}

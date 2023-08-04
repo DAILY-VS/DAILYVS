@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
+from account.models import *
 
 # Create your models here.
 class Poll(models.Model): #이미지, 제목, 좋아요 추가
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,)
     text = models.TextField()
     pub_date = models.DateTimeField(default=timezone.now)
     active = models.BooleanField(default=True) 
