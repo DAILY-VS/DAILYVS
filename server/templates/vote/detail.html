@@ -1,0 +1,19 @@
+{% extends 'vote/base.html' %} {% load static %} {% block content %}
+<div class="vote-detail-container">
+  <div class="vote-introduction">
+    {% include 'vote/detail/detail-introduction-card.html' %}
+  </div>
+  <div class="option-container">
+    <div class="detail-option">
+      <div>위로한다.</div>
+      <p>그래그래 힘들었지?ㅠㅠ</p>
+    </div>
+    <div><span>V</span><span>S</span></div>
+    <div class="detail-option">
+      <div>환불한다.</div>
+      <p>뭐야..고장났나?</p>
+    </div>
+  </div>
+  <a href="/result/" class="vote-register-btn" style="color: white">투표하기</a>
+</div>
+{% endblock %}
