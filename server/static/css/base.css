@@ -1,0 +1,107 @@
+#base-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  background-color: var(--blue-bg-color);
+}
+
+nav {
+  width: 500px;
+  height: 56px;
+  background-color: var(--purple-bg-color);
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 15px;
+  align-items: center;
+}
+
+.nav-list img:hover {
+  cursor: pointer;
+}
+
+.base-block-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 350px;
+  height: 100%;
+  background-color: var(--pink-bg-color);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
+  max-width: 500px;
+}
+
+#sidebar.show {
+  right: calc(50% - 250px);
+}
+
+#hide-sidebar-icon {
+  margin: 5px;
+}
+
+.ham-user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "GongGothicMedium";
+}
+
+.ham-user-name {
+  margin: 10px auto;
+}
+
+.ham-logged-user-name {
+  font-weight: bold;
+}
+
+.ham-user-nim {
+  color: gray;
+}
+
+.ham-navigator {
+  margin: 15px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  border-top: solid #bdbdbd 1px;
+}
+
+.ham-navigator li {
+  width: 100vw;
+  margin-top: 20px;
+  text-align: left;
+  justify-content: center;
+  align-items: center;
+  font-family: "GongGothicMedium";
+  font-size: 18px;
+  font-weight: light;
+}
+
+.ham-navigator li span img {
+  margin-right: 30px;
+}
+
+.ham-navigator li:hover {
+  cursor: pointer;
+  color: gray;
+}
+
+.ham-footer {
+  border-top: solid #bdbdbd 1px;
+  margin: 10px;
+  padding-top: 20px;
+  font-size: 12px;
+  text-align: center;
+}

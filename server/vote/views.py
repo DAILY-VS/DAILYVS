@@ -1,13 +1,21 @@
 from django.shortcuts import render
+<<<<<<< HEAD
 from django.db.models import Count
 from django.http import HttpResponse
 from vote.models import *
+=======
+from django.http import JsonResponse
+import json
+
+# Create your views here.
+>>>>>>> develop
 
 
 def main(request):
     
     return render(request, "vote/main.html")
 
+<<<<<<< HEAD
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 
@@ -170,3 +178,26 @@ def calcstat(request):
     print('total_mbtis_choice2_count : ' + str(total_mbtis_choice2_count))   
 
     return render(request, template_name='vote/base.html')
+=======
+
+def detail(request):
+    return render(request, "vote/detail.html")
+
+
+def result(request):
+    return render(request, "vote/result.html")
+
+
+def result_view(request):
+    approval_percentage = 75
+    disapproval_percentage = 25
+
+    return render(
+        request,
+        "result.html",
+        {
+            "approval_percentage": approval_percentage,
+            "disapproval_percentage": disapproval_percentage,
+        },
+    )
+>>>>>>> develop
