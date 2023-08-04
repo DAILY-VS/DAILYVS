@@ -1,11 +1,47 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>ㅇ
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <title>Document</title>
   </head>
   <body>
-    base입니다!
+    <div id="base-container">
+      <nav class="nav-list">
+          <span><img src="{% static 'img/user.png'%}" style="width:25px" /></span>
+          <a href="/" id="logo"
+            ><img src="{% static 'img/Row.png' %}" style="width: 130px"
+          /></a>
+          <span><img src="{% static 'img/icon/hamburger.png'%}" style="width:25px" id="hamburger-icon"/></span>
+        </ul>
+      </nav>
+      <div class="base-block-container">{% block content %} {% endblock %}</div>
+    </div>
+    <div id="sidebar" class="hidden" style="z-index: 99;">
+      <span id="hide-sidebar-icon"><img src="{% static 'img/icon/right_round.png' %}" style="width: 40px" /></span>
+      <div class="ham-user-info">
+        <img src="{% static 'img/user.png'%}" style="width:80px" />
+        <div class="ham-user-name">
+          <span class="ham-logged-user-name">김투표</span><span class="ham-user-nim">님</span>
+        </div>
+      </div>
+      <ul class="ham-navigator">
+        <li><span><img src="{% static 'img/icon/settings.png' %}" style="width:30px"/></span><span>설정</span></li>
+        <li><span><img src="{% static 'img/icon/dark-mode.png' %}" style="width:30px"/></span><span>다크모드</span></li>
+        <li><span><img src="{% static 'img/icon/routine.png' %}" style="width:30px"/></span><span>최근 투표한 컨텐츠</span></li>
+        <li><span><img src="{% static 'img/icon/home.png' %}" style="width:30px"/></span><span>마이페이지</span></li>
+      </ul>
+      <div class="ham-footer">
+        <div>made by Team VS</div>
+        <div>social community</div>
+        <div>dev</div>
+        <div>김정곤 | 곽민경 | 조성민 | 송우진 | 왕한솔</div>
+    </div>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/base.js' %}"></script>
 </html>

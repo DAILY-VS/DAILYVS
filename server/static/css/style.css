@@ -1,3 +1,53 @@
+@charset "UTF-8";
+@import url("./base.css");
+@import url("./main.css");
+@import url("./detail.css");
+@import url("./result.css");
+@font-face {
+  font-family: "GongGothicMedium";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NEXON Lv1 Gothic OTF";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   box-sizing: border-box;
+  font-family: "NEXON Lv1 Gothic OTF";
+  margin: 0px;
+  padding: 0px;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  width: 100vw;
+  display: flex;
+}
+
+:root {
+  --blue-bg-color: #f9fcff;
+  --purple-bg-color: #f8f8ff;
+  --pink-bg-color: #fff9f9;
+
+  --darkblue-primary-color: #17355a;
+  --redpink-primary-color: #ff495a;
+
+  --mint-secondary-color: #a7dcdd;
+  --turquois-secondary-color: #457c9e;
 }
