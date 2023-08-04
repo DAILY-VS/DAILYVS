@@ -10,4 +10,6 @@ urlpatterns = [
     path('<int:poll_id>/', views.poll_detail, name='detail'),
     path('like/', views.poll_like, name='like'),
     path('<int:poll_id>/vote/', views.poll_vote, name='vote'),
+    path('mypage/', views.mypage, name='mypage'),
+    
     ]

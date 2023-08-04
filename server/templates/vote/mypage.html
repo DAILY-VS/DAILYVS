@@ -1,0 +1,21 @@
+{% extends 'vote/base.html' %}
+{% load static %}
+{% block content %}
+
+닉네임: {{user.username}}
+<br>
+MBTI: {{user.mbti}}
+<br>
+성별: {{user.gender}}
+<br>
+
+<h5>나의 vote list</h5>
+<ul>
+{% for poll in polls %}
+<li>
+   {{ poll.text }}
+</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

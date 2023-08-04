@@ -8,6 +8,8 @@ from .models import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
+from account.models import *
+
 
 # Create your views here.
 
@@ -105,4 +107,11 @@ def poll_like(request):
         return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
 
 
- 
+def mypage(request):
+
+    polls = Poll.objects.all()
+    print(polls)
+    context = {
+        'polls': polls
+    }
+    return render(request, 'vote/mypage.html', context)
