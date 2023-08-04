@@ -9,10 +9,12 @@ class Poll(models.Model): #이미지, 제목, 좋아요 추가
     owner = models.ForeignKey(User, on_delete=models.CASCADE,)
     text = models.TextField()
     pub_date = models.DateTimeField(default=timezone.now)
-    active = models.BooleanField(default=True) 
+    active = models.BooleanField(default=True)
+    poll_like = models.ManyToManyField('account.User', blank=True, related_name='likes')
+
     
     def __str__(self):
-        return self.text
+        return self.text 
     
     def user_can_vote(self, user): #이미 투표한 유저 못하도록
         """ 
@@ -39,6 +41,7 @@ class Poll(models.Model): #이미지, 제목, 좋아요 추가
             else:
                 d['percentage'] = (choice.get_vote_count /
                                    self.get_vote_count)*100 # 선택한 투표 수/총 투표 수
+                
             res.append(d) #리스트 안에 디렉토리 구조
         return res
     
@@ -49,6 +52,10 @@ class Choice(models.Model): #이미지 추가
     @property
     def get_vote_count(self):
         return self.vote_set.count()
+    
+    # def choice_get_vote_count(self):
+    #     User.objects.filter('mbti'=='infj')
+    #     return self.vote_set.count()
     
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -11,7 +11,7 @@ def login(request):
         if form.is_valid():
             user = form.get_user()
             auth.login(request, user)
-            return redirect('vote:main')
+            return redirect('vote:list')
         else:
             context = {
                 'form': form,
@@ -39,7 +39,7 @@ def signup(request):
             user = form.save()
             auth.login(request, user)
 
-            return redirect('/')
+            return redirect('vote:list')
         else:
             
             ctx={
