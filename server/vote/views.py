@@ -1,24 +1,16 @@
-<<<<<<< HEAD
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from .models import *
 from django.contrib import messages
-
-
-# Create your views here.
-=======
-from django.shortcuts import render
 from django.db.models import Count
-from django.http import HttpResponse
 from vote.models import *
->>>>>>> 9a582c9e1128f8d07e4d79aa1a98a5100133c0dd
+
 
 
 def main(request):
     return render(request, "vote/main.html")
 
-<<<<<<< HEAD
 # 리스트 페이지
 def polls_list(request):
     polls = Poll.objects.all()
@@ -51,7 +43,6 @@ def poll_vote(request, poll_id):
         vote.save()
         print(vote)
         return render(request, 'vote/result.html', {'poll': poll})
-=======
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 
@@ -212,4 +203,3 @@ def calcstat(request):
     print('total_mbtis_choice2_count : ' + str(total_mbtis_choice2_count))   
 
     return render(request, template_name='vote/base.html')
->>>>>>> 9a582c9e1128f8d07e4d79aa1a98a5100133c0dd

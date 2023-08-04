@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
-<<<<<<< HEAD
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 # Create your models here.
 class User(AbstractUser): #AbstractUser이용 (id,pw,이름은 O)
@@ -14,8 +14,6 @@ class User(AbstractUser): #AbstractUser이용 (id,pw,이름은 O)
     
     def __str__(self):
         return self.username
-=======
-from django.utils import timezone
 
 
->>>>>>> 9a582c9e1128f8d07e4d79aa1a98a5100133c0dd
+

@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-<<<<<<< HEAD
 from django.conf import settings
 from account.models import *
 
@@ -54,7 +53,6 @@ class Choice(models.Model): #이미지 추가
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-=======
 
 class TempUser(models.Model): #AbstractUser이용 (id,pw,이름은 O)
     mbti=models.CharField(max_length=4)
@@ -93,5 +91,4 @@ class NonUserVote(models.Model): #비회원투표
         ('W', '여성'),
     )
     gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS)
->>>>>>> 9a582c9e1128f8d07e4d79aa1a98a5100133c0dd
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
