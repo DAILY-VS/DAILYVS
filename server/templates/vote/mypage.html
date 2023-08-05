@@ -10,8 +10,9 @@ MBTI: {{user.mbti}}
 <br>
 성별: {{user.gender}}
 <br>
-
-<a href="{% url 'vote:update' %}">회원 수정</a>
+{% if request.user == user %}
+    <a href="{% url 'vote:update' %}">회원 수정</a>
+{% endif %}
 
 <h5>나의 vote list</h5>
 <ul>
@@ -24,7 +25,7 @@ MBTI: {{user.mbti}}
 {% endblock %}
 
 
-{% comment %} {% if request.user == user %} {% endcomment %}
+{% comment %}  {% endcomment %}
 
     {% comment %} <form action="{% url 'account:delete' %}" method="POST">
         {% csrf_token %}

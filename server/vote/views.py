@@ -50,7 +50,10 @@ def polls_list(request):
 #디테일 페이지
 def poll_detail(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
-
+    
+    poll.increase_views()  # 게시글 조회 수 증가
+    print("조회 수:", poll.views_count)  # 디버깅용 출력
+    
     if not poll.active: #마감이 끝났다면
         return render(request, 'vote/result.html', {'poll': poll})
     loop_count = poll.choice_set.count() 
@@ -61,19 +64,19 @@ def poll_detail(request, poll_id):
     response =  render(request, 'vote/detail.html', context)
     
    #조회수 기능 (쿠키 이용)
-    expire_date, now = datetime.now(), datetime.now()
-    expire_date += timedelta(days=1)
-    expire_date = expire_date.replace(hour=0, minute=0, second=0, microsecond=0)
-    expire_date -= now
-    max_age = expire_date.total_seconds()
+    # expire_date, now = datetime.now(), datetime.now()
+    # expire_date += timedelta(days=1)
+    # expire_date = expire_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    # expire_date -= now
+    # max_age = expire_date.total_seconds()
 
-    cookie_value = request.COOKIES.get('view', '_')
+    # cookie_value = request.COOKIES.get('view', '_')
 
-    if f'_{poll_id}_' not in cookie_value:
-        cookie_value += f'{poll_id}_'
-        response.set_cookie('view', value=cookie_value, max_age=max_age, httponly=True)
-        poll.views_count += 1
-        poll.save()
+    # if f'_{poll_id}_' not in cookie_value:
+    #     cookie_value += f'{poll_id}_'
+    #     response.set_cookie('view', value=cookie_value, max_age=max_age, httponly=True)
+    #     poll.views_count += 1
+    #     poll.save()
     return response
 
     
