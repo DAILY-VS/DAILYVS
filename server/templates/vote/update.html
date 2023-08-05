@@ -1,0 +1,12 @@
+{% extends 'vote/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<form action="{% url 'vote:update' %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit" class="btn btn-primary">수정</button>
+</form>
+
+{% endblock %}

@@ -11,8 +11,12 @@ class Poll(models.Model): #이미지, 제목, 좋아요 추가
     pub_date = models.DateTimeField(default=timezone.now)
     active = models.BooleanField(default=True)
     poll_like = models.ManyToManyField('account.User', blank=True, related_name='likes')
+    views_count = models.PositiveIntegerField(default=0)  # 조회 숫자 필드
 
-    
+    # def views_count(self):
+    #     self.views_count+=1
+    #     self.save()
+
     def __str__(self):
         return self.text 
     

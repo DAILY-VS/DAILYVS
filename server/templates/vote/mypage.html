@@ -2,12 +2,16 @@
 {% load static %}
 {% block content %}
 
-닉네임: {{user.username}}
+nickname: {{user.nickname}}
+<br>
+id: {{user.username}}
 <br>
 MBTI: {{user.mbti}}
 <br>
 성별: {{user.gender}}
 <br>
+
+<a href="{% url 'vote:update' %}">회원 수정</a>
 
 <h5>나의 vote list</h5>
 <ul>
@@ -17,5 +21,11 @@ MBTI: {{user.mbti}}
 </li>
 {% endfor %}
 </ul>
-
 {% endblock %}
+
+
+{% comment %} {% if request.user == user %} {% endcomment %}
+
+    {% comment %} <form action="{% url 'account:delete' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-secondary">회원 탈퇴</button> {% endcomment %}

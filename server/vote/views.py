@@ -9,8 +9,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
 from account.models import *
-
-
+from account.forms import *
+from datetime import datetime, timedelta
 # Create your views here.
 
 
@@ -58,7 +58,27 @@ def poll_detail(request, poll_id):
         'poll': poll,
         'loop_time': range(0, loop_count),
     }
-    return render(request, 'vote/detail.html', context)
+    response =  render(request, 'vote/detail.html', context)
+    
+   #조회수 기능 (쿠키 이용)
+    expire_date, now = datetime.now(), datetime.now()
+    expire_date += timedelta(days=1)
+    expire_date = expire_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    expire_date -= now
+    max_age = expire_date.total_seconds()
+
+    cookie_value = request.COOKIES.get('view', '_')
+
+    if f'_{poll_id}_' not in cookie_value:
+        cookie_value += f'{poll_id}_'
+        response.set_cookie('view', value=cookie_value, max_age=max_age, httponly=True)
+        poll.views_count += 1
+        poll.save()
+    return response
+
+    
+
+
 
 # 결과 페이지
 def poll_vote(request, poll_id):
@@ -115,3 +135,17 @@ def mypage(request):
         'polls': polls
     }
     return render(request, 'vote/mypage.html', context)
+
+
+def mypage_update(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('vote:mypage')
+    else:
+        form = UserChangeForm(instance=request.user)
+    context = {
+        'form': form
+    }
+    return render(request, 'vote/update.html', context)

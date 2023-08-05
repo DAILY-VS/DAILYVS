@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import SignupForm
+from .forms import *
+from vote.models import *
 
 
 def login(request):
@@ -52,3 +53,26 @@ def signup(request):
             'form': form,
         }
         return render(request, template_name='account/signup.html', context=ctx)
+
+
+def mypage(request):
+
+    polls = Poll.objects.all()
+    print(polls)
+    context = {
+        'polls': polls
+    }
+    return render(request, 'vote/mypage.html', context)
+
+def mypage_update(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('account:mypage')
+    else:
+        form = UserChangeForm(instance=request.user)
+    context = {
+        'form': form
+    }
+    return render(request, 'account/update.html', context)

@@ -13,6 +13,8 @@
         <div><span>V</span><span>S</span></div>
         <br>
         {% endfor %}
+
+
     </div>
   </div>
 
@@ -21,6 +23,8 @@
         <a href="{% url 'vote:list' %}" role="button">Cancel</a>
       </form>
 
+      <p>조회 수: {{ poll.views_count }}</p> <!-- 조회 수 출력 -->
+      
       <button id="like-button" data-poll-id="{{ poll.id }}">
         {% if user_likes_poll %}
           좋아요 취소
