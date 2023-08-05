@@ -12,6 +12,7 @@
         <li>{{ choice.choice_text }}{{ choice.get_vote_count }}</li>
     </ul>
     {% endfor %}
+
     <a href="{% url 'vote:list' %}" role="button">리스트 페이지 가기</a>
 
   </div>

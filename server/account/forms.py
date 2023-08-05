@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm
 
 class SignupForm(UserCreationForm):
-    username = forms.CharField(label='Username', max_length=100, min_length=5,
+    username = forms.CharField(label='아이디', max_length=100, min_length=5,
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
     password1 = forms.CharField(label='Password', max_length=50, min_length=5,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control'}))

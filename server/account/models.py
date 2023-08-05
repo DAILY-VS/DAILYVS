@@ -8,7 +8,7 @@ class User(AbstractUser): #AbstractUser이용 (id,pw,이름은 O)
     ('W', '여성(Woman)'),
     )
     gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS)
-    nickname = models.CharField(max_length=20)
+    nickname = models.CharField(verbose_name='닉네임',max_length=20)
     mbti=models.CharField(max_length=4)
     
     

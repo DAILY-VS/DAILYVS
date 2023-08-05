@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
 from account.models import *
 from account.forms import *
-from datetime import datetime, timedelta
+from django.db.models import Count
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # Create your views here.
 
 
@@ -42,8 +43,22 @@ def result_view(request):
 # 리스트 페이지
 def polls_list(request):
     polls = Poll.objects.all()
+    page=request.GET.get('page')
+    
+    paginator = Paginator(polls,6)
+    
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page=1
+        page_obj=paginator.page(page)
+    except EmptyPage:
+        page=paginator.num_pages
+        page_obj=paginator.page(page)
     context = {
-        'polls': polls
+        'polls': polls,
+        'page_obj': page_obj,
+        'paginator': paginator,
     }
     return render(request, 'vote/list.html', context)
 
@@ -52,7 +67,7 @@ def poll_detail(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
     
     poll.increase_views()  # 게시글 조회 수 증가
-    print("조회 수:", poll.views_count)  # 디버깅용 출력
+    print("조회수:", poll.views_count)  # 디버깅용 출력
     
     if not poll.active: #마감이 끝났다면
         return render(request, 'vote/result.html', {'poll': poll})
@@ -79,10 +94,6 @@ def poll_detail(request, poll_id):
     #     poll.save()
     return response
 
-    
-
-
-
 # 결과 페이지
 def poll_vote(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
@@ -93,9 +104,9 @@ def poll_vote(request, poll_id):
         vote = Vote(user=request.user, poll=poll, choice=choice)
         vote.save()
         print(vote)
-        return render(request, 'vote/result.html', {'poll': poll})
+        print(int(choice_id) % 2)
     
-
+        return render(request, 'vote/result.html', {'poll': poll})
 
 @login_required
 def poll_like(request):
@@ -152,3 +163,8 @@ def mypage_update(request):
         'form': form
     }
     return render(request, 'vote/update.html', context)
+
+
+
+
+

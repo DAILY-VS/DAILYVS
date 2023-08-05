@@ -65,3 +65,23 @@ class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+
+class NonUserVote(models.Model):
+    mbti=models.CharField(max_length=4)
+    GENDERS = (
+        ('M', '남성(Man)'),
+        ('W', '여성(Woman)'),
+    )
+    gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+ 
+ #  def calcstat(request):
+#     votes = Vote.objects.filter(choice__poll__pk=1)
+#     result = votes.values("user__gender", "user__mbti", "choice_id").annotate(total=Count("*"))
+        
+#     user_total_count = votes.count()
+#     print(user_total_count)
+
+#     result_gender = votes.values("user__gender", "choice_id").annotate(total=Count("*"))
+#     gender_w = [group for group in result_gender if group["user__gender"] == "W"]
+#     print(gender_w)

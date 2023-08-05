@@ -9,7 +9,7 @@
     <a href="{% url 'account:logout' %}"> 로그아웃 </a>
     <a href="{% url 'account:signup' %}"> 회원가입 </a>
 
-    <ul>
+    {% comment %} <ul>
     {% for poll in polls %}
     <li><a href="{% url 'vote:detail' poll.id %}">{{ poll.text}}
         {% if not poll.active%} 
@@ -17,6 +17,24 @@
         </a>
     </li>
     </ul>
+    {% endfor %} {% endcomment %}
+
+    <ul>
+    {% for page in page_obj %}
+    <li><a href="{% url 'vote:detail' page.id %}">{{ page.text}}
+        {% if not page.active%} 
+        {% endif %}
+        </a>
+    </li>
+    </ul>
     {% endfor %}
+    <br/>
+    {% for page in paginator.page_range %}
+    <ul>
+        <li>
+        <a href="?page={{ page}}">{{page}}</a>
+        </li>
+        {% endfor %}
+    </ul>   
 </body>
 </html>
