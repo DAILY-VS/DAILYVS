@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
+
+
+
+    <div>
     <h1>Login Page</h1>
-    <form method="post">
+    <form action="{% url 'account:login' %}" method="post">
         {% csrf_token %}
         <label for="id_username">Username:</label>
         <input type="text" id="id_username" name="username" required><br>
@@ -14,7 +12,6 @@
         <input type="submit" value="Login">
     </form>
     <p><a href="{% url 'account:signup' %}">Signup</a></p>
-</body>
-</html>
+    </div>
 
 

@@ -1,10 +1,14 @@
+from django.shortcuts import redirect
 from django.urls import path, include
-from . import views
+from .views import *
+from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
-app_name = "account"
+app_name = 'account'
 
 urlpatterns = [
-    path("/login", views.login, name="login"),
-    #path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    #path('signup/', signup, name='signup'), #회원가입
+    #path('', main, name="main"),
+    path('login/', login, name='login'),
+    path('signup/', signup, name='signup'),
 ]
