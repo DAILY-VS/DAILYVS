@@ -30,10 +30,12 @@ class SignupForm(UserCreationForm):
             attrs={"class": "form-control", "placeholder": "비밀번호 확인"}
         ),
     )
+
     gender_choices = [
-        ("male", "남자"),
-        ("female", "여자"),
+        ("M", "남성(Man)"),
+        ("W", "여성(Woman)"),
     ]
+
     gender = forms.ChoiceField(
         label="성별",
         choices=gender_choices,
@@ -45,7 +47,7 @@ class SignupForm(UserCreationForm):
         fields = ["username", "password1", "password2", "mbti", "nickname", "gender"]
         widgets = {
             "mbti": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "MBTI를 입력하세요"}
+                attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
             ),
             "nickname": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "별명을 입력하세요"}

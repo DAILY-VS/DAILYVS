@@ -21,7 +21,7 @@
           <div class="login-name">회원가입</div>
         </div>
         <div>
-          <img src="{% static 'img/Only_Text.png' %}" style="width: 300px" />
+          <img src="{% static 'img/Only_Text.png' %}" style="width: 250px" />
         </div>
         <form
           action="{% url 'account:signup' %}"
@@ -33,9 +33,9 @@
             회원가입
           </button>
         </form>
-        <p>
-          Already have an account?
-          <a href="{% url 'account:login' %}">Login Here</a>
+        <p class="lets-login">
+          바로 로그인하러 가기
+          <a href="{% url 'account:login' %}">로그인</a>
         </p>
       </div>
     </div>
@@ -64,20 +64,40 @@
       padding-left: 20px;
     }
 
-    .signup-container input:nth-of-type(5) {
-      width: 300px;
-      height: 50px;
-      font-size: 20px;
-      background-color: #f4faff;
+    .signup-container label {
+      margin-top: 10px;
     }
 
-    /* 
-    .signup-container label {
-      opacity: 0;
-    } */
-
     .radio-list {
+      width: 220px;
+    }
+
+    #id_gender div {
+      display: flex;
+    }
+
+    .signup-container input[name="gender"] {
       width: 20px;
+      height: 20px;
+      margin-top: 10px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .lets-login {
+      margin-top: 15px;
+      margin-bottom: 50px;
+    }
+
+    .lets-login a {
+      font-weight: bold;
+      color: var(--redpink-primary-color);
+    }
+
+    .lets-login a:hover {
+      border-bottom: 1px solid var(--redpink-primary-color);
     }
   </style>
 </html>
