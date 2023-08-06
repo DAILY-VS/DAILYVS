@@ -1,25 +1,19 @@
 from django.shortcuts import render
-<<<<<<< HEAD
 from django.db.models import Count
 from django.http import HttpResponse
 from vote.models import *
-=======
 from django.http import JsonResponse
 import json
 
 # Create your views here.
->>>>>>> develop
 
 
 def main(request):
     
     return render(request, "vote/main.html")
 
-<<<<<<< HEAD
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
-
-
 
 def calcstat(request):
     mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
@@ -177,8 +171,26 @@ def calcstat(request):
     print('total_mbtis_choice1_count : ' + str(total_mbtis_choice1_count))   
     print('total_mbtis_choice2_count : ' + str(total_mbtis_choice2_count))   
 
-    return render(request, template_name='vote/base.html')
-=======
+    mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
+
+    ctx = {
+        'total_count':total_count,
+        'choice1_count':total_choice1_count,
+        'choice2_count':total_choice2_count,
+        'man_count':total_man_count,
+        'man_choice1_count':total_man_choice1_count,
+        'man_choice2_count':total_man_choice2_count,
+        'woman_count':total_woman_count,
+        'woman_choice1_count':total_woman_choice1_count,
+        'woman_choice2_count':total_woman_choice2_count,
+        'mbtis':mbtis,
+        'mbtis_count':total_mbtis_count,
+        'mbtis_choice1_count':total_mbtis_choice1_count,
+        'mbtis_choice2_count':total_mbtis_choice2_count,
+    }
+    return render(request, template_name='vote/result.html',context=ctx) 
+
+
 
 def detail(request):
     return render(request, "vote/detail.html")
@@ -200,4 +212,3 @@ def result_view(request):
             "disapproval_percentage": disapproval_percentage,
         },
     )
->>>>>>> develop

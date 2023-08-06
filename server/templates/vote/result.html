@@ -1,10 +1,89 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <section class="result-container">
   <div class="result-title">가정부 로봇 이야기</div>
-  <div class="graph-information">그래프 정보</div>
+    total_count : {{total_count}}
+    </br>
+    choice1_count : {{choice1_count}}
+    </br>
+    choice2_count : {{choice2_count}}
+    </br>
+    man_count : {{man_count}}
+    </br>
+    man_choice1_count : {{choice1_count}}
+    </br>
+    man_choice2_count : {{choice2_count}}
+    </br>
+    woman_count : {{woman_count}}
+    </br>
+    woman_choice1_count : {{woman_choice1_count}}
+    </br>
+    woman_choice2_count : {{woman_choice2_count}}
+    </br>
+
+    mbtis : 
+    {% for item in mbtis %}
+      {{ item }},
+    {% endfor %}
+    </br> 
+
+    mbtis_count : 
+    {% for item in mbtis_count %}
+      {{ item }},
+    {% endfor %}
+    </br> 
+
+    mbtis_choice1_count : 
+    {% for item in mbtis_choice1_count %}
+      {{ item }},
+    {% endfor %}
+    </br>
+
+    mbtis_choice2_count :
+    {% for item in mbtis_choice2_count %}
+      {{ item }},
+    {% endfor %}  
+  <div class="graph-information">
+    <canvas id="myPieChart"></canvas>
+    <canvas id="myHorizontalBarChart"></canvas>
+  </div>
   <div class="graph-container">{% include 'vote/result/chart.html' %}</div>
   <button>공유하기</button>
   <div class="graph-category-container">카테고리 공간</div>
   <div class="comment-container">댓글 공간</div>
 </section>
+
+<script>
+  // 원 그래프를 생성하는 함수
+  function createPieChart() {
+      // 그래프를 그릴 데이터
+      var data = {
+          labels: ['choice1', 'choice2'],
+          datasets: [{
+              data: [{{choice1_count}}, {{choice2_count}}], // 각 항목별 값
+              backgroundColor: ['red', 'blue'], // 각 항목별 색상
+          }]
+      };
+
+      // 그래프 옵션
+      var options = {
+          responsive: true,
+          maintainAspectRatio: false,
+      };
+
+      // 캔버스 요소를 가져와서 원 그래프를 생성
+      var ctx = document.getElementById('myPieChart').getContext('2d');
+      new Chart(ctx, {
+          type: 'pie',
+          data: data,
+          options: options
+      });
+  }
+  // 페이지가 로드되면 원 그래프를 생성
+  window.onload = function() {
+      createPieChart();
+  };
+</script>
 {% endblock %}
