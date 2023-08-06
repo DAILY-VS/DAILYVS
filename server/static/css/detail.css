@@ -167,12 +167,21 @@
 }
 
 .vote-submit-btn {
-  background-color: #e0e1e2;
-  color: white;
   border: none;
   border-radius: 5px;
   margin: 10px auto;
   height: 50px;
   width: 300px;
   font-size: 20px;
+}
+
+.vote-submit-btn.disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.vote-submit-btn.active {
+  background-color: var(--darkblue-primary-color);
+  color: white;
+  cursor: pointer;
 }

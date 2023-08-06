@@ -1,15 +1,32 @@
 const detailOptions = document.querySelectorAll(".detail-option");
+const choiceInput = document.querySelectorAll(".choice-input");
+const voteBtn = document.querySelector(".vote-submit-btn"); // 클래스 선택자 사용
 
 detailOptions.forEach((option, index) => {
   option.addEventListener("click", () => {
+    choiceInput.forEach((input) => {
+      input.checked = false;
+    });
+
     const radioInput = document.getElementById(`choice${index + 1}`);
     radioInput.checked = true;
     detailOptions.forEach((opt) => {
       opt.classList.remove("selected");
     });
     option.classList.add("selected");
+
+    voteBtn.classList.add("active"); // 활성화 클래스 추가
+    voteBtn.classList.remove("disabled"); // 비활성화 클래스 제거
+    voteBtn.disabled = false; // 버튼 활성화
   });
 });
+
+// 버튼 비활성화 함수
+function disableVoteButton() {
+  voteBtn.classList.remove("active");
+  voteBtn.classList.add("disabled");
+  voteBtn.disabled = true;
+}
 
 function getCookie(name) {
   let cookieValue = null;
@@ -25,14 +42,3 @@ function getCookie(name) {
   }
   return cookieValue;
 }
-
-const choiceInputs = document.querySelectorAll(".choice-input");
-const voteButton = document.getElementById("vote-button");
-
-choiceInputs.forEach((input) => {
-  input.addEventListener("click", () => {
-    voteButton.style.backgroundColor = "#007BFF"; // 파란색으로 변경
-    voteButton.style.cursor = "pointer"; // 커서 모양 변경
-    voteButton.disabled = false; // 버튼 활성화
-  });
-});
