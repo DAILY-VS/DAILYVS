@@ -12,5 +12,5 @@ urlpatterns = [
     path('<int:poll_id>/vote/', views.poll_vote, name='vote'),
     path('mypage/', views.mypage, name='mypage'),
     path('mypage/update/', views.mypage_update, name='update'),
-    # path('calculate_statistics/', views.calculate_statistics, name='calculate_statistics'),
+
     ]
