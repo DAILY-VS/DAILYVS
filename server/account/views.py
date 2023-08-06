@@ -18,8 +18,11 @@ from vote.models import *
 #비밀번호 변경
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-
-
+#회원 탈퇴
+from django.views.generic.edit import DeleteView
+from django.urls import reverse_lazy
+from .models import User
+from .forms import UserChangeForm, UserDeleteForm
 
 User = get_user_model()
 
@@ -111,3 +114,14 @@ def mypage_update(request):
         'form': form
     }
     return render(request, 'account/update.html', context)
+
+
+
+class UserDeleteView(DeleteView):
+    model = User
+    template_name = 'account/delete.html'
+    success_url = reverse_lazy('vote:mypage') 
+    form_class = UserDeleteForm
+
+    def get_object(self, queryset=None):
+        return self.request.user

@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 
 from django.contrib.auth.models import AbstractUser, UserManager
 
+
+
 #비회원일 때
 class NonUser(models.Model):
     mbti=models.CharField(max_length=4)
