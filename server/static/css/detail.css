@@ -3,14 +3,14 @@
   flex-direction: column;
   justify-content: center;
   max-width: 500px;
-  padding-bottom: 100px;
+  padding-bottom: 50px;
   background-color: var(--purple-bg-color);
 }
 
 .vote-detail-card {
   position: relative;
   width: 25rem;
-  height: 70vh;
+  height: 60vh;
   margin: 15px auto;
   border-radius: 10px;
   overflow: hidden;
@@ -23,15 +23,42 @@
   height: auto;
 }
 
+.detail-card-first {
+  display: flex;
+  flex-direction: row;
+}
+
+.detail-like-container {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+#like-count {
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+#like-button {
+  margin-right: 10px;
+  margin-left: 5px;
+}
 .detail-card-title {
   padding: 10px;
+  width: 13rem;
   font-family: "GongGothicMedium";
+  font-size: 24px;
+}
+
+.detail-card-paragraph {
+  margin-left: 10px;
   font-size: 16px;
 }
 
 .detail-card-content {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
   height: 120px;
@@ -48,10 +75,39 @@
 }
 
 .detail-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  position: relative;
   margin: 10px auto;
   border: 1px gray solid;
-  width: 300px;
-  height: 160px;
+  width: 22rem;
+  height: 12rem;
+  background-size: 100%;
+}
+
+.detail-option:before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.detail-option input {
+  opacity: 0;
+}
+
+.detail-option label {
+  font-family: "GongGothicMedium";
+  color: white;
+  font-size: 40px;
+  z-index: 90;
+}
+
+.detail-option.selected {
+  border: var(--redpink-primary-color) 6px solid;
 }
 
 .vote-register-btn {
@@ -67,6 +123,34 @@
   background-color: var(--darkblue-primary-color);
 }
 
+.vs-font:first-of-type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  opacity: 1;
+}
+
 .vs-font {
+  opacity: 0;
+}
+
+.vs-font span:first-of-type {
+  color: var(--darkblue-primary-color);
+}
+
+.vs-font span {
   font-family: "GongGothicMedium";
+  color: var(--redpink-primary-color);
+}
+
+.vote-submit-btn {
+  background-color: var(--darkblue-primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin: 2px auto;
+  height: 50px;
+  width: 200px;
+  font-size: 20px;
 }
