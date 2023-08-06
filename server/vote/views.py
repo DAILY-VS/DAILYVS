@@ -44,9 +44,7 @@ def result(request):
 def polls_list(request):
     polls = Poll.objects.all()
     page=request.GET.get('page')
-    
     paginator = Paginator(polls,6)
-    
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -166,39 +164,39 @@ def calcstat(request, poll_id):
     mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
 
     print('User')
-    user_poll = UserVote.objects.filter(choice__poll__pk=1)
+    user_poll = UserVote.objects.filter(choice__poll__pk=poll_id)
     user_total_count=user_poll.count()
     print('user_total_count : ' + str(user_total_count))
 
-    user_choice1 = user_poll.filter(choice_id=1)
+    user_choice1 = user_poll.filter(choice_id=2*poll_id-1)
     user_choice1_count=user_choice1.count()
     print('user_choice1_count : ' + str(user_choice1_count))
 
-    user_choice2 = user_poll.filter(choice_id=2)
+    user_choice2 = user_poll.filter(choice_id=2*poll_id)
     user_choice2_count=user_choice2.count()
     print('user_choice2_count : ' + str(user_choice2_count))   
 
-    user_man = UserVote.objects.filter(choice__poll__pk=1, user__gender='M')
+    user_man = UserVote.objects.filter(choice__poll__pk=poll_id, user__gender='M')
     user_man_count=user_man.count()
     print('user_man_count : ' + str(user_man_count))
 
-    user_man_choice1 = user_man.filter(choice_id=1)
+    user_man_choice1 = user_man.filter(choice_id=2*poll_id-1)
     user_man_choice1_count=user_man_choice1.count()
     print('user_man_choice1_count : ' + str(user_man_choice1_count))
 
-    user_man_choice2 = user_man.filter(choice_id=2)
+    user_man_choice2 = user_man.filter(choice_id=2*poll_id)
     user_man_choice2_count=user_man_choice2.count()
     print('user_man_choice2_count : ' + str(user_man_choice2_count))
 
-    user_woman = UserVote.objects.filter(choice__poll__pk=1, user__gender='W')
+    user_woman = UserVote.objects.filter(choice__poll__pk=poll_id, user__gender='W')
     user_woman_count= user_woman.count()
     print('user_woman_count : ' + str(user_woman_count))
 
-    user_woman_choice1 = user_woman.filter(choice_id=1)
+    user_woman_choice1 = user_woman.filter(choice_id=2*poll_id-1)
     user_woman_choice1_count=user_woman_choice1.count()
     print('user_woman_choice1_count : ' + str(user_woman_choice1_count))
 
-    user_woman_choice2 = user_woman.filter(choice_id=2)
+    user_woman_choice2 = user_woman.filter(choice_id=2*poll_id)
     user_woman_choice2_count=user_woman_choice2.count()
     print('user_woman_choice2_count : ' + str(user_woman_choice2_count))
 
@@ -207,15 +205,15 @@ def calcstat(request, poll_id):
     user_mbtis_choice2_count=[]
 
     for mbti in mbtis : 
-        user_mbti = UserVote.objects.filter(choice__poll__pk=1, user__mbti= mbti)
+        user_mbti = UserVote.objects.filter(choice__poll__pk=poll_id, user__mbti= mbti)
         user_mbti_count=user_mbti.count()  
         user_mbtis_count.append(user_mbti_count) 
 
-        user_mbti_choice1 = user_mbti.filter(choice_id=1)
+        user_mbti_choice1 = user_mbti.filter(choice_id=2*poll_id-1)
         user_mbti_choice1_count= user_mbti_choice1.count()
         user_mbtis_choice1_count.append(user_mbti_choice1_count)
 
-        user_mbti_choice2 = user_mbti.filter(choice_id=2)
+        user_mbti_choice2 = user_mbti.filter(choice_id=2*poll_id)
         user_mbti_choice2_count= user_mbti_choice2.count()
         user_mbtis_choice2_count.append(user_mbti_choice2_count)
 
@@ -224,39 +222,39 @@ def calcstat(request, poll_id):
     print('user_mbtis_choice2_count : ' + str(user_mbtis_choice2_count))
 
     print('\nNonUser')
-    nonuser_poll=NonUserVote.objects.filter(choice__poll__pk=1)
+    nonuser_poll=NonUserVote.objects.filter(choice__poll__pk=poll_id)
     nonuser_total_count=nonuser_poll.count()
     print('nonuser_total_count : ' + str(nonuser_total_count))
 
-    nonuser_choice1 = nonuser_poll.filter(choice_id=1)
+    nonuser_choice1 = nonuser_poll.filter(choice_id=2*poll_id-1)
     nonuser_choice1_count=nonuser_choice1.count()
     print('nonuser_choice1_count : ' + str(nonuser_choice1_count))
 
-    nonuser_choice2 = nonuser_poll.filter(choice_id=2)
+    nonuser_choice2 = nonuser_poll.filter(choice_id=2*poll_id)
     nonuser_choice2_count=nonuser_choice2.count()
     print('nonuser_choice2_count : ' + str(nonuser_choice2_count))   
 
-    nonuser_man = NonUserVote.objects.filter(choice__poll__pk=1, gender='M')
+    nonuser_man = NonUserVote.objects.filter(choice__poll__pk=poll_id, gender='M')
     nonuser_man_count=nonuser_man.count()
     print('nonuser_man_count : ' + str(nonuser_man_count))
     
-    nonuser_man_choice1 = nonuser_man.filter(choice_id=1)
+    nonuser_man_choice1 = nonuser_man.filter(choice_id=2*poll_id-1)
     nonuser_man_choice1_count=nonuser_man_choice1.count()
     print('nonuser_man_choice1_count : ' + str(nonuser_man_choice1_count))
 
-    nonuser_man_choice2 = nonuser_man.filter(choice_id=2)
+    nonuser_man_choice2 = nonuser_man.filter(choice_id=2*poll_id)
     nonuser_man_choice2_count=nonuser_man_choice2.count()
     print('nonuser_man_choice2_count : ' + str(nonuser_man_choice2_count))
 
-    nonuser_woman = NonUserVote.objects.filter(choice__poll__pk=1, gender='W')
+    nonuser_woman = NonUserVote.objects.filter(choice__poll__pk=poll_id, gender='W')
     nonuser_woman_count=nonuser_woman.count()
     print('nonuser_woman_count : ' + str(nonuser_woman_count))
 
-    nonuser_woman_choice1 = nonuser_woman.filter(choice_id=1)
+    nonuser_woman_choice1 = nonuser_woman.filter(choice_id=2*poll_id-1)
     nonuser_woman_choice1_count=nonuser_woman_choice1.count()
     print('nonuser_woman_choice1_count : ' + str(nonuser_woman_choice1_count))
 
-    nonuser_woman_choice2 = nonuser_woman.filter(choice_id=2)
+    nonuser_woman_choice2 = nonuser_woman.filter(choice_id=2*poll_id)
     nonuser_woman_choice2_count=nonuser_woman_choice2.count()
     print('nonuser_woman_choice2_count : ' + str(nonuser_woman_choice2_count))
 
@@ -265,15 +263,15 @@ def calcstat(request, poll_id):
     nonuser_mbtis_choice2_count=[]
 
     for mbti in mbtis : 
-        nonuser_mbti = NonUserVote.objects.filter(choice__poll__pk=1, MBTI = mbti)
+        nonuser_mbti = NonUserVote.objects.filter(choice__poll__pk=poll_id, MBTI = mbti)
         nonuser_mbti_count=nonuser_mbti.count()  
         nonuser_mbtis_count.append(nonuser_mbti_count) 
 
-        nonuser_mbti_choice1 = nonuser_mbti.filter(choice_id=1)
+        nonuser_mbti_choice1 = nonuser_mbti.filter(choice_id=2*poll_id-1)
         nonuser_mbti_choice1_count= nonuser_mbti_choice1.count()
         nonuser_mbtis_choice1_count.append(nonuser_mbti_choice1_count)
 
-        nonuser_mbti_choice2 = nonuser_mbti.filter(choice_id=2)
+        nonuser_mbti_choice2 = nonuser_mbti.filter(choice_id=2*poll_id)
         nonuser_mbti_choice2_count= nonuser_mbti_choice2.count()
         nonuser_mbtis_choice2_count.append(nonuser_mbti_choice2_count)
 
@@ -319,12 +317,6 @@ def calcstat(request, poll_id):
     print('total_mbtis_choice2_count : ' + str(total_mbtis_choice2_count))   
 
     mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
-
-
-
-    
- 
-
 
     ctx = {
         'total_count':total_count,
