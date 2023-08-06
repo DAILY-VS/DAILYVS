@@ -66,3 +66,7 @@
   padding-top: 7px;
   background-color: var(--darkblue-primary-color);
 }
+
+.vs-font {
+  font-family: "GongGothicMedium";
+}
