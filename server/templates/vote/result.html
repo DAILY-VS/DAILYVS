@@ -1,27 +1,59 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
+
 <section class="result-container">
-  {% comment %} <div class="result-title">{% if poll.active %} <h3>{{ poll.title }}</h3> {% else %} <p> NO </p>{% endif %}
-    <h3>전체 투표수 {{ poll.get_vote_count }} </h3>
-    {% for choice in poll.get_result_dict %}
-    
-    {{choice.title}}: {{choice.percentage}}%
+  <div class="result-title">가정부 로봇 이야기</div>
+    total_count : {{total_count}}
+    </br>
+    choice1_count : {{choice1_count}}
+    </br>
+    choice2_count : {{choice2_count}}
+    </br>
+    man_count : {{man_count}}
+    </br>
+    man_choice1_count : {{choice1_count}}
+    </br>
+    man_choice2_count : {{choice2_count}}
+    </br>
+    woman_count : {{woman_count}}
+    </br>
+    woman_choice1_count : {{woman_choice1_count}}
+    </br>
+    woman_choice2_count : {{woman_choice2_count}}
+    </br>
 
+    mbtis : 
+    {% for item in mbtis %}
+      {{ item }},
     {% endfor %}
-    {% for choice in poll.choice_set.all %}
-    <ul>
-        <li>{{ choice.choice_text }}{{ choice.get_vote_count }}</li>
-    </ul>
+    </br> 
+
+    mbtis_count : 
+    {% for item in mbtis_count %}
+      {{ item }},
     {% endfor %}
+    </br> 
 
-    <a href="{% url 'vote:list' %}" role="button">리스트 페이지 가기</a>
+    mbtis_choice1_count : 
+    {% for item in mbtis_choice1_count %}
+      {{ item }},
+    {% endfor %}
+    </br>
 
-  </div> {% endcomment %}
+    mbtis_choice2_count :
+    {% for item in mbtis_choice2_count %}
+      {{ item }},
+    {% endfor %}  
   <div class="graph-information">그래프 정보</div>
   <div class="graph-container">{% include 'vote/result/chart.html' %}</div>
   <button>공유하기</button>
   <div class="graph-category-container">카테고리 공간</div>
   <div class="comment-container">댓글 공간</div>
 </section>
+
+
+
+
+
 {% endblock %}
 
 

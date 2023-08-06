@@ -80,18 +80,18 @@ def poll_detail(request, poll_id):
     return response
 
 # 결과 페이지
-def poll_vote(request, poll_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    # choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
+# def poll_vote(request, poll_id):
+#     poll = get_object_or_404(Poll, pk=poll_id)
+#     choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
 
-    # if choice_id:
-    #     choice = Choice.objects.get(id=choice_id)
-    #     vote = UserVote(user=request.user, poll=poll, choice=choice)
-    #     vote.save()
-    #     print(vote)
-    #     print(int(choice_id) % 2)
+#     if choice_id:
+#         choice = Choice.objects.get(id=choice_id)
+#         vote = UserVote(user=request.user, poll=poll, choice=choice)
+#         vote.save()
+#         print(vote)
+#         print(int(choice_id) % 2)
     
-    return render(request, 'vote/result.html', {'poll': poll})
+#     return render(request, 'vote/result.html', {'poll': poll})
 
 @login_required
 def poll_like(request):
@@ -151,9 +151,19 @@ def mypage_update(request):
 
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
-
-def calcstat(request):
-    mbtis = ['ISTJ', 'ISFJ', 'INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
+# 결과 페이지
+def calcstat(request, poll_id):
+    
+    poll = get_object_or_404(Poll, pk=poll_id)
+    choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
+    print(choice_id)
+    if choice_id:
+        choice = Choice.objects.get(id=choice_id)
+        vote = UserVote(user=request.user, poll=poll, choice=choice)
+        vote.save()
+        print(vote)
+        
+    mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
 
     print('User')
     user_poll = UserVote.objects.filter(choice__poll__pk=1)
@@ -308,4 +318,27 @@ def calcstat(request):
     print('total_mbtis_choice1_count : ' + str(total_mbtis_choice1_count))   
     print('total_mbtis_choice2_count : ' + str(total_mbtis_choice2_count))   
 
-    return render(request, template_name='vote/base.html')
+    mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
+
+
+
+    
+ 
+
+
+    ctx = {
+        'total_count':total_count,
+        'choice1_count':total_choice1_count,
+        'choice2_count':total_choice2_count,
+        'man_count':total_man_count,
+        'man_choice1_count':total_man_choice1_count,
+        'man_choice2_count':total_man_choice2_count,
+        'woman_count':total_woman_count,
+        'woman_choice1_count':total_woman_choice1_count,
+        'woman_choice2_count':total_woman_choice2_count,
+        'mbtis':mbtis,
+        'mbtis_count':total_mbtis_count,
+        'mbtis_choice1_count':total_mbtis_choice1_count,
+        'mbtis_choice2_count':total_mbtis_choice2_count,
+    }
+    return render(request, template_name='vote/result.html',context=ctx) 
