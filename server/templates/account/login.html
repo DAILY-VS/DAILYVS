@@ -1,46 +1,49 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
     <title>Document</title>
   </head>
   <body>
-    <form action="{% url 'account:login' %}" method="post">
-      {% csrf_token %}
-      <!-- form -->
-<div>
-  <form method="post" action="/login/">
-      {% csrf_token %}
-      <table>
-          <tr>
-          <td>
-              <label for="username">userID</label>
-          </td>
-          <td>
-              <input type="text" name="username" id="username">
-          </td>
-          </tr>
-      
-          <tr>
-          <td>
-              <label for="password">비밀번호</label>
-          </td>
-          <td>
-              <input type="password" name="password" id="password">
-          </td>
-          </tr>
-          <tr>
-          <td colspan="2" class="login-btn-td">
-              <button type="submit" class="login-btn hover-black">로그인</button>
-          </td>
-          </tr>
-      </table>
-  </form>
-</div>
-
-<div class="login__forgot-pw"><a href="{% url 'account:logout' %}">로그아웃</a></div>        
-<div class="login__signup">Not a member? <a href="{% url 'account:signup' %}">Create an account</a></div>
-   
+    <div class="login-box">
+      <div class="login-nav">
+        <span
+          ><img src="{% static 'img/icon/left_page.png'%}" style="width: 30px"
+        /></span>
+        <div class="login-name">로그인</div>
+      </div>
+      <form action="{% url 'account:login' %}" method="post">
+        {% csrf_token %}
+        <!-- form -->
+        <div class="login-container">
+          <form method="post" action="/login/" style="width: 400px">
+            {% csrf_token %}
+            <img src="{% static 'img/Logo.png'%}" style="width: 250px" />
+            <div class="input-container">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="아이디"
+              />
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="비밀번호"
+              />
+              <button type="submit" class="login-btn">로그인</button>
+            </div>
+          </form>
+        </div>
+      </form>
+      <div class="login__signup">
+        아직 계정이 없으신가요?
+        <a href="{% url 'account:signup' %}">회원가입</a>
+      </div>
+    </div>
   </body>
 </html>
