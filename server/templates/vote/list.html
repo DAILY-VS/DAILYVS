@@ -5,23 +5,28 @@
     <title>Title</title>
 </head>
 <body>
+
     <a href="{% url 'account:login' %}"> 로그인 </a>
     <a href="{% url 'account:logout' %}"> 로그아웃 </a>
     <a href="{% url 'account:signup' %}"> 회원가입 </a>
 
-    {% comment %} <ul>
+    <ul>
     {% for poll in polls %}
-    <li><a href="{% url 'vote:detail' poll.id %}">{{ poll.text}}
+    <li>
+        <a href="{% url 'vote:detail' poll.id %}">
+        {{poll.title}}
         {% if not poll.active%} 
         {% endif %}
         </a>
     </li>
     </ul>
-    {% endfor %} {% endcomment %}
+    {% endfor %} 
 
-    <ul>
+     <ul>
     {% for page in page_obj %}
-    <li><a href="{% url 'vote:detail' page.id %}">{{ page.text}}
+    <li>
+        <a href="{% url 'vote:detail' page.id %}">
+        {{ page.title}}
         {% if not page.active%} 
         {% endif %}
         </a>
@@ -35,6 +40,6 @@
         <a href="?page={{ page}}">{{page}}</a>
         </li>
         {% endfor %}
-    </ul>   
+    </ul> 
 </body>
 </html>

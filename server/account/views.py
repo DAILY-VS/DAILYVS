@@ -4,7 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import *
 from vote.models import *
 
-def signup(request):
+
+def signup(request): # 회원가입
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -23,7 +24,7 @@ def signup(request):
         }
         return render(request, template_name='account/signup.html', context=ctx)
 
-def login(request):
+def login(request): #로그인
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -42,6 +43,6 @@ def login(request):
         }
         return render(request, 'account/login.html', context=context)
 
-def logout(request):
+def logout(request): #로그아웃
     auth.logout(request)
     return redirect("/")
