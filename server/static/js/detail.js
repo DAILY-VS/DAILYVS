@@ -25,3 +25,14 @@ function getCookie(name) {
   }
   return cookieValue;
 }
+
+const choiceInputs = document.querySelectorAll(".choice-input");
+const voteButton = document.getElementById("vote-button");
+
+choiceInputs.forEach((input) => {
+  input.addEventListener("click", () => {
+    voteButton.style.backgroundColor = "#007BFF"; // 파란색으로 변경
+    voteButton.style.cursor = "pointer"; // 커서 모양 변경
+    voteButton.disabled = false; // 버튼 활성화
+  });
+});

@@ -30,6 +30,7 @@
             name="choice"
             id="choice{{ forloop.counter }}"
             value="{{ choice.id }}"
+            class="choice-input"
           />
           <label for="choice{{ forloop.counter }}"
             >{{ choice.choice_text }}</label
@@ -37,11 +38,17 @@
         </div>
         <strong class="vs-font"><span>V</span><span>S</span></strong>
         {% endfor %}
+        <input
+          type="submit"
+          value="투표하기"
+          class="vote-submit-btn"
+          disabled
+        />
       </form>
     </div>
   </div>
-  <input type="submit" value="투표하기" class="vote-submit-btn" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="{% static 'js/detail.js' %}"></script>
+
   {% endblock %}
 </div>

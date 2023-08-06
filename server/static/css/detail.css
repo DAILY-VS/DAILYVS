@@ -167,12 +167,12 @@
 }
 
 .vote-submit-btn {
-  background-color: var(--darkblue-primary-color);
+  background-color: #e0e1e2;
   color: white;
   border: none;
   border-radius: 5px;
-  margin: 2px auto;
+  margin: 10px auto;
   height: 50px;
-  width: 200px;
+  width: 300px;
   font-size: 20px;
 }
