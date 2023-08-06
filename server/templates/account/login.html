@@ -1,17 +1,44 @@
-
-
-
-    <div>
-    <h1>Login Page</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
     <form action="{% url 'account:login' %}" method="post">
-        {% csrf_token %}
-        <label for="id_username">Username:</label>
-        <input type="text" id="id_username" name="username" required><br>
-        <label for="id_password">Password:</label>
-        <input type="password" id="id_password" name="password" required><br>
-        <input type="submit" value="Login">
-    </form>
-    <p><a href="{% url 'account:signup' %}">Signup</a></p>
+      {% csrf_token %}
+      <!-- form -->
+    <div>
+      <form method="post" action="/login/">
+      {% csrf_token %}
+      <table>
+          <tr>
+          <td>
+              <label for="username">userID</label>
+          </td>
+          <td>
+              <input type="text" name="username" id="username">
+          </td>
+          </tr>
+      
+          <tr>
+          <td>
+              <label for="password">비밀번호</label>
+          </td>
+          <td>
+              <input type="password" name="password" id="password">
+          </td>
+          </tr>
+          <tr>
+          <td colspan="2" class="login-btn-td">
+              <button type="submit" class="login-btn hover-black">로그인</button>
+          </td>
+          </tr>
+      </table>
+      </form>
     </div>
-
-
+    <div class="login__forgot-pw"><a href="{% url 'account:logout' %}">로그아웃</a></div>        
+    <div class="login__signup">Not a member? <a href="{% url 'account:signup' %}">Create an account</a></div> 
+  </body>
+</html>
