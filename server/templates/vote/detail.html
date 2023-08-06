@@ -1,7 +1,19 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 
 <div class="vote-detail-container">
-  <p>조회 수: {{ poll.views_count }}</p>
+  <div class="detail-top">
+    <a href="{% url 'vote:list' %}" role="button" class="back-button"
+      ><img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
+      이전 페이지로
+    </a>
+    <div class="detail-views">
+      <span
+        ><img src="{% static 'img/icon/view.png'%}" style="width: 20px"
+      /></span>
+      <span> {{ poll.views_count }} </span>
+      <span> views</span>
+    </div>
+  </div>
   <div class="vote-introduction">
     {% include 'vote/detail/detail-introduction-card.html' %}
   </div>
@@ -29,7 +41,6 @@
     </div>
   </div>
   <input type="submit" value="투표하기" class="vote-submit-btn" />
-  <a href="{% url 'vote:list' %}" role="button">뒤로가기</a>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="{% static 'js/detail.js' %}"></script>
   {% endblock %}

@@ -7,6 +7,28 @@
   background-color: var(--purple-bg-color);
 }
 
+.detail-top {
+  display: flex;
+}
+
+.back-button {
+  text-decoration: none;
+  color: var(--redpink-primary-color);
+  align-items: center;
+  display: flex;
+  margin-left: 40px;
+}
+
+.detail-views {
+  display: flex;
+  margin: 5px 60px 0 auto;
+  font-size: 12px;
+}
+
+.detail-views span {
+  margin-left: 3px;
+}
+
 .vote-detail-card {
   position: relative;
   width: 25rem;
@@ -42,7 +64,7 @@
 
 #like-button {
   margin-right: 10px;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 .detail-card-title {
   padding: 10px;
