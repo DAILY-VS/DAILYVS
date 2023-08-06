@@ -3,17 +3,6 @@ from django.contrib.auth.models import AbstractUser
 
 from django.contrib.auth.models import AbstractUser, UserManager
 
-
-#컨텐츠에 따라서
-# JOBS = (
-#     ('P', '교수/강사(Professor/Lecturer)'),
-#     ('S', '학생(Student)'),
-#     ('R', '연구원(Researcher)'),
-#     ('E', '기타(Etc.)')
-# )
-# job = models.CharField(verbose_name='직업', max_length=1, choices=JOBS)
-
-
 #비회원일 때
 class NonUser(models.Model):
     mbti=models.CharField(max_length=4)

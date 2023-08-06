@@ -12,6 +12,7 @@ MBTI: {{user.mbti}}
 <br>
 {% if request.user == user %}
     <a href="{% url 'vote:update' %}">회원 수정</a>
+    <a href="{% url 'account:change_password' %}">비밀번호 변경</a> 
 {% endif %}
 
 <h5>나의 vote list</h5>
@@ -29,4 +30,5 @@ MBTI: {{user.mbti}}
 
     {% comment %} <form action="{% url 'account:delete' %}" method="POST">
         {% csrf_token %}
-        <button class="btn btn-secondary">회원 탈퇴</button> {% endcomment %}
+        <button class="btn btn-secondary">회원 탈퇴</button> 
+        {% endcomment %}
