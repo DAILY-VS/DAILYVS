@@ -8,6 +8,7 @@
   </div>
   <div class="option-container">
     <div class="detail-option">
+
       <form action="{% url 'vote:calcstat' poll.id %}" method="POST">
         {% csrf_token %}
         {% for choice in poll.choice_set.all %}
@@ -34,9 +35,6 @@
       </button>
       <span id="like-count">{{ poll.poll_like.count }}</span>
       
-      
-    
-
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
 
@@ -54,7 +52,6 @@
         }
         return cookieValue;
     }
-
 
         const likeButton = document.getElementById('like-button');
         const pollId = likeButton.getAttribute('data-poll-id');

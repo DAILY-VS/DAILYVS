@@ -22,3 +22,8 @@ class UserChangeForm(UserChangeForm): #마이페이지 정보 수정
     class Meta:
         model = get_user_model()
         fields = ['nickname','mbti','gender']
+        
+class UserDeleteForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = []

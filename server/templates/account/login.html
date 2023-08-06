@@ -17,6 +17,13 @@
       </div>
       <form action="{% url 'account:login' %}" method="post">
         {% csrf_token %}
+        {% if wrong_password %}
+        <div class="alert alert-danger" role="alert">
+            The password you entered is incorrect. Please try again.
+        </div>
+        {% endif %}
+
+
         <!-- form -->
         <div class="login-container">
           <form method="post" action="/login/" style="width: 400px">

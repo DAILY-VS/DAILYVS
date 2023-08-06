@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 import json
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from .models import *
@@ -27,25 +26,12 @@ def result(request):
     return render(request, "vote/result.html")
 
 
-# def result_view(request):
-#     approval_percentage = 75
-#     disapproval_percentage = 25
-
-#     return render(
-#         request,
-#         "result.html",
-#         {
-#             "approval_percentage": approval_percentage,
-#             "disapproval_percentage": disapproval_percentage,
-#         },
-#     )
-
 # 리스트 페이지
 def polls_list(request):
     polls = Poll.objects.all()
     page=request.GET.get('page')
     
-    paginator = Paginator(polls,6)
+    paginator = Paginator(polls,4)
     
     try:
         page_obj = paginator.page(page)
@@ -79,20 +65,7 @@ def poll_detail(request, poll_id):
     response =  render(request, 'vote/detail.html', context)
     return response
 
-# 결과 페이지
-# def poll_vote(request, poll_id):
-#     poll = get_object_or_404(Poll, pk=poll_id)
-#     choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
-
-#     if choice_id:
-#         choice = Choice.objects.get(id=choice_id)
-#         vote = UserVote(user=request.user, poll=poll, choice=choice)
-#         vote.save()
-#         print(vote)
-#         print(int(choice_id) % 2)
-    
-#     return render(request, 'vote/result.html', {'poll': poll})
-
+#좋아요 버튼
 @login_required
 def poll_like(request):
     if request.method == 'POST':
@@ -125,7 +98,7 @@ def poll_like(request):
     else:
         return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
 
-
+#마이페이지
 def mypage(request):
 
     polls = Poll.objects.all()
@@ -135,7 +108,7 @@ def mypage(request):
     }
     return render(request, 'vote/mypage.html', context)
 
-
+#마이페이지 수정사항
 def mypage_update(request):
     if request.method == 'POST':
         form = UserChangeForm(request.POST, instance=request.user)
@@ -153,7 +126,6 @@ def mypage_update(request):
 # 반복문 돌리기.
 # 결과 페이지
 def calcstat(request, poll_id):
-    
     poll = get_object_or_404(Poll, pk=poll_id)
     choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
     print(choice_id)
@@ -320,12 +292,6 @@ def calcstat(request, poll_id):
 
     mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
 
-
-
-    
- 
-
-
     ctx = {
         'total_count':total_count,
         'choice1_count':total_choice1_count,
@@ -341,4 +307,5 @@ def calcstat(request, poll_id):
         'mbtis_choice1_count':total_mbtis_choice1_count,
         'mbtis_choice2_count':total_mbtis_choice2_count,
     }
+    
     return render(request, template_name='vote/result.html',context=ctx) 
