@@ -52,8 +52,10 @@ def login(request):
             auth.login(request, user)
             return redirect('/')
         else:
+            wrong_password = True  # 비밀번호가 틀렸을 때 변수를 설정하여 템플릿으로 전달
             context = {
                 'form': form,
+                'wrong_password': wrong_password,  # 변수를 템플릿으로 전달
             }
             return render(request, 'account/login.html', context=context)
     else:
