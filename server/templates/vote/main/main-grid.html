@@ -1,3 +1,49 @@
 {% load static %} {% block content %}
-<div>this is grid</div>
+<div class="main-grid-container">
+  <div class="main-list-title">🗒️ 투표 모음 리스트</div>
+  <select name="sort" class="option_select">
+    <option value="popular" selected>인기순</option>
+    <option value="latest">최신순</option>
+  </select>
+  <div class="main-grid-content">
+    <div class="main-grid-square">
+      <div class="grid-square-pic">
+        <img src="{% static 'img/slide/slide1.jpg'%}" />
+        <span class="grid-square-like-view">1.2k like</span>
+      </div>
+    </div>
+    <div class="main-grid-square">
+      <div class="grid-square-pic">
+        <img src="{% static 'img/slide/slide2.jpg'%}" />
+        <span class="grid-square-like-view">1.2k like</span>
+      </div>
+    </div>
+    <div class="main-grid-square">
+      <div class="grid-square-pic">
+        <img src="{% static 'img/slide/slide3.jpg'%}" />
+        <span class="grid-square-like-view">1.2k like</span>
+      </div>
+    </div>
+    <div class="main-grid-square">
+      <div class="grid-square-pic">
+        <img src="{% static 'img/slide/mintchoco.jpg'%}" />
+        <span class="grid-square-like-view">1.2k like</span>
+      </div>
+    </div>
+  </div>
+  <div class="pagination-box">
+    <div class="pagination">
+      <a class="page-btn gray">
+        <img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
+      </a>
+      <a class="page-btn">1</a>
+      <a class="page-btn">2</a>
+      <a class="page-btn">3</a>
+      <a class="page-btn">4</a>
+      <a class="page-btn gray">
+        <img src="{% static 'img/icon/right_page.png'%}" style="width: 30px" />
+      </a>
+    </div>
+  </div>
+</div>
 {% endblock %}
