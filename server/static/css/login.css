@@ -1,0 +1,83 @@
+.login-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+
+.login-container form {
+  width: 400px;
+  margin: 10px auto;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container input {
+  width: 300px;
+  height: 50px;
+  margin-bottom: 10px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  font-size: 20px;
+  border: 1px rgba(128, 128, 128, 0.2) solid;
+  background-color: #f4faff;
+  padding-left: 20px;
+}
+
+.login-btn {
+  margin-top: 20px;
+  height: 50px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  font-size: 24px;
+  color: white;
+  background-color: #ff495a;
+  border: none;
+  border-radius: 5px;
+}
+
+.login__signup {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.login__signup a {
+  border: none;
+  text-decoration: none;
+  color: #ff495a;
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+.login__signup a:hover {
+  border-bottom: solid #ff495a 1px;
+}
+
+.login-nav {
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f0f0f0;
+}
+
+.login-nav img {
+  margin-right: auto;
+}
+
+.login-name {
+  margin: 0 auto;
+  text-align: center;
+  font-size: 24px;
+}
