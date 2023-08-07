@@ -1,4 +1,5 @@
 .result-container {
+  max-width: 500px;
   padding-bottom: 100px;
   display: flex;
   flex-direction: column;
@@ -12,20 +13,70 @@
 }
 
 .graph-information {
-  height: 20vh;
-  background-color: gray;
-}
-
-.graph-container {
-  height: 50vh;
-  background-color: turquoise;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(212, 212, 212);
 }
 
 .graph-category-container {
-  height: 20vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .comment-container {
   height: 50vh;
   background-color: pink;
+}
+
+.result-graph-content {
+  display: flex;
+  justify-content: center;
+}
+/* 차트 정보 섹션 */
+.graph-information-box {
+  margin: 10px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.choice-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.darkblue-circle {
+  background-color: var(--darkblue-primary-color);
+}
+
+.redpink-circle {
+  background-color: var(--redpink-primary-color);
+}
+
+.choice-percentage-result {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 5px;
+  width: 200px;
+}
+
+/* 차트 섹션 */
+.result-chart-container {
+  display: flex;
+  justify-content: center;
+}
+
+.result-total-count {
+  display: flex;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--darkblue-primary-color);
+}
+
+.result-total-count strong {
+  margin-left: 5px;
+  color: var(--redpink-primary-color);
 }
