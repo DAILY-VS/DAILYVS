@@ -21,7 +21,7 @@
     </div>
   </div>
   <input type="submit" value="Vote">
-        <a href="{% url 'vote:list' %}" role="button">Cancel</a>
+        <a href="{% url 'vote:main' %}" role="button">Cancel</a>
       </form>
 
       <p>조회 수: {{ poll.views_count }}</p> <!-- 조회 수 출력 -->
@@ -34,7 +34,9 @@
         {% endif %}
       </button>
       <span id="like-count">{{ poll.poll_like.count }}</span>
-      
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
 
@@ -66,7 +68,7 @@
             .then(response => {
               const message = response.data.message;
               const likeCount = response.data.like_count;
-
+   
               likeButton.textContent = (message === '좋아요 취소') ? '좋아요' : '좋아요 취소';
               document.querySelector('#like-count').textContent = likeCount;
 
@@ -77,5 +79,8 @@
               console.error('Error:', error);
           });
   });
+
+
+
     </script>
 {% endblock %}

@@ -1,11 +1,11 @@
-from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
 import json
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import AnonymousUser
 from account.models import *
 from account.forms import *
@@ -15,7 +15,25 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def main(request):
-    return render(request, "vote/main.html")
+    polls = Poll.objects.all()
+    page=request.GET.get('page')
+    
+    paginator = Paginator(polls,4)
+    
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page=1
+        page_obj=paginator.page(page)
+    except EmptyPage:
+        page=paginator.num_pages
+        page_obj=paginator.page(page)
+    context = {
+        'polls': polls,
+        'page_obj': page_obj,
+        'paginator': paginator,
+    }
+    return render(request, "vote/main.html", context)
 
 
 def detail(request):
@@ -61,6 +79,7 @@ def poll_detail(request, poll_id):
     context = {
         'poll': poll,
         'loop_time': range(0, loop_count),
+
     }
     response =  render(request, 'vote/detail.html', context)
     return response
@@ -122,18 +141,45 @@ def mypage_update(request):
     }
     return render(request, 'vote/update.html', context)
 
+
+
+#댓글달기 
+@login_required
+def reply(request, poll_id):  # 댓글 작성 뷰 함수에 poll_id 파라미터 추가
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        user_info = request.user  # 현재 로그인한 사용자
+
+        poll = get_object_or_404(Poll, pk=poll_id)
+
+        comment = Comment.objects.create(
+            poll=poll,
+            user_info=user_info,
+            content=content
+        )
+
+        context = {
+            'nickname': user_info.nickname,
+            'content': comment.content,
+            'created_at': comment.created_at.strftime("%Y년 %m월 %d일"),
+            'updated_at': comment.updated_at.strftime("%Y년 %m월 %d일"),
+        }
+
+        return JsonResponse(context)
+
+
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    comments = Comment.objects.filter(poll=poll)
+    
     choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
-    print(choice_id)
     if choice_id:
         choice = Choice.objects.get(id=choice_id)
         vote = UserVote(user=request.user, poll=poll, choice=choice)
         vote.save()
-        print(vote)
         
     mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
 
@@ -292,6 +338,8 @@ def calcstat(request, poll_id):
 
     mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
 
+    
+
     ctx = {
         'total_count':total_count,
         'choice1_count':total_choice1_count,
@@ -306,6 +354,8 @@ def calcstat(request, poll_id):
         'mbtis_count':total_mbtis_count,
         'mbtis_choice1_count':total_mbtis_choice1_count,
         'mbtis_choice2_count':total_mbtis_choice2_count,
+        'comments': comments,
+        'poll': poll,
     }
     
     return render(request, template_name='vote/result.html',context=ctx) 

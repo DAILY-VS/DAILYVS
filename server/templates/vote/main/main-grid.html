@@ -1,3 +1,43 @@
 {% load static %} {% block content %}
-<div>this is grid</div>
+<div class="main-grid-container">
+  <div class="main-list-title">🗒️ 투표 모음 리스트</div>
+  <select name="sort" class="option_select">
+    <option value="popular" selected>인기순</option>
+    <option value="latest">최신순</option>
+  </select>
+
+
+  <div class="main-grid-content">
+    {% for page in page_obj %}
+    <a href="{% url 'vote:detail' page.id %}">
+    {{ page.title}}
+    {% if not page.active%} 
+    {% endif %}
+    </a>
+{% endfor %}
+    <div class="main-grid-square">
+      <div class="grid-square-pic">
+
+        <span class="grid-square-like-view">1.2k like</span>
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+  <div class="pagination-box">
+    <div class="pagination">
+      <a class="page-btn gray">
+        <img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
+      </a>
+      {% for page in paginator.page_range %}
+        <a href="?page={{ page}}">{{page}}</a>
+      {% endfor %}
+        <img src="{% static 'img/icon/right_page.png'%}" style="width: 30px" />
+      </a>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -5,14 +5,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{%static 'css/style.css'%}" />
-    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+    <title>Daily vs login</title>
   </head>
   <body>
     <div class="login-box">
       <div class="login-nav">
         <span
-          ><img src="{% static 'img/icon/left_page.png'%}" style="width: 30px"
-        /></span>
+          ><a href="/"
+            ><img
+              src="{% static 'img/icon/left_page.png'%}"
+              style="width: 30px" /></a
+        ></span>
         <div class="login-name">로그인</div>
       </div>
       <form action="{% url 'account:login' %}" method="post">

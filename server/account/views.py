@@ -18,7 +18,7 @@ def signup(request): # 회원가입
         if form.is_valid():
             user = form.save()
             auth.login(request, user)
-            return redirect('vote:list')
+            return redirect('vote:main')
         else:
             ctx={
                 'form':form,
@@ -37,7 +37,7 @@ def login(request): #로그인
         if form.is_valid():
             user = form.get_user()
             auth.login(request, user)
-            return redirect('vote:list')
+            return redirect('vote:main')
         else:
             context = {
                 'form': form,

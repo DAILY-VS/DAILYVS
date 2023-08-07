@@ -11,6 +11,7 @@ urlpatterns = [
     path('like/', views.poll_like, name='like'),
     path('mypage/', views.mypage, name='mypage'),
     path('mypage/update/', views.mypage_update, name='update'),
-    path("<int:poll_id>/calcstat", views.calcstat, name="calcstat"),
+    path("<int:poll_id>/calcstat/", views.calcstat, name="calcstat"),
+    path('<int:poll_id>/reply/', views.reply, name='reply'),
 
     ]

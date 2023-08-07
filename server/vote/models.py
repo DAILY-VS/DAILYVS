@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from account.models import *
+
 # Create your models here.
 
 class Poll(models.Model):
@@ -40,3 +41,14 @@ class NonUserVote(models.Model): #비회원투표
     )
     gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+
+class Comment(models.Model): #댓글
+    user_info = models.ForeignKey(User, on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+   
+    def __str__(self):
+        return self.content

@@ -47,7 +47,63 @@
   <div class="graph-container">{% include 'vote/result/chart.html' %}</div>
   <button>공유하기</button>
   <div class="graph-category-container">카테고리 공간</div>
-  <div class="comment-container">댓글 공간</div>
+  <div class="comment-container">댓글 공간
+
+    <form id="commentForm">
+      {% csrf_token %}
+      <input type="hidden" name="poll_id" value="{{ poll.id }}">
+      <textarea class="replyContent" name="content" placeholder="댓글 내용"></textarea>
+      <button type="submit" class="btnReply">댓글 작성</button>
+  </form>
+  
+  <table class="replyTable">
+      {% for comment in comments %}
+      <tr>
+          <td>{{ comment.user_info.nickname }}:: </td>
+          <td>{{ comment.content }}</td>
+          <td>올린 시간: {{ comment.created_at }}</td>
+          <td>{{ comment.updated_at }}</td>
+      </tr>
+      {% endfor %}
+  </table>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+document.querySelector("#commentForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+    let pollId = "{{ poll.id }}"; 
+    console.log(pollId);
+
+    axios({
+        method: 'post',
+        url: `/${pollId}/reply/`,    // poll_id 파라미터를 전달하여 URL 생성
+        data: formData
+    })
+    .then(response => {
+        let data = response.data;
+        
+        let replyTable = document.querySelector(".replyTable");
+        let newTr = document.createElement("tr");
+        let str = `
+            <td>${data.nickname}</td>
+            <td>${data.content}</td>
+            <td>${data.created_at}</td>
+            <td>${data.updated_at}</td>`;
+        newTr.innerHTML = str;
+        replyTable.appendChild(newTr);
+
+        document.querySelector(".replyContent").value = '';
+    })
+    .catch(error => {
+        console.error("댓글 작성 중 오류가 발생했습니다.", error);
+    });
+});
+</script>
 </section>
 
 {% endblock %}
