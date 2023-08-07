@@ -327,11 +327,15 @@ def calcstat(request, poll_id):
         "ENFJ",
         "ENTJ",
     ]
+    choice1_percentage = int(total_choice1_count / total_count * 100)
+    choice2_percentage = int(total_choice2_count / total_count * 100)
 
     ctx = {
         "total_count": total_count,
         "choice1_count": total_choice1_count,
         "choice2_count": total_choice2_count,
+        "choice1_percentage": choice1_percentage,
+        "choice2_percentage": choice2_percentage,
         "man_count": total_man_count,
         "man_choice1_count": total_man_choice1_count,
         "man_choice2_count": total_man_choice2_count,
@@ -342,5 +346,7 @@ def calcstat(request, poll_id):
         "mbtis_count": total_mbtis_count,
         "mbtis_choice1_count": total_mbtis_choice1_count,
         "mbtis_choice2_count": total_mbtis_choice2_count,
+        "poll": poll,
     }
+    print(poll)
     return render(request, template_name="vote/result.html", context=ctx)
