@@ -72,10 +72,11 @@ class UserVote(models.Model): #회원투표
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
 
 class NonUserVote(models.Model): #비회원투표
-    MBTI = models.TextField()
+    MBTI = models.TextField(null= True)
     GENDERS = (
         ('M', '남성'),
         ('W', '여성'),
     )
-    gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS)
+    gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS, null= True)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
