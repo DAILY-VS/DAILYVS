@@ -1,10 +1,77 @@
 {% load static %} {% block content %}
 <div class="vote-detail-card">
-  <div><img src="{% static 'img/robot.jpg' %}" style="width: 100%" /></div>
-  <div class="detail-card-title">가정부 로봇 이야기</div>
+  <div>
+    <img src="../../../{{poll.thumbnail}}" style="width: 100%" />
+  </div>
   <div class="detail-card-content">
-    당신의 집에서 열심히 일하고 있던 가정부 로봇. 어느날 일이 너무 힘들다며 울기
-    시작하는 로봇. 당신의 행동은?
+    <div class="detail-card-first">
+      <div class="detail-card-title">{{ poll.title }}</div>
+      <div class="detail-like-container">
+        <span class="like-word">좋아요 : </span>
+        <span id="like-count"> {{ poll.poll_like.count }} </span>
+        <span class="like-word"> 명</span>
+        <span
+          id="like-button"
+          data-poll-id="{{ poll.id }}"
+          data-user-likes="{{ user_likes_poll }}"
+        >
+          <img
+            src="{% static 'img/icon/blank_heart.png'%}"
+            style="width: 30px"
+          />
+        </span>
+      </div>
+    </div>
+    <div class="detail-card-paragraph">{{poll.content}}</div>
   </div>
 </div>
+<script>
+  const likeButton = document.getElementById("like-button");
+  const pollId = likeButton.getAttribute("data-poll-id");
+  let userLikesPoll = likeButton.getAttribute("data-user-likes") === "True";
+
+  likeButton.addEventListener("click", () => {
+    axios
+      .post(
+        "/like/",
+        { poll_id: pollId },
+        {
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+        }
+      )
+      .then((response) => {
+        const message = response.data.message;
+        const likeCount = response.data.like_count;
+
+        const heartImage = likeButton.querySelector("img");
+        if (message === "좋아요 취소") {
+          heartImage.src = "{% static 'img/icon/blank_heart.png' %}";
+          userLikesPoll = false;
+          localStorage.setItem("userLikesPoll", "false");
+        } else {
+          heartImage.src = "{% static 'img/icon/pink_heart.png' %}";
+          userLikesPoll = true;
+          localStorage.setItem("userLikesPoll", "true");
+        }
+
+        document.querySelector("#like-count").textContent = likeCount;
+        likeButton.setAttribute("data-user-likes", userLikesPoll);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const heartImage = likeButton.querySelector("img");
+    const userLikesPoll = localStorage.getItem("userLikesPoll");
+    if (userLikesPoll === "true") {
+      heartImage.src = "{% static 'img/icon/pink_heart.png' %}";
+    } else {
+      heartImage.src = "{% static 'img/icon/blank_heart.png' %}";
+    }
+  });
+</script>
 {% endblock %}

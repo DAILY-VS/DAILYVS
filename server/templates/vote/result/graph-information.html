@@ -1,0 +1,14 @@
+{% load static %} {% block content %}
+<div class="graph-information-box">
+  <div class="choice-percentage-result">
+    <span class="choice-circle darkblue-circle"></span>
+    <span>{{choice1_percentage}} %</span>
+    <span>{{ poll.choice_set.all.0.choice_text }}</span>
+  </div>
+  <div class="choice-percentage-result">
+    <span class="choice-circle redpink-circle"></span>
+    <span>{{choice2_percentage}} %</span>
+    <span>{{ poll.choice_set.all.1.choice_text }}</span>
+  </div>
+  {% endblock %}
+</div>

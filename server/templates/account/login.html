@@ -1,11 +1,53 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+    <title>Daily vs login</title>
   </head>
   <body>
-    login 입니다.
+    <div class="login-box">
+      <div class="login-nav">
+        <span
+          ><a href="/"
+            ><img
+              src="{% static 'img/icon/left_page.png'%}"
+              style="width: 30px" /></a
+        ></span>
+        <div class="login-name">로그인</div>
+      </div>
+      <form action="{% url 'account:login' %}" method="post">
+        {% csrf_token %}
+        <!-- form -->
+        <div class="login-container">
+          <form method="post" action="/login/" style="width: 400px">
+            {% csrf_token %}
+            <img src="{% static 'img/Logo.png'%}" style="width: 250px" />
+            <div class="input-container">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="아이디"
+              />
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="비밀번호"
+              />
+              <button type="submit" class="login-btn">로그인</button>
+            </div>
+          </form>
+        </div>
+      </form>
+      <div class="login__signup">
+        아직 계정이 없으신가요?
+        <a href="{% url 'account:signup' %}">회원가입</a>
+      </div>
+    </div>
   </body>
 </html>

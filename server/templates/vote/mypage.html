@@ -1,0 +1,33 @@
+{% extends 'vote/base.html' %}
+{% load static %}
+{% block content %}
+
+
+id: {{user.username}}
+<br>
+nickname: {{user.nickname}}
+<br>
+MBTI: {{user.mbti}}
+<br>
+성별: {{user.gender}}
+<br>
+{% if request.user == user %}
+    <a href="{% url 'vote:update' %}">회원 수정</a>
+{% endif %}
+
+<h5>나의 vote list</h5>
+<ul>
+{% for poll in polls %}
+<li>
+   {{ poll.title }}
+</li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+
+{% comment %}  {% endcomment %}
+
+    {% comment %} <form action="{% url 'account:delete' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-secondary">회원 탈퇴</button> {% endcomment %} 
