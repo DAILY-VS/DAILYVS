@@ -1,58 +1,20 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 
 <section class="result-container">
-  <div class="result-title">가정부 로봇 이야기</div>
-    total_count : {{total_count}}
-    </br>
-    choice1_count : {{choice1_count}}
-    </br>
-    choice2_count : {{choice2_count}}
-    </br>
-    man_count : {{man_count}}
-    </br>
-    man_choice1_count : {{man_choice1_count}}
-    </br>
-    man_choice2_count : {{man_choice2_count}}
-    </br>
-    woman_count : {{woman_count}}
-    </br>
-    woman_choice1_count : {{woman_choice1_count}}
-    </br>
-    woman_choice2_count : {{woman_choice2_count}}
-    </br>
-
-    mbtis : 
-    {% for item in mbtis %}
-      {{ item }},
-    {% endfor %}
-    </br> 
-
-    mbtis_count : 
-    {% for item in mbtis_count %}
-      {{ item }},
-    {% endfor %}
-    </br> 
-
-    mbtis_choice1_count : 
-    {% for item in mbtis_choice1_count %}
-      {{ item }},
-    {% endfor %}
-    </br>
-
-    mbtis_choice2_count :
-    {% for item in mbtis_choice2_count %}
-      {{ item }},
-    {% endfor %}  
-  <div class="graph-information">그래프 정보</div>
-  <div class="graph-container">{% include 'vote/result/chart.html' %}</div>
+  <div class="result-title">{{poll.title}}</div>
+  <div class="result-graph-content">{{poll.content}}</div>
+  <div class="graph-information-container">
+    {% include 'vote/result/graph-information.html' %}
+  </div>
+  <div class="graph-container">
+    {% include 'vote/result/result-chart.html' %}
+  </div>
   <button>공유하기</button>
-  <div class="graph-category-container">카테고리 공간</div>
-  <div class="comment-container">댓글 공간</div>
+  <div class="graph-category-container">
+    {% include 'vote/result/category.html' %}
+  </div>
+  <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
 </section>
-
-
-
-
 
 {% endblock %}
 

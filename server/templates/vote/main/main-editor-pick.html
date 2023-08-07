@@ -1,3 +1,25 @@
 {% load static %} {% block content %}
-<div id="carouselExample" class="carousel slide">this is editor pick</div>
+<div id="editor-pick">
+  <div class="editor-pick-title">에디터 픽 💡</div>
+  <div class="editor-card-section">
+    <div class="editor-card">
+      <div class="card-img">
+        <img src="{% static 'img/slide/catdog.jpg' %}" />
+      </div>
+      <div class="card-content">
+        <div class="card-content-title">멍? 냥?</div>
+        <div class="card-content-paragraph">댕댕이 vs 애옹이</div>
+      </div>
+    </div>
+    <div class="editor-card">
+      <div class="card-img">
+        <img src="{% static 'img/slide/mintchoco.jpg' %}" />
+      </div>
+      <div class="card-content">
+        <div class="card-content-title">민트초코 호불호 대전</div>
+        <div class="card-content-paragraph">상쾌한 단맛! vs 치약맛!</div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

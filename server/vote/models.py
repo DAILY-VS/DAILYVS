@@ -79,5 +79,3 @@ class NonUserVote(models.Model): #비회원투표
     )
     gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-
