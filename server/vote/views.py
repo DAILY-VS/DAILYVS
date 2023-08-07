@@ -125,7 +125,6 @@ def poll_like(request):
 
 
 def mypage(request):
-
     polls = Poll.objects.all()
     print(polls)
     context = {
@@ -147,20 +146,37 @@ def mypage_update(request):
     }
     return render(request, 'vote/update.html', context)
 
+
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
+
+def poll_detail2(request, poll_id):
+    poll = get_object_or_404(Poll, id=poll_id)
+    context= {
+        'poll' : poll
+    }
+    return render(request, "vote/detail2.html", context)
+
+
 def calcstat(request, poll_id):
     
     poll = get_object_or_404(Poll, pk=poll_id)
     choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
+    user = request.POST.get('user')
     print(choice_id)
     if choice_id:
         choice = Choice.objects.get(id=choice_id)
-        vote = UserVote(user=request.user, poll=poll, choice=choice)
-        vote.save()
-        print(vote)
-        
+        if (user) : 
+            vote = UserVote(user=request.user, poll=poll, choice=choice)
+            vote.save()
+            print(vote)
+        else : 
+            vote = NonUserVote(poll=poll, choice=choice, MBTI='INTP',gender='M')
+            vote.save()
+            detail2_url = reverse('vote:detail2', args=[poll_id])  # Generate the URL with poll_id
+            return redirect(detail2_url)
+ 
     mbtis = ['ISTJ', 'ISFJ','INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ']
 
     print('User')
