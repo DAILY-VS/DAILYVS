@@ -42,11 +42,36 @@ class SignupForm(UserCreationForm):
         widget=forms.RadioSelect(attrs={"class": "radio-list"}),
     )
 
+    MBTI_CHOICES = [
+        ("INFP", "INFP"),
+        ("ENFP", "ENFP"),
+        ("INFJ", "INFJ"),
+        ("ENFJ", "ENFJ"),
+        ("INTJ", "INTJ"),
+        ("ENTJ", "ENTJ"),
+        ("INTP", "INTP"),
+        ("ENTP", "ENTP"),
+        ("ISFP", "ISFP"),
+        ("ESFP", "ESFP"),
+        ("ISFJ", "ISFJ"),
+        ("ESFJ", "ESFJ"),
+        ("ISTP", "ISTP"),
+        ("ESTP", "ESTP"),
+        ("ISTJ", "ISTJ"),
+        ("ESTJ", "ESTJ"),
+    ]
+
+    mbti = forms.ChoiceField(
+        label="MBTI",
+        choices=MBTI_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+
     class Meta:
         model = User
         fields = ["username", "password1", "password2", "mbti", "nickname", "gender"]
         widgets = {
-            "mbti": forms.TextInput(
+            "mbti": forms.Select(
                 attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
             ),
             "nickname": forms.TextInput(
@@ -60,6 +85,13 @@ class UserChangeForm(UserChangeForm):
 
     class Meta:
         model = get_user_model()
+        fields = ["nickname", "mbti", "gender"]
+
+
+class UserDeleteForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = []
         fields = ["nickname", "mbti", "gender"]
         widgets = {
             "mbti": forms.TextInput(
