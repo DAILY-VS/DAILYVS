@@ -11,6 +11,8 @@
 
 
 <a href={% url 'account:login' %}>login</a>
+<a href="{% url 'account:logout' %}">logout</a>
+
 <a href={% url 'vote:mypage' %}>mypage</a>
 <div class="login__forgot-pw"><a href="{% url 'account:logout' %}">로그아웃</a></div>  
 {% endblock %}
