@@ -22,6 +22,26 @@ nav {
   align-items: center;
 }
 
+.login-word {
+  border: none;
+  text-decoration: none;
+  padding-left: 5px;
+  font-weight: bolder;
+  color: var(--darkblue-primary-color);
+}
+
+.login-word:hover {
+  color: var(--redpink-primary-color);
+}
+
+.nav-list a:hover {
+  cursor: pointer;
+}
+
+.nav-list a {
+  text-decoration: none;
+}
+
 .nav-list img:hover {
   cursor: pointer;
 }
@@ -88,13 +108,23 @@ nav {
   font-family: "GongGothicMedium";
   font-size: 18px;
   font-weight: light;
+  color: var(--darkblue-primary-color);
 }
 
+.ham-navigator li a {
+  text-decoration: none;
+  color: var(--darkblue-primary-color);
+}
 .ham-navigator li span img {
   margin-right: 30px;
 }
 
 .ham-navigator li:hover {
+  cursor: pointer;
+  color: gray;
+}
+
+.ham-navigator li a:hover {
   cursor: pointer;
   color: gray;
 }
