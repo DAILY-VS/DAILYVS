@@ -2,7 +2,58 @@
 {% load static %}
 {% block content %}
 
+<div class="mypage-container">
+    <div class="mypage-prof-container">
+        <img src='https://picsum.photos/100/100' alt="">
+        <div class="mypage-info-wrap">
+            <div class="mypage-nickname-wrap">
+                <span class="mypage-nickname">{{user.username}}</span>
+                <span class="mypage-nickname">님</span>
+            </div>
+            <hr>
+            <div class="mypage-nickname-wrap">
+                <span class="mypage-nickname">MBTI: </span>
+                <span class="mypage-nickname">{{user.mbti}}</span>
+            </div>
+            <div class="mypage-nickname-wrap">
+                <span class="mypage-nickname">성별:</span>
+                <span class="mypage-nickname">{{user.gender}}</span>
+            </div>
+        </div>
+    </div>
+    <p>나의 VOTE LIST</p>
+    <div class="pagination-box">
+        <div class="pagination">
+            <a class="page-btn gray">
+            <img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
+            </a>
+    
+        <br/>
+        <a class="page-btn">
+            {% comment %} <a class="page-btn gray"> {% endcomment %}
+            {% for page in paginator.page_range %}
+            <a class = "page-btn gray" href="?page={{ page}}">{{page}}</a>
+            {% endfor %}
+            {% comment %} </a> {% endcomment %}
+            <img src="{% static 'img/icon/right_page.png'%}" style="width: 30px" />
+            </a>
+        </div>
+    </div>
+    <hr>
 
+    <p>나의 stat gallery</p>
+    <hr>
+    <div class="stat-gallery">
+
+    </div>
+</div>
+
+
+
+<!-- <div class="mypage-prof-detail"></div>
+<input value={{user.username}} disabled>
+<input value={{user.mbti}} disabled>
+<input value={{user.gender}} disabled>
 id: {{user.username}}
 <br>
 nickname: {{user.nickname}}
@@ -24,7 +75,7 @@ MBTI: {{user.mbti}}
    {{ poll.title }}
 </li>
 {% endfor %}
-</ul>
+</ul> -->
 {% endblock %}
 
 

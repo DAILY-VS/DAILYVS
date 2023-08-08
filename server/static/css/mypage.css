@@ -1,0 +1,49 @@
+.mypage-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.mypage-prof-container {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.mypage-info-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.mypage-nickname-wrap {
+    display: flex;
+    flex-direction: row;
+    width: 200px;
+    margin: 0;
+}
+
+.mypage-nickname {
+
+}
+
+.mypage-prof-detail {
+    display: flex;
+    flex-direction: row;
+}
+
+/* .mypage-prof-input {
+    width: 100px;
+}
+
+.mypage-prof-btn-wrap {
+
+}
+
+.mypage-prof-btn {
+
+} */
+
