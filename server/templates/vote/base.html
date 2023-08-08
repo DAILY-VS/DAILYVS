@@ -30,14 +30,21 @@
       <div class="ham-user-info">
         <img src="{% static 'img/user.png'%}" style="width:80px" />
         <div class="ham-user-name">
-          <span class="ham-logged-user-name">김투표</span><span class="ham-user-nim">님</span>
+          <span class="ham-logged-user-name">
+            {% if user.is_authenticated %}
+              {{ user.username }}
+            {% else %}
+              로그인 해주세요
+            {% endif %}
+          </span>
+          <span class="ham-user-nim">님</span>
         </div>
       </div>
       <ul class="ham-navigator">
-        <li><span><img src="{% static 'img/icon/settings.png' %}" style="width:30px"/></span><span>설정</span></li>
-        <li><span><img src="{% static 'img/icon/dark-mode.png' %}" style="width:30px"/></span><span>다크모드</span></li>
-        <li><span><img src="{% static 'img/icon/routine.png' %}" style="width:30px"/></span><span>최근 투표한 컨텐츠</span></li>
-        <li><a href={% url 'vote:mypage' %}><span><img src="{% static 'img/icon/home.png' %}" style="width:30px"/></span><span>마이페이지</span></a></li>
+        <li><span><img src="{% static 'img/icon/dark-mode-blue.png' %}" style="width:30px"/></span><span>다크모드</span></li>
+        <li><span><img src="{% static 'img/icon/routine-blue.png' %}" style="width:30px"/></span><span>최근 투표한 컨텐츠</span></li>
+        <li><a href={% url 'vote:mypage' %}><span><img src="{% static 'img/icon/home-blue.png' %}" style="width:30px"/></span><span>마이페이지</span></a></li>
+        <li><span><img src="{% static 'img/icon/settings-blue.png' %}" style="width:30px"/></span><span>회원정보 수정</span></li>
       </ul>
       <div class="ham-footer">
         <div>made by Team VS</div>

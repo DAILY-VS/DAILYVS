@@ -53,8 +53,16 @@ nav {
   margin-right: auto;
 }
 
+.nav-login-btn img {
+  margin-left: 10px;
+}
+
 .nav-ham-btn {
   margin-left: auto;
+}
+
+.nav-ham-btn img {
+  margin-right: 20px;
 }
 
 .base-block-container {
