@@ -16,7 +16,7 @@ class Poll(models.Model): #이미지, 제목, 좋아요 추가
     poll_like = models.ManyToManyField('account.User', blank=True, related_name='likes')
     views_count = models.PositiveIntegerField(default=0)  # 조회 숫자 필드
     thumbnail = models.ImageField()
-    created_at = models.DateTimeField(auto_now_add=True)    
+    # created_at = models.DateTimeField(auto_now_add=True)    
 
     def increase_views(self):
         self.views_count=self.views_count+1
@@ -82,7 +82,7 @@ class NonUserVote(models.Model): #비회원투표
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     
-class Comment(models.Model): #댓글
+""" class Comment(models.Model): #댓글
     user_info = models.ForeignKey(User, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null= True)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
@@ -92,4 +92,4 @@ class Comment(models.Model): #댓글
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
    
     def __str__(self):
-        return self.content
+        return self.content """
