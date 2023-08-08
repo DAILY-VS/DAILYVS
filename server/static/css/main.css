@@ -159,6 +159,11 @@
   box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.1);
 }
 
+.red-pink {
+  background-color: var(--redpink-primary-color);
+  color: white;
+}
+
 .gray {
   background-color: gray;
 }

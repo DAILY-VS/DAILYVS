@@ -23,7 +23,7 @@
         {% csrf_token %} {% for choice in poll.choice_set.all %}
         <div
           class="detail-option"
-          style="background-image: url(../../{{choice.image}});"
+          style="background-image: url(../../media/{{choice.image}});"
         >
           <input
             type="radio"
