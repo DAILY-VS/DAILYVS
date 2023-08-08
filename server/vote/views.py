@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponse,JsonResponse
 import json
@@ -13,8 +13,10 @@ from account.models import *
 from account.forms import *
 from django.db.models import Count
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-# Create your views here.
-
+#mypage 로그인 막기
+from django.contrib.auth.forms import AuthenticationForm
+from account.forms import SignupForm
+from django.urls import reverse
 
 def main(request):
     polls = Poll.objects.all()
@@ -62,45 +64,15 @@ def poll_detail(request, poll_id):
     return response
 
 
-@login_required
-def poll_like(request):
-    if request.method == "POST":
-        req = json.loads(request.body)
-        poll_id = req["poll_id"]
-        try:
-            poll = Poll.objects.get(id=poll_id)
-        except Poll.DoesNotExist:
-            return JsonResponse({"error": "해당 투표가 존재하지 않습니다."}, status=404)
 
-        if request.user.is_authenticated:
-            user = request.user
-        else:
-            user = AnonymousUser()
-
-        if user.is_authenticated and user.is_active:  # 인증된 사용자 중 활성화된 사용자만 고려
-            if poll.poll_like.filter(id=user.id).exists():
-                poll.poll_like.remove(user)
-                message = "좋아요 취소"
-            else:
-                poll.poll_like.add(user)
-                message = "좋아요"
-
-            like_count = poll.poll_like.count()
-            context = {"like_count": like_count, "message": message}
-            return JsonResponse(context)
-        else:
-            return JsonResponse({"error": "로그인이 필요하거나 활성화된 사용자가 아닙니다."}, status=401)
-    else:
-        return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
-
-
+@login_required(login_url='/account/login/') # 비로그인시 /mypage 막음
 def mypage(request):
     polls = Poll.objects.all()
     print(polls)
     context = {"polls": polls}
     return render(request, "vote/mypage.html", context)
 
-
+@login_required(login_url='/account/login/') # 비로그인시 mypage/update 막음
 def mypage_update(request):
     if request.method == "POST":
         form = UserChangeForm(request.POST, instance=request.user)
@@ -427,27 +399,6 @@ def poll_like(request):
         return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
 
 
-def mypage(request):
-    polls = Poll.objects.all()
-    print(polls)
-    context = {
-        'polls': polls
-    }
-    return render(request, 'vote/mypage.html', context)
-
-
-def mypage_update(request):
-    if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('vote:mypage')
-    else:
-        form = UserChangeForm(instance=request.user)
-    context = {
-        'form': form
-    }
-    return render(request, 'vote/update.html', context)
 
 
 # 해당 주제 디테일 페이지, PK로 받아오기.

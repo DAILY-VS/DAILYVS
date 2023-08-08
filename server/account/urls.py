@@ -17,5 +17,6 @@ urlpatterns = [
     path("delete/", views.UserDeleteView.as_view(), name="delete"),
     # path("mypage/",views.mypage, name='mypage'),
     # path('mypage/update/', views.mypage_update, name='update')
+    #path('kakao/redirect',kakao_Auth_Redirect,name="kakaoAuth"),
     ]
 

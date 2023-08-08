@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignupForm 
-import requests
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth
@@ -23,11 +22,13 @@ from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import User
 from .forms import UserChangeForm, UserDeleteForm
+from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
 def main(request):
     return render(request, "base.html") ##
+
 
 def change_password(request):
     if request.method == 'POST':
@@ -45,6 +46,9 @@ def change_password(request):
 
 
 def login(request): #로그인
+    if request.user.is_authenticated:
+        return redirect('/')  # 이미 로그인한 사용자는 메인 페이지로 리다이렉트
+    
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -71,6 +75,8 @@ def logout(request): #로그아웃
 
 
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect('/')  # 이미 로그인한 사용자는 메인 페이지로 리다이렉트
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -91,31 +97,6 @@ def signup(request):
         }
         return render(request, template_name='account/signup.html', context=ctx)
 
-
-def mypage(request):
-
-    polls = Poll.objects.all()
-    print(polls)
-    context = {
-        'polls': polls
-    }
-    return render(request, 'vote/mypage.html', context)
-
-def mypage_update(request):
-    if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('account:mypage')
-    else:
-        form = UserChangeForm(instance=request.user)
-    context = {
-        'form': form
-    }
-    return render(request, 'account/update.html', context)
-
-
-
 class UserDeleteView(DeleteView):
     model = User
     template_name = 'account/delete.html'
@@ -124,4 +105,5 @@ class UserDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
 
