@@ -1,86 +1,54 @@
-{% extends 'vote/base.html' %} 
-{% load static %} 
-{% block content %}
+{% extends 'vote/base.html' %} {% load static %} {% block content %}
 
 <div class="vote-detail-container">
+  <div class="detail-top">
+    <a href="{% url 'vote:main' %}" role="button" class="back-button"
+      ><img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
+      이전 페이지로
+    </a>
+    <div class="detail-views">
+      <span
+        ><img src="{% static 'img/icon/view.png'%}" style="width: 20px"
+      /></span>
+      <span> {{ poll.views_count }} </span>
+      <span> views</span>
+    </div>
+  </div>
   <div class="vote-introduction">
     {% include 'vote/detail/detail-introduction-card.html' %}
   </div>
   <div class="option-container">
-    <div class="detail-option">
-
+    <div>
       <form action="{% url 'vote:calcstat' poll.id %}" method="POST">
-        {% csrf_token %}
-        {% for choice in poll.choice_set.all %}
-        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-        <script></script>
-        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
-        <div class="vs-font"><span>V</span><span>S</span></div>
-        <br>
+        {% csrf_token %} {% for choice in poll.choice_set.all %}
+        <div
+          class="detail-option"
+          style="background-image: url(../../{{choice.image}});"
+        >
+          <input
+            type="radio"
+            name="choice"
+            id="choice{{ forloop.counter }}"
+            value="{{ choice.id }}"
+            class="choice-input"
+          />
+          <label for="choice{{ forloop.counter }}"
+            >{{ choice.choice_text }}</label
+          >
+        </div>
+        <strong class="vs-font"><span>V</span><span>S</span></strong>
         {% endfor %}
+        <input
+          type="submit"
+          value="투표하기"
+          class="vote-submit-btn"
+          disabled
+        />
+      </form>
     </div>
   </div>
-  <input type="submit" value="Vote">
-        <a href="{% url 'vote:main' %}" role="button">Cancel</a>
-      </form>
 
-      <p>조회 수: {{ poll.views_count }}</p> <!-- 조회 수 출력 -->
-      
-      <button id="like-button" data-poll-id="{{ poll.id }}">
-        {% if user_likes_poll %}
-          좋아요 취소
-        {% else %}
-          좋아요
-        {% endif %}
-      </button>
-      <span id="like-count">{{ poll.poll_like.count }}</span>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-
-      function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-        const likeButton = document.getElementById('like-button');
-        const pollId = likeButton.getAttribute('data-poll-id');
-        let userLikesPoll = likeButton.getAttribute('data-user-likes') === 'True';
-    
-        likeButton.addEventListener('click', () => {
-            axios.post('/like/', { poll_id: pollId }, {
-              headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-              }
-            })
-            .then(response => {
-              const message = response.data.message;
-              const likeCount = response.data.like_count;
-   
-              likeButton.textContent = (message === '좋아요 취소') ? '좋아요' : '좋아요 취소';
-              document.querySelector('#like-count').textContent = likeCount;
-
-              userLikesPoll = !userLikesPoll; // 토글 좋아요 상태
-              likeButton.setAttribute('data-user-likes', userLikesPoll);
-          })
-          .catch(error => {
-              console.error('Error:', error);
-          });
-  });
-
-
-
-    </script>
-{% endblock %}
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="{% static 'js/detail.js' %}"></script>
+  {% endblock %}
+</div>

@@ -1,52 +1,16 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 
 <section class="result-container">
-  <div class="result-title">가정부 로봇 이야기</div>
-    total_count : {{total_count}}
-    </br>
-    choice1_count : {{choice1_count}}
-    </br>
-    choice2_count : {{choice2_count}}
-    </br>
-    man_count : {{man_count}}
-    </br>
-    man_choice1_count : {{choice1_count}}
-    </br>
-    man_choice2_count : {{choice2_count}}
-    </br>
-    woman_count : {{woman_count}}
-    </br>
-    woman_choice1_count : {{woman_choice1_count}}
-    </br>
-    woman_choice2_count : {{woman_choice2_count}}
-    </br>
+  <div class="result-title">{{poll.title}}</div>
+  <div class="result-graph-content">{{poll.content}}</div>
 
-    mbtis : 
-    {% for item in mbtis %}
-      {{ item }},
-    {% endfor %}
-    </br> 
+  <div class="graph-information">
+    {% include 'vote/result/graph-information.html' %}
+  </div>
 
-    mbtis_count : 
-    {% for item in mbtis_count %}
-      {{ item }},
-    {% endfor %}
-    </br> 
-
-    mbtis_choice1_count : 
-    {% for item in mbtis_choice1_count %}
-      {{ item }},
-    {% endfor %}
-    </br>
-
-    mbtis_choice2_count :
-    {% for item in mbtis_choice2_count %}
-      {{ item }},
-    {% endfor %}  
-  <div class="graph-information">그래프 정보</div>
-  <div class="graph-container">{% include 'vote/result/chart.html' %}</div>
+  <div class="graph-container">{% include 'vote/result/result-chart.html' %}</div>
   <button>공유하기</button>
-  <div class="graph-category-container">카테고리 공간</div>
+  <div class="graph-category-container"> {% include 'vote/result/category.html' %} </div>
   <div class="comment-container">댓글 공간
 
     <form id="commentForm">
@@ -54,17 +18,41 @@
       <input type="hidden" name="poll_id" value="{{ poll.id }}">
       <textarea class="replyContent" name="content" placeholder="댓글 내용"></textarea>
       <button type="submit" class="btnReply">댓글 작성</button>
-  </form>
+    </form>
   
+    {% comment %} <form method="GET" action="{% url 'vote:calcstat' poll.id %}">
+      <div class="col-4">
+        <select name="sort" id="sort">
+          <option value="created_date" id="created_date">최신순</option>
+          <option value="created_date" id="created_date">최신순</option>
+          <option value="old_date" id="old_date">오래된순</option>
+        </select>
+        <button class="btn btn-primary" type="submit" value="">정렬</button>
+      </div> {% endcomment %}
+
+
   <table class="replyTable">
-      {% for comment in comments %}
-      <tr>
-          <td>{{ comment.user_info.nickname }}:: </td>
-          <td>{{ comment.content }}</td>
-          <td>올린 시간: {{ comment.created_at }}</td>
-          <td>{{ comment.updated_at }}</td>
-      </tr>
+
+      {% for page in page_obj %}
+
+        {{ page.user_info.nickname }}
+    
+        {{ page.user_info.mbti }}
+ 
+        {{ page.user_info.gender }}
+
+        {{ page.content }}
+
+        {{ page.created_at }}
+
+          <button class="btnDelete" data-comment-id="{{ comment.id }}">댓글 삭제</button>
+        </br>
       {% endfor %}
+
+      {% for page in paginator.page_range %}
+        <a href="?page={{ page}}">{{page}}</a>
+      {% endfor %}
+
   </table>
 
 
@@ -72,37 +60,85 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+// CSRF 토큰을 가져오는 함수
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 document.querySelector("#commentForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    let formData = new FormData(this);
-    let pollId = "{{ poll.id }}"; 
-    console.log(pollId);
+  let formData = new FormData(this);
+  let pollId = "{{ poll.id }}";
 
-    axios({
+  axios({
+    method: 'post',
+    url: `/${pollId}/reply/`,
+    headers: {
+      "X-CSRFToken": getCookie("csrftoken") // CSRF 토큰 추가
+    },
+    data: formData
+  })
+  .then(response => {
+    let data = response.data.comment;
+
+    let replyTable = document.querySelector(".replyTable");
+    let newTr = document.createElement("tr");
+    let str = `
+        <td>${data.nickname}</td>
+        <td>${data.mbti}</td>
+        <td>${data.gender}</td>
+        <td>${data.content}</td>
+        <td>${data.created_at}</td>
+        <td><button class="btnDelete" data-comment-id="${data.comment_id}">삭제</button></td>`; // 삭제 버튼 추가
+    newTr.innerHTML = str;
+    replyTable.appendChild(newTr);
+
+    document.querySelector(".replyContent").value = '';
+
+    // 삭제 버튼 클릭 이벤트 추가
+    newTr.querySelector(".btnDelete").addEventListener("click", function() {
+      let commentId = this.getAttribute("data-comment-id");
+      axios({
         method: 'post',
-        url: `/${pollId}/reply/`,    // poll_id 파라미터를 전달하여 URL 생성
-        data: formData
-    })
-    .then(response => {
-        let data = response.data;
-        
-        let replyTable = document.querySelector(".replyTable");
-        let newTr = document.createElement("tr");
-        let str = `
-            <td>${data.nickname}</td>
-            <td>${data.content}</td>
-            <td>${data.created_at}</td>
-            <td>${data.updated_at}</td>`;
-        newTr.innerHTML = str;
-        replyTable.appendChild(newTr);
-
-        document.querySelector(".replyContent").value = '';
-    })
-    .catch(error => {
-        console.error("댓글 작성 중 오류가 발생했습니다.", error);
+        url: `/${pollId}/delete_comment/`,
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken") // CSRF 토큰 추가
+        },
+        data: {
+          comment_id: commentId
+        }
+      })
+      .then(response => {
+        if (response.data.success) {
+          // 성공적으로 삭제되면 해당 댓글 행 삭제
+          let deletedRow = document.querySelector(`tr[data-comment-id="${commentId}"]`);
+          deletedRow.remove();
+        } else {
+          console.error(response.data.error);
+        }
+      })
+      .catch(error => {
+        console.error("댓글 삭제 중 오류가 발생했습니다.", error);
+      });
     });
+  })
+  .catch(error => {
+    console.error("댓글 작성 중 오류가 발생했습니다.", error);
+  });
 });
+
 </script>
 </section>
 

@@ -45,6 +45,7 @@ class NonUserVote(models.Model): #비회원투표
 class Comment(models.Model): #댓글
     user_info = models.ForeignKey(User, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    # choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     content = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

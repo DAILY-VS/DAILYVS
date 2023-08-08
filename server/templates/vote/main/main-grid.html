@@ -1,19 +1,31 @@
 {% load static %} {% block content %}
 <div class="main-grid-container">
   <div class="main-list-title">🗒️ 투표 모음 리스트</div>
+
+  <form method="GET" action="{% url 'vote:main'%}">
   <select name="sort" class="option_select">
     <option value="popular" selected>인기순</option>
     <option value="latest">최신순</option>
+    <option value="old_date" id="old_date">오래된순</option>
   </select>
+  <button class="btn btn-primary" type="submit" value="">정렬</button>
 
 
   <div class="main-grid-content">
-    {% for page in page_obj %}
+    {% comment %} {% for page in page_obj %}
     <a href="{% url 'vote:detail' page.id %}">
     {{ page.title}}
     {% if not page.active%} 
     {% endif %}
     </a>
+{% endfor %} {% endcomment %}
+
+{% for poll in polls %}
+<a href="{% url 'vote:detail' poll.id %}">
+{{ poll.title}}
+{% if not poll.active%} 
+{% endif %}
+</a>
 {% endfor %}
     <div class="main-grid-square">
       <div class="grid-square-pic">
