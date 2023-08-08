@@ -126,6 +126,7 @@ def classifyuser(request, poll_id):
     if choice_id:   
         choice = Choice.objects.get(id=choice_id)
         try : 
+            uservote = UserVote.objects.get
             vote = UserVote(user=request.user, poll=poll, choice=choice)
             vote.save()
             print(vote)
@@ -399,7 +400,6 @@ def poll_like(request):
     if request.method == 'POST':
         req = json.loads(request.body)
         poll_id = req['poll_id']
-
         try:
             poll = Poll.objects.get(id=poll_id)
         except Poll.DoesNotExist:

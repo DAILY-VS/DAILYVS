@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignupForm 
-import requests
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth
