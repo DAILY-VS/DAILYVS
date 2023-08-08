@@ -16,7 +16,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 #메인페이지, 투표 리스트도 포함
 def main(request):
-    
     sort = request.GET.get('sort','')
     if sort == 'popular': #인기
         poll_list = Poll.objects.all().order_by('-views_count')
@@ -52,7 +51,31 @@ def detail(request):
 def result(request):
     return render(request, "vote/result.html")
 
-#디테일 페이지
+
+# 리스트 페이지
+def polls_list(request):
+    polls = Poll.objects.all()
+    page = request.GET.get("page")
+
+    paginator = Paginator(polls, 6)
+
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        page_obj = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        page_obj = paginator.page(page)
+    context = {
+        "polls": polls,
+        "page_obj": page_obj,
+        "paginator": paginator,
+    }
+    return render(request, "vote/list.html", context)
+
+
+# 디테일 페이지
 def poll_detail(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
     poll.increase_views()  # 게시글 조회 수 증가
