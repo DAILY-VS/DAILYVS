@@ -68,8 +68,6 @@
 }
 .detail-card-title {
   padding: 10px;
-<<<<<<< HEAD
-=======
   width: 13rem;
   font-family: "GongGothicMedium";
   font-size: 24px;
@@ -77,7 +75,6 @@
 
 .detail-card-paragraph {
   margin-left: 10px;
->>>>>>> develop
   font-size: 16px;
 }
 
@@ -148,10 +145,10 @@
   background-color: var(--darkblue-primary-color);
 }
 
-<<<<<<< HEAD
 .vs-font {
   font-family: "GongGothicMedium";
-=======
+}
+
 .vs-font:first-of-type {
   display: flex;
   justify-content: center;
@@ -191,5 +188,4 @@
   background-color: var(--darkblue-primary-color);
   color: white;
   cursor: pointer;
->>>>>>> develop
 }
