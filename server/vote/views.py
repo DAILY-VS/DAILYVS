@@ -17,19 +17,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def main(request):
-    return render(request, "vote/main.html")
-
-
-def detail(request):
-    return render(request, "vote/detail.html")
-
-
-def result(request):
-    return render(request, "vote/result.html")
-
-
-# 리스트 페이지
-def polls_list(request):
     polls = Poll.objects.all()
     page = request.GET.get("page")
 
@@ -48,8 +35,15 @@ def polls_list(request):
         "page_obj": page_obj,
         "paginator": paginator,
     }
-    return render(request, "vote/list.html", context)
+    return render(request, "vote/main.html", context)
 
+
+def detail(request):
+    return render(request, "vote/detail.html")
+
+
+def result(request):
+    return render(request, "vote/result.html")
 
 # 디테일 페이지
 def poll_detail(request, poll_id):
