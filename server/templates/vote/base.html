@@ -12,7 +12,11 @@
   <body>
     <div id="base-container">
       <nav class="nav-list">
-          <span><img src="{% static 'img/user.png'%}" style="width:25px" /></span>
+        {% if user.is_authenticated %}
+        <a href="{% url 'account:logout' %}"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
+        {% else %}
+        <a href="{% url 'account:login' %}""><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
+        {% endif %}
           <a href="/" id="logo"
             ><img src="{% static 'img/Row.png' %}" style="width: 130px"
           /></a>
@@ -33,7 +37,7 @@
         <li><span><img src="{% static 'img/icon/settings.png' %}" style="width:30px"/></span><span>설정</span></li>
         <li><span><img src="{% static 'img/icon/dark-mode.png' %}" style="width:30px"/></span><span>다크모드</span></li>
         <li><span><img src="{% static 'img/icon/routine.png' %}" style="width:30px"/></span><span>최근 투표한 컨텐츠</span></li>
-        <li><span><img src="{% static 'img/icon/home.png' %}" style="width:30px"/></span><span>마이페이지</span></li>
+        <li><a href={% url 'vote:mypage' %}><span><img src="{% static 'img/icon/home.png' %}" style="width:30px"/></span><span>마이페이지</span></a></li>
       </ul>
       <div class="ham-footer">
         <div>made by Team VS</div>
