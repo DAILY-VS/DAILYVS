@@ -1,9 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Daily vs login</title>
+    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
     <style>
       #modal.modal-overlay {
         width: 100%;
@@ -64,12 +67,23 @@
       #modal .title h2 {
         margin: 0; /* 기본 마진을 제거 */
       }
+      
     </style>
   </head>
   <body>
-    <form action="{% url 'account:login' %}" method="post">
-      {% csrf_token %}
-      {% if wrong_password %}
+    <div class="login-box">
+      <div class="login-nav">
+        <span
+          ><a href="/"
+            ><img
+              src="{% static 'img/icon/left_page.png'%}"
+              style="width: 30px" /></a
+        ></span>
+        <div class="login-name">로그인</div>
+      </div>
+      <form action="{% url 'account:login' %}" method="post">
+        {% csrf_token %}
+        {% if wrong_password %}
             <!-- <div class="alert alert-danger" role="alert">
                 The password you entered is incorrect. Please try again.
             </div> -->
@@ -85,38 +99,35 @@
                   </div>
               </div>
           </div>
-      {% endif %}
-    <div>
-      <form method="post" action="/login/">
-      {% csrf_token %}
-      <table>
-          <tr>
-          <td>
-              <label for="username">userID</label>
-          </td>
-          <td>
-              <input type="text" name="username" id="username">
-          </td>
-          </tr>
-      
-          <tr>
-          <td>
-              <label for="password">비밀번호</label>
-          </td>
-          <td>
-              <input type="password" name="password" id="password">
-          </td>
-          </tr>
-          <tr>
-          <td colspan="2" class="login-btn-td">
-              <button type="submit" class="login-btn hover-black">로그인</button>
-          </td>
-          </tr>
-      </table>
+        {% endif %}
+        <!-- form -->
+        <div class="login-container">
+          <form method="post" action="/login/" style="width: 400px">
+            {% csrf_token %}
+            <img src="{% static 'img/Logo.png'%}" style="width: 250px" />
+            <div class="input-container">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="아이디"
+              />
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="비밀번호"
+              />
+              <button type="submit" class="login-btn">로그인</button>
+            </div>
+          </form>
+        </div>
       </form>
+      <div class="login__signup">
+        아직 계정이 없으신가요?
+        <a href="{% url 'account:signup' %}">회원가입</a>
+      </div>
     </div>
-    <div class="login__forgot-pw"><a href="{% url 'account:logout' %}">로그아웃</a></div>        
-    <div class="login__signup">Not a member? <a href="{% url 'account:signup' %}">Create an account</a></div> 
     <script>
       const loremIpsum = document.getElementById("lorem-ipsum")
       fetch("https://baconipsum.com/api/?type=all-meat&paras=200&format=html")

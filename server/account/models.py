@@ -15,7 +15,7 @@ class NonUser(models.Model):
     gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS)
 
 # Create your models here.
-class User(AbstractUser): #AbstractUser이용 (id,pw,이름은 O)
+class User(AbstractUser): #user 정보
     GENDERS = (
     ('M', '남성(Man)'),
     ('W', '여성(Woman)'),
@@ -29,6 +29,8 @@ class User(AbstractUser): #AbstractUser이용 (id,pw,이름은 O)
         ('ISTP', 'ISTP'), ('ESTP', 'ESTP'), ('ISTJ', 'ISTJ'), ('ESTJ', 'ESTJ'),
     )
     mbti=models.CharField(verbose_name='MBTI', max_length=4, choices=MBTI_set)
+    nickname = models.CharField(verbose_name='닉네임',max_length=20)
+    mbti=models.CharField(max_length=4)
     
     
     def __str__(self):

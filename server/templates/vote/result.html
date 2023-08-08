@@ -1,34 +1,19 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
+
 <section class="result-container">
-  <div class="result-title">{% if poll.active %} <h3>{{ poll.text }}</h3> {% else %} <p> NO </p>{% endif %}
-    <h3>전체 투표수 {{ poll.get_vote_count }} </h3>
-    {% for choice in poll.get_result_dict %}
-    
-    {{choice.text}}: {{choice.percentage}}%
-
-    {% endfor %}
-    {% for choice in poll.choice_set.all %}
-    <ul>
-        <li>{{ choice.choice_text }}{{ choice.get_vote_count }}</li>
-    </ul>
-    {% endfor %}
-    <a href="{% url 'vote:list' %}" role="button">리스트 페이지 가기</a>
-
+  <div class="result-title">{{poll.title}}</div>
+  <div class="result-graph-content">{{poll.content}}</div>
+  <div class="graph-information-container">
+    {% include 'vote/result/graph-information.html' %}
   </div>
-  <div class="graph-information">그래프 정보</div>
-  <div class="graph-container">{% include 'vote/result/chart.html' %}</div>
+  <div class="graph-container">
+    {% include 'vote/result/result-chart.html' %}
+  </div>
   <button>공유하기</button>
-  <div class="graph-category-container">카테고리 공간</div>
-  <div class="comment-container">댓글 공간</div>
+  <div class="graph-category-container">
+    {% include 'vote/result/category.html' %}
+  </div>
+  <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
 </section>
+
 {% endblock %}
-
-
-
-
-
-
-
-
-
-    

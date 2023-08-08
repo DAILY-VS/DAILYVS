@@ -1,18 +1,104 @@
 
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="stylesheet" href="{%static 'css/style.css'%}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+    <title>Daily vs signup</title>
   </head>
   <body>
-    <p>Already have an account? <a href="{% url 'account:login' %}">Login Here</a></p>
-
-    <form action="{% url 'account:signup' %}" method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-    </form>
+    <div class="signup-box">
+      <div class="login-box">
+        <div class="login-nav">
+          <span
+            ><a href="/"
+              ><img
+                src="{% static 'img/icon/left_page.png'%}"
+                style="width: 30px" /></a
+          ></span>
+          <div class="login-name">회원가입</div>
+        </div>
+        <div>
+          <img src="{% static 'img/Only_Text.png' %}" style="width: 250px" />
+        </div>
+        <form
+          action="{% url 'account:signup' %}"
+          method="POST"
+          class="signup-container"
+        >
+          {% csrf_token %} {{ form }}
+          <button type="submit" class="btn btn-primary login-btn">
+            회원가입
+          </button>
+        </form>
+        <p class="lets-login">
+          바로 로그인하러 가기
+          <a href="{% url 'account:login' %}">로그인</a>
+        </p>
+      </div>
+    </div>
   </body>
+  <style>
+    .signup-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      margin: 0;
+    }
+
+    .signup-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .signup-container input {
+      width: 300px;
+      height: 50px;
+      font-family: "NEXON Lv1 Gothic OTF";
+      font-size: 20px;
+      border: 1px rgba(128, 128, 128, 0.2) solid;
+      background-color: #f4faff;
+      padding-left: 20px;
+    }
+
+    .signup-container label {
+      margin-top: 10px;
+    }
+
+    .radio-list {
+      width: 220px;
+    }
+
+    #id_gender div {
+      display: flex;
+    }
+
+    .signup-container input[name="gender"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 10px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .lets-login {
+      margin-top: 15px;
+      margin-bottom: 50px;
+    }
+
+    .lets-login a {
+      font-weight: bold;
+      color: var(--redpink-primary-color);
+    }
+
+    .lets-login a:hover {
+      border-bottom: 1px solid var(--redpink-primary-color);
+    }
+  </style>
 </html>

@@ -43,8 +43,8 @@ def change_password(request):
     }
     return render(request, 'account/change_password.html', context)
 
-  
-def login(request):
+
+def login(request): #로그인
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -59,17 +59,14 @@ def login(request):
             }
             return render(request, 'account/login.html', context=context)
     else:
-
         form = AuthenticationForm()
         context = {
             'form': form,
         }
         return render(request, 'account/login.html', context=context)
 
-
-def logout(request):
+def logout(request): #로그아웃
     auth.logout(request)
-
     return redirect("/")
 
 
@@ -127,3 +124,4 @@ class UserDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         return self.request.user
+    return redirect("/")

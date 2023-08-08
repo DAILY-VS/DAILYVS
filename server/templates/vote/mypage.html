@@ -2,9 +2,10 @@
 {% load static %}
 {% block content %}
 
-nickname: {{user.nickname}}
-<br>
+
 id: {{user.username}}
+<br>
+nickname: {{user.nickname}}
 <br>
 MBTI: {{user.mbti}}
 <br>
@@ -20,7 +21,7 @@ MBTI: {{user.mbti}}
 <ul>
 {% for poll in polls %}
 <li>
-   {{ poll.text }}
+   {{ poll.title }}
 </li>
 {% endfor %}
 </ul>
@@ -31,5 +32,4 @@ MBTI: {{user.mbti}}
 
     {% comment %} <form action="{% url 'account:delete' %}" method="POST">
         {% csrf_token %}
-        <button class="btn btn-secondary">회원 탈퇴</button> 
-        {% endcomment %}
+        <button class="btn btn-secondary">회원 탈퇴</button> {% endcomment %} 

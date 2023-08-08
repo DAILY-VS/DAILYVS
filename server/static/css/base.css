@@ -14,11 +14,32 @@ nav {
 }
 
 .nav-list {
+  position: sticky;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding: 15px;
   align-items: center;
+}
+
+.login-word {
+  border: none;
+  text-decoration: none;
+  padding-left: 5px;
+  font-weight: bolder;
+  color: var(--darkblue-primary-color);
+}
+
+.login-word:hover {
+  color: var(--redpink-primary-color);
+}
+
+.nav-list a:hover {
+  cursor: pointer;
+}
+
+.nav-list a {
+  text-decoration: none;
 }
 
 .nav-list img:hover {
@@ -38,7 +59,7 @@ nav {
   height: 100%;
   background-color: var(--pink-bg-color);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  transition: right 0.3s ease-in-out;
+  transition: right 0.5s ease-in-out;
   max-width: 500px;
 }
 
@@ -87,13 +108,23 @@ nav {
   font-family: "GongGothicMedium";
   font-size: 18px;
   font-weight: light;
+  color: var(--darkblue-primary-color);
 }
 
+.ham-navigator li a {
+  text-decoration: none;
+  color: var(--darkblue-primary-color);
+}
 .ham-navigator li span img {
   margin-right: 30px;
 }
 
 .ham-navigator li:hover {
+  cursor: pointer;
+  color: gray;
+}
+
+.ham-navigator li a:hover {
   cursor: pointer;
   color: gray;
 }

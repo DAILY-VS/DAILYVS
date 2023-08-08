@@ -18,3 +18,4 @@ urlpatterns = [
     # path("mypage/",views.mypage, name='mypage'),
     # path('mypage/update/', views.mypage_update, name='update')
     ]
+
