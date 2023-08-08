@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "account",
     "vote",
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +119,5 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 FAVICON_PATH = os.path.join(BASE_DIR, "static", "favicon.ico")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = 'account.User'  ##
