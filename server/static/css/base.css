@@ -8,18 +8,18 @@
 }
 
 nav {
+  position: sticky;
   width: 500px;
-  height: 56px;
   background-color: var(--purple-bg-color);
 }
 
 .nav-list {
-  position: sticky;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
   align-items: center;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .login-word {
@@ -40,10 +40,21 @@ nav {
 
 .nav-list a {
   text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
 .nav-list img:hover {
   cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-login-btn {
+  margin-right: auto;
+}
+
+.nav-ham-btn {
+  margin-left: auto;
 }
 
 .base-block-container {
@@ -52,15 +63,16 @@ nav {
 }
 
 #sidebar {
+  font-family: "GongGothicMedium";
   position: fixed;
   top: 0;
   right: -350px;
   width: 360px;
   height: 100%;
-  background-color: var(--pink-bg-color);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   transition: right 0.5s ease-in-out;
   max-width: 500px;
+  background-color: white;
 }
 
 #sidebar.show {
@@ -68,7 +80,18 @@ nav {
 }
 
 #hide-sidebar-icon {
-  margin: 5px;
+  padding-top: 20px;
+  color: var(--darkblue-primary-color);
+}
+
+#hide-sidebar-icon img:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+#hide-sidebar-icon img {
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 .ham-user-info {
@@ -101,38 +124,53 @@ nav {
 
 .ham-navigator li {
   width: 100vw;
+  padding-bottom: 5px;
   margin-top: 20px;
   text-align: left;
-  justify-content: center;
-  align-items: center;
   font-family: "GongGothicMedium";
   font-size: 18px;
   font-weight: light;
   color: var(--darkblue-primary-color);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .ham-navigator li a {
   text-decoration: none;
   color: var(--darkblue-primary-color);
 }
+
 .ham-navigator li span img {
   margin-right: 30px;
+  vertical-align: middle;
 }
 
-.ham-navigator li:hover {
-  cursor: pointer;
-  color: gray;
+.ham-navigator li::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--darkblue-primary-color);
+  transition: width 0.3s ease-in-out;
 }
 
-.ham-navigator li a:hover {
-  cursor: pointer;
-  color: gray;
+.ham-navigator li:hover::before {
+  margin-top: 3px;
+  width: 250px;
 }
+/* .ham-navigator li span {
+  font-family: "TheJamsil5Bold";
+} */
 
 .ham-footer {
   border-top: solid #bdbdbd 1px;
   margin: 10px;
   padding-top: 20px;
+  padding-bottom: 20px;
   font-size: 12px;
   text-align: center;
+  color: var(--darkblue-primary-color);
 }
