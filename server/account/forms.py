@@ -85,6 +85,13 @@ class UserChangeForm(UserChangeForm):
 
     class Meta:
         model = get_user_model()
+        fields = ['nickname','mbti','gender']
+
+
+class UserDeleteForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = []
         fields = ["nickname", "mbti", "gender"]
 
 

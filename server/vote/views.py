@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse,JsonResponse
 import json
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -12,7 +13,6 @@ from account.models import *
 from account.forms import *
 from django.db.models import Count
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
 # Create your views here.
 
 
@@ -73,7 +73,6 @@ def poll_like(request):
     if request.method == "POST":
         req = json.loads(request.body)
         poll_id = req["poll_id"]
-
         try:
             poll = Poll.objects.get(id=poll_id)
         except Poll.DoesNotExist:
@@ -123,16 +122,32 @@ def mypage_update(request):
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
+
+def classifyuser(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
+    user=request.user
+    print(user)
+    print(choice_id)
+    if choice_id:   
+        choice = Choice.objects.get(id=choice_id)
+        try : 
+            vote = UserVote(user=request.user, poll=poll, choice=choice)
+            vote.save()
+            print(vote)
+            calcstat_url= reverse('vote:calcstat', args=[poll_id])
+            return redirect(calcstat_url)
+        except : 
+            vote = NonUserVote(poll=poll, choice=choice)
+            vote.save()
+            nonuservote_id = vote.id
+            detail2_url = reverse('vote:nonusergender', args=[poll_id, nonuservote_id])  # Generate the URL with poll_id
+            return redirect(detail2_url)
+        
+
+
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-    choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
-    print(choice_id)
-    if choice_id:
-        choice = Choice.objects.get(id=choice_id)
-        vote = UserVote(user=request.user, poll=poll, choice=choice)
-        vote.save()
-        print(vote)
-
     mbtis = [
         "ISTJ",
         "ISFJ",
@@ -348,5 +363,139 @@ def calcstat(request, poll_id):
         "mbtis_choice2_count": total_mbtis_choice2_count,
         "poll": poll,
     }
-    print(poll)
     return render(request, template_name="vote/result.html", context=ctx)
+
+# def result_view(request):
+#     approval_percentage = 75
+#     disapproval_percentage = 25
+
+#     return render(
+#         request,
+#         "result.html",
+#         {
+#             "approval_percentage": approval_percentage,
+#             "disapproval_percentage": disapproval_percentage,
+#         },
+#     )
+
+# 리스트 페이지
+def polls_list(request):
+    polls = Poll.objects.all()
+    page=request.GET.get('page')
+    paginator = Paginator(polls,6)
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page=1
+        page_obj=paginator.page(page)
+    except EmptyPage:
+        page=paginator.num_pages
+        page_obj=paginator.page(page)
+    context = {
+        'polls': polls,
+        'page_obj': page_obj,
+        'paginator': paginator,
+    }
+    return render(request, 'vote/list.html', context)
+
+
+
+@login_required
+def poll_like(request):
+    if request.method == 'POST':
+        req = json.loads(request.body)
+        poll_id = req['poll_id']
+
+        try:
+            poll = Poll.objects.get(id=poll_id)
+        except Poll.DoesNotExist:
+            return JsonResponse({'error': '해당 투표가 존재하지 않습니다.'}, status=404)
+
+        if request.user.is_authenticated:
+            user = request.user
+        else:
+            user = AnonymousUser()
+
+        if user.is_authenticated and user.is_active:  # 인증된 사용자 중 활성화된 사용자만 고려
+            if poll.poll_like.filter(id=user.id).exists():
+                poll.poll_like.remove(user)
+                message = "좋아요 취소"
+            else:
+                poll.poll_like.add(user)
+                message = "좋아요"
+            
+            like_count = poll.poll_like.count()
+            context = {'like_count': like_count, 'message': message}
+            return JsonResponse(context)
+        else:
+            return JsonResponse({'error': '로그인이 필요하거나 활성화된 사용자가 아닙니다.'}, status=401)
+    else:
+        return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
+
+
+def mypage(request):
+    polls = Poll.objects.all()
+    print(polls)
+    context = {
+        'polls': polls
+    }
+    return render(request, 'vote/mypage.html', context)
+
+
+def mypage_update(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('vote:mypage')
+    else:
+        form = UserChangeForm(instance=request.user)
+    context = {
+        'form': form
+    }
+    return render(request, 'vote/update.html', context)
+
+
+# 해당 주제 디테일 페이지, PK로 받아오기.
+# 반복문 돌리기.
+# 결과 페이지
+
+def poll_nonusergender(request, poll_id, nonuservote_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    context= {
+        'poll' : poll,
+        'gender' : ['M','W'],
+        'nonuservote_id':nonuservote_id,
+        "loop_time": range(0, 2),
+    }
+    return render(request, "vote/detail2.html", context)
+
+    """     choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
+        if choice_id == 1: 
+            NonUserVote.objects.filter(pk=nonuservote_id).update(gender='M')
+        if choice_id == 2: 
+            NonUserVote.objects.filter(pk=nonuservote_id).update(gender='W')
+        detail2_url = reverse('vote:nonusermbti', args=[poll_id, nonuservote_id])  # Generate the URL with poll_id 
+    return redirect(detail2_url)"""
+
+def poll_nonusermbti(request, poll_id, nonuservote_id):
+    choice_id = request.POST.get('choice')
+    if choice_id == 'M': 
+        NonUserVote.objects.filter(pk=nonuservote_id).update(gender='M')
+    if choice_id == 'W': 
+        NonUserVote.objects.filter(pk=nonuservote_id).update(gender='W')
+    print(nonuservote_id)
+    poll = get_object_or_404(Poll, id=poll_id)
+    context= {
+        'poll' : poll,
+        'mbti' : ['INTP','ESFJ'],
+        'nonuservote_id':nonuservote_id,
+        "loop_time": range(0, 2),
+    }
+    return render(request, "vote/detail3.html", context)
+
+def poll_nonuserfinal(request,poll_id, nonuservote_id):
+    choice_id = request.POST.get('choice')
+    NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))
+    calcstat_url= reverse('vote:calcstat', args=[poll_id])
+    return redirect(calcstat_url)
