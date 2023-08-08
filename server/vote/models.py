@@ -15,7 +15,7 @@ class Poll(models.Model):
     poll_like = models.ManyToManyField('account.User', blank=True, related_name='likes')
     views_count = models.PositiveIntegerField(default=0)  # 조회 숫자 필드
     thumbnail = models.ImageField()
-    # created_at = models.DateTimeField(auto_now_add=True)    
+    # created_at = models.DateTimeField(auto_now_add=True) 
 
     def increase_views(self):
         self.views_count=self.views_count+1
@@ -37,8 +37,8 @@ class UserVote(models.Model): #회원투표
 class NonUserVote(models.Model): #비회원투표
     MBTI = models.TextField(null= True)
     GENDERS = (
-        ('M', '남성'),
-        ('W', '여성'),
+        ('M', 'M'),
+        ('W', 'W'),
     )
     gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS, null= True)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
