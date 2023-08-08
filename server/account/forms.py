@@ -94,6 +94,13 @@ class UserDeleteForm(forms.ModelForm):
         model = User
         fields = []
         fields = ["nickname", "mbti", "gender"]
+
+
+class UserDeleteForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = []
+        fields = ["nickname", "mbti", "gender"]
         widgets = {
             "mbti": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "MBTI를 입력하세요"}
