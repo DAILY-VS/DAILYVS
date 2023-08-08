@@ -19,8 +19,8 @@
   </div>
   <div class="option-container">
     <div>
-      <form action="{% url 'vote:classifyuser' poll.id %}" method="POST">
-        {% csrf_token %} {% for choice in poll.choice_set.all %}
+      <form action="{% url 'vote:nonuserfinal' poll.id nonuservote_id %}" method="POST">
+        {% csrf_token %} {% for choice in mbti %}
         <div
           class="detail-option"
           style="background-image: url(../../{{choice.image}});"
@@ -29,11 +29,11 @@
             type="radio"
             name="choice"
             id="choice{{ forloop.counter }}"
-            value="{{ choice.id }}"
+            value="{{ choice}}"
             class="choice-input"
           />
           <label for="choice{{ forloop.counter }}"
-            >{{ choice.choice_text }}</label
+            >{{ choice }}</label
           >
         </div>
         <strong class="vs-font"><span>V</span><span>S</span></strong>
