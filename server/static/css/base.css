@@ -46,7 +46,6 @@ nav {
 
 .nav-list img:hover {
   cursor: pointer;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .nav-login-btn {
