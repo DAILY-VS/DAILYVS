@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.conf import settings
 from account.models import *
 
-
 # Create your models here.
 
 class Poll(models.Model): #이미지, 제목, 좋아요 추가
@@ -82,14 +81,14 @@ class NonUserVote(models.Model): #비회원투표
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     
-""" class Comment(models.Model): #댓글
+class Comment(models.Model): #댓글
     user_info = models.ForeignKey(User, on_delete=models.CASCADE)
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null= True)
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    # choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     content = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
    
     def __str__(self):
-        return self.content """
+        return self.content
