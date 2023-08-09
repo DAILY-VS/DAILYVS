@@ -17,6 +17,7 @@
 .mypage-info-wrap {
     display: flex;
     flex-direction: column;
+    width: 300px;
 }
 
 .mypage-nickname-wrap {
@@ -27,7 +28,14 @@
 }
 
 .mypage-nickname {
+    color: #C4C4C4;
+}
 
+#mypage-nickname {
+    color: #282732;
+}
+.mypage-hr {
+    width: 20%;
 }
 
 .mypage-prof-detail {
