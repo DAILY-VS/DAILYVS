@@ -10,6 +10,8 @@ from django.contrib.auth.models import AnonymousUser
 from account.models import *
 from account.forms import *
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.serializers.json import DjangoJSONEncoder
+
 
 # Create your views here.
 def main(request):
@@ -117,12 +119,48 @@ def mypage_update(request):
     context = {"form": form}
     return render(request, "vote/update.html", context)
 
+
+@login_required
+def comment_write_view(request, poll_id):
+    poll = get_object_or_404(Poll, id=poll_id)
+    user_info = request.user  # 현재 로그인한 사용자
+    content = request.POST.get('content')
+    
+    if content:
+        comment = Comment.objects.create(poll=poll, content=content, user_info=request.user)
+        poll.save()
+        comment_id = request.POST.get('comment_id')
+    
+        data = {
+            'nickname': user_info.nickname,
+            'mbti': user_info.mbti,
+            'gender': user_info.gender,
+            'content': content,
+            'created_at': comment.created_at.strftime("%Y년 %m월 %d일"),
+            'comment_id': comment.id
+        }
+        return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
+
+@login_required
+def comment_delete_view(request, pk):
+    poll = get_object_or_404(Poll, id=pk)
+    comment_id = request.POST.get('comment_id')
+    print(comment_id)
+    target_comment = Comment.objects.get(pk = comment_id)
+    target_comment.delete()
+    poll.save()
+    data = {
+        'comment_id': comment_id,
+    }
+    return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
+
+
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
 def classifyuser(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-    choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
+    choice_id = request.POST.get("choice")
     user = request.user
     print(user)
     print(choice_id)
@@ -152,6 +190,7 @@ def classifyuser(request, poll_id):
 
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    comment = Comment.objects.filter(poll=poll_id)
     mbtis = [
         "ISTJ",
         "ISFJ",
@@ -366,6 +405,7 @@ def calcstat(request, poll_id):
         "mbtis_choice1_count": total_mbtis_choice1_count,
         "mbtis_choice2_count": total_mbtis_choice2_count,
         "poll": poll,
+        'comments': comment
     }
     return render(request, template_name="vote/result.html", context=ctx)
 
