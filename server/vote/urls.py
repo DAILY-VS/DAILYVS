@@ -4,7 +4,6 @@ from . import views
 app_name = "vote"
 
 urlpatterns = [
-    
     path("", views.main, name="main"),
     path('<int:poll_id>/<int:nonuservote_id>', views.poll_nonusergender, name='nonusergender'),
     path('<int:poll_id>/<int:nonuservote_id>/1', views.poll_nonusermbti, name='nonusermbti'),

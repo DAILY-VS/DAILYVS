@@ -43,14 +43,11 @@ def main(request):
 
     return render(request, "vote/main.html", context)
 
-
 def detail(request):
     return render(request, "vote/detail.html")
 
-
 def result(request):
     return render(request, "vote/result.html")
-
 
 # 디테일 페이지
 def poll_detail(request, poll_id):
@@ -123,7 +120,6 @@ def mypage_update(request):
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
-
 def classifyuser(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
@@ -455,7 +451,6 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
         "loop_time": range(0, 2),
     }
     return render(request, "vote/detail3.html", context)
-
 
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
     choice_id = request.POST.get("choice")

@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 
-
 class SignupForm(UserCreationForm):
     username = forms.CharField(
         label="아이디",
@@ -79,7 +78,6 @@ class SignupForm(UserCreationForm):
                 attrs={"class": "form-control", "placeholder": "별명을 입력하세요"}
             ),
         }
-
 
 class UserChangeForm(UserChangeForm):
     password = None
