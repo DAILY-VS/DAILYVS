@@ -1,13 +1,12 @@
 {% load static %} {% block content %}
-<div class="card">
-    <div class="card-header">
+
+    <div>
     <!-- 댓글 작성 폼 -->
     <form id="commentForm" method="POST">
         {% csrf_token %}
         {{ comment_form.as_p }}
         <button type="submit">댓글 작성</button>
     </form>
-</div>
 </div>
 
 <!-- 댓글 목록 표시 -->

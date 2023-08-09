@@ -16,6 +16,15 @@ from .forms import *
 
 def main(request):
     polls = Poll.objects.all()
+    sort = request.GET.get("sort")
+
+    if sort == "popular":
+        polls = polls.order_by("-views_count")  # 인기순
+    elif sort == "latest":
+        polls = polls.order_by("-id")  # 최신순
+    elif sort == "oldest":
+        polls = polls.order_by("id")  # 등록순
+
     page = request.GET.get("page")
 
     paginator = Paginator(polls, 4)
@@ -33,6 +42,7 @@ def main(request):
         "page_obj": page_obj,
         "paginator": paginator,
     }
+
     return render(request, "vote/main.html", context)
 
 
@@ -42,6 +52,7 @@ def detail(request):
 
 def result(request):
     return render(request, "vote/result.html")
+
 
 # 디테일 페이지
 def poll_detail(request, poll_id):
@@ -143,25 +154,29 @@ def reply_delete(request, poll_id):
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
+
 def classifyuser(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-    choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
-    user=request.user
+    choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
+    user = request.user
     print(user)
     print(choice_id)
-    if choice_id:   
+    if choice_id:
         choice = Choice.objects.get(id=choice_id)
-        try : 
+        try:
+            uservote = UserVote.objects.get
             vote = UserVote(user=request.user, poll=poll, choice=choice)
             vote.save()
             print(vote)
-            calcstat_url= reverse('vote:calcstat', args=[poll_id])
+            calcstat_url = reverse("vote:calcstat", args=[poll_id])
             return redirect(calcstat_url)
-        except : 
+        except:
             vote = NonUserVote(poll=poll, choice=choice)
             vote.save()
             nonuservote_id = vote.id
-            detail2_url = reverse('vote:nonusergender', args=[poll_id, nonuservote_id])  # Generate the URL with poll_id
+            detail2_url = reverse(
+                "vote:nonusergender", args=[poll_id, nonuservote_id]
+            )  # Generate the URL with poll_id
             return redirect(detail2_url)
         
 def calcstat(request, poll_id):
@@ -404,20 +419,23 @@ def calcstat(request, poll_id):
         "mbtis_choice1_count": total_mbtis_choice1_count,
         "mbtis_choice2_count": total_mbtis_choice2_count,
         "poll": poll,
-        'comments':comments,
-        'page_obj': page_obj,
-        'paginator': paginator,
-        'comment_form': comment_form,
     }
     return render(request, template_name="vote/result.html", context=ctx)
 
 
+
+
+
+# 해당 주제 디테일 페이지, PK로 받아오기.
+# 반복문 돌리기.
+# 결과 페이지
+
 def poll_nonusergender(request, poll_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-    context= {
-        'poll' : poll,
-        'gender' : ['M','W'],
-        'nonuservote_id':nonuservote_id,
+    context = {
+        "poll": poll,
+        "gender": ["M", "W"],
+        "nonuservote_id": nonuservote_id,
         "loop_time": range(0, 2),
     }
     return render(request, "vote/detail2.html", context)
@@ -431,23 +449,23 @@ def poll_nonusergender(request, poll_id, nonuservote_id):
     return redirect(detail2_url)"""
 
 def poll_nonusermbti(request, poll_id, nonuservote_id):
-    choice_id = request.POST.get('choice')
-    if choice_id == 'M': 
-        NonUserVote.objects.filter(pk=nonuservote_id).update(gender='M')
-    if choice_id == 'W': 
-        NonUserVote.objects.filter(pk=nonuservote_id).update(gender='W')
+    choice_id = request.POST.get("choice")
+    if choice_id == "M":
+        NonUserVote.objects.filter(pk=nonuservote_id).update(gender="M")
+    if choice_id == "W":
+        NonUserVote.objects.filter(pk=nonuservote_id).update(gender="W")
     print(nonuservote_id)
     poll = get_object_or_404(Poll, id=poll_id)
-    context= {
-        'poll' : poll,
-        'mbti' : ['INTP','ESFJ'],
-        'nonuservote_id':nonuservote_id,
+    context = {
+        "poll": poll,
+        "mbti": ["INTP", "ESFJ"],
+        "nonuservote_id": nonuservote_id,
         "loop_time": range(0, 2),
     }
     return render(request, "vote/detail3.html", context)
 
-def poll_nonuserfinal(request,poll_id, nonuservote_id):
-    choice_id = request.POST.get('choice')
+def poll_nonuserfinal(request, poll_id, nonuservote_id):
+    choice_id = request.POST.get("choice")
     NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))
-    calcstat_url= reverse('vote:calcstat', args=[poll_id])
+    calcstat_url = reverse("vote:calcstat", args=[poll_id])
     return redirect(calcstat_url)
