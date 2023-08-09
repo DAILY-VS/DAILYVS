@@ -81,7 +81,6 @@ class SignupForm(UserCreationForm):
 
 class UserChangeForm(UserChangeForm):
     password = None
-
     class Meta:
         model = get_user_model()
         fields = ['nickname','mbti','gender']
