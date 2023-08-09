@@ -85,12 +85,16 @@
                     'csrfmiddlewaretoken': '{{csrf_token}}',
                 },
                 success: function (response) {
-                    $('#' + response.comment_id).remove(); // 엘리먼트제거
+                    if (response.success) {
+                        $('#' + response.comment_id).remove(); // 엘리먼트제거
+                    } else {
+                        alert(response.error);
+                    }
                 },
                 error: function () {
-                    alert('본인 댓글이 아닙니다.');
+                    alert('오류가 발생했습니다.');
                 },
-            });
+          });
         }
     }
 </script> 

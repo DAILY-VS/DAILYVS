@@ -145,13 +145,21 @@ def comment_write_view(request, poll_id):
 def comment_delete_view(request, pk):
     poll = get_object_or_404(Poll, id=pk)
     comment_id = request.POST.get('comment_id')
-    print(comment_id)
     target_comment = Comment.objects.get(pk = comment_id)
-    target_comment.delete()
-    poll.save()
-    data = {
-        'comment_id': comment_id,
-    }
+
+    if request.user == target_comment.user_info:
+        target_comment.delete()
+        poll.save()
+        data = {
+            'comment_id': comment_id,
+            'success': True
+        }
+    else:
+        data = {
+            'success': False,
+            'error': '본인 댓글이 아닙니다.'
+        }
+    
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
 
