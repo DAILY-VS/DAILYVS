@@ -42,7 +42,7 @@ class User(AbstractUser):  # user 정보
     )
     mbti=models.CharField(verbose_name='MBTI', max_length=4, choices=MBTI_set)
     nickname = models.CharField(verbose_name='닉네임',max_length=20)
-    voted_polls = models.ManyToManyField('vote.Poll', blank=True, related_name='voters')
+    voted_polls = models.ManyToManyField('vote.Poll', blank=True)
 
     def __str__(self):
         return self.username

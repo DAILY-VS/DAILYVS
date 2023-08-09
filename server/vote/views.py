@@ -47,6 +47,7 @@ def result(request):
 
 # 디테일 페이지
 def poll_detail(request, poll_id):
+    user = request.user 
     poll = get_object_or_404(Poll, id=poll_id)
     poll.increase_views()  # 게시글 조회 수 증가
     print("조회수:", poll.views_count)  # 디버깅용 출력
@@ -83,6 +84,7 @@ def poll_like(request):
                 message = "좋아요 취소"
             else:
                 poll.poll_like.add(user)
+                print(poll.poll_like)
                 message = "좋아요"
 
             like_count = poll.poll_like.count()
@@ -126,13 +128,19 @@ def classifyuser(request, poll_id):
     if choice_id:   
         choice = Choice.objects.get(id=choice_id)
         try : 
-            uservote = UserVote.objects.get
             vote = UserVote(user=request.user, poll=poll, choice=choice)
             vote.save()
+            print(poll_id)
+            user.voted_polls.add(poll_id)
+            user.save()
+            print('--------------------------')
+            print(poll)
+            print(user.voted_polls)
+            print('--------------------------')
             print(vote)
             calcstat_url= reverse('vote:calcstat', args=[poll_id])
             return redirect(calcstat_url)
-        except : 
+        except ValueError: 
             vote = NonUserVote(poll=poll, choice=choice)
             vote.save()
             nonuservote_id = vote.id
