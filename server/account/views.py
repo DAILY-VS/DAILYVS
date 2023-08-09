@@ -2,11 +2,17 @@ from django.shortcuts import render, redirect
 
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+<<<<<<< HEAD
 
 # 회원가입
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignupForm
+=======
+#회원가입
+from django.contrib.auth.forms import UserCreationForm
+from .forms import SignupForm 
+>>>>>>> b8c245e2ef082178c86444ab166694c9ee2e9daf
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth

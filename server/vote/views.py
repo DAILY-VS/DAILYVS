@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse,JsonResponse
 import json
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from .models import *
@@ -11,15 +10,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
 from account.models import *
 from account.forms import *
-from django.db.models import Count
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
 # Create your views here.
 
 
 def main(request):
     polls = Poll.objects.all()
     page = request.GET.get("page")
+
     paginator = Paginator(polls, 4)
 
     try:
@@ -97,13 +95,11 @@ def poll_like(request):
     else:
         return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
 
-
 def mypage(request):
     polls = Poll.objects.all()
     print(polls)
     context = {"polls": polls}
     return render(request, "vote/mypage.html", context)
-
 
 def mypage_update(request):
     if request.method == "POST":
@@ -116,11 +112,41 @@ def mypage_update(request):
     context = {"form": form}
     return render(request, "vote/update.html", context)
 
+#댓글달기 
+@login_required
+def reply(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.poll = poll
+        comment.user_info = request.user
+        comment.save()
+            # 새 댓글 데이터를 JSON 형식으로 생성하여 반환
+        comment_data = {
+            'nickname': comment.user_info.nickname,
+            'created_at': comment.created_at.strftime("%Y년 %m월 %d일"),
+            'content': comment.content,
+        }
+        return JsonResponse({'comment': comment_data})
+    else:
+        return JsonResponse({'error': '댓글 내용을 입력해주세요.'})
+
+@login_required
+def reply_delete(request, poll_id):
+    if request.method == 'POST':
+        comment_id = request.POST.get('comment_id') #AJAX로 넘어온 댓글
+        try:
+            comment = Comment.objects.get(id=comment_id, user_info=request.user)
+            comment.delete()
+            return JsonResponse({'success': True})
+        except Comment.DoesNotExist:
+            return JsonResponse({'success': False, 'error': '댓글을 찾을 수 없거나 삭제할 권한이 없습니다.'})
 
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
-
 
 def classifyuser(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
@@ -152,10 +178,35 @@ def classifyuser(request, poll_id):
                 "vote:nonusergender", args=[poll_id, nonuservote_id]
             )  # Generate the URL with poll_id
             return redirect(detail2_url)
+        
 
 
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    comments = Comment.objects.filter(poll=poll)
+    comment_form = CommentForm()  # CommentForm 인스턴스 생성
+    
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)  # POST 데이터로 CommentForm 인스턴스 생성
+        if comment_form.is_valid():
+            # CommentForm에 저장된 정보로 댓글 생성
+            comment = comment_form.save(commit=False)
+            comment.poll = poll
+            comment.user_info = request.user
+            comment.save()
+    
+    
+    page=request.GET.get('page')
+    paginator = Paginator(comments,10) 
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page=1
+        page_obj=paginator.page(page)
+    except EmptyPage:
+        page=paginator.num_pages
+        page_obj=paginator.page(page) 
+        
     mbtis = [
         "ISTJ",
         "ISFJ",
@@ -370,99 +421,12 @@ def calcstat(request, poll_id):
         "mbtis_choice1_count": total_mbtis_choice1_count,
         "mbtis_choice2_count": total_mbtis_choice2_count,
         "poll": poll,
+        'comments':comments,
+        'page_obj': page_obj,
+        'paginator': paginator,
+        'comment_form': comment_form,
     }
     return render(request, template_name="vote/result.html", context=ctx)
-
-
-# def result_view(request):
-#     approval_percentage = 75
-#     disapproval_percentage = 25
-
-#     return render(
-#         request,
-#         "result.html",
-#         {
-#             "approval_percentage": approval_percentage,
-#             "disapproval_percentage": disapproval_percentage,
-#         },
-#     )
-
-
-# # 리스트 페이지
-# def polls_list(request):
-#     polls = Poll.objects.all()
-#     page = request.GET.get("page")
-#     paginator = Paginator(polls, 4)
-#     try:
-#         page_obj = paginator.page(page)
-#     except PageNotAnInteger:
-#         page = 1
-#         page_obj = paginator.page(page)
-#     except EmptyPage:
-#         page = paginator.num_pages
-#         page_obj = paginator.page(page)
-#     context = {
-#         "polls": polls,
-#         "page_obj": page_obj,
-#         "paginator": paginator,
-#     }
-#     return render(request, "vote/list.html", context)
-
-
-@login_required
-def poll_like(request):
-    if request.method == "POST":
-        req = json.loads(request.body)
-        poll_id = req["poll_id"]
-        try:
-            poll = Poll.objects.get(id=poll_id)
-        except Poll.DoesNotExist:
-            return JsonResponse({"error": "해당 투표가 존재하지 않습니다."}, status=404)
-
-        if request.user.is_authenticated:
-            user = request.user
-        else:
-            user = AnonymousUser()
-
-        if user.is_authenticated and user.is_active:  # 인증된 사용자 중 활성화된 사용자만 고려
-            if poll.poll_like.filter(id=user.id).exists():
-                poll.poll_like.remove(user)
-                message = "좋아요 취소"
-            else:
-                poll.poll_like.add(user)
-                message = "좋아요"
-
-            like_count = poll.poll_like.count()
-            context = {"like_count": like_count, "message": message}
-            return JsonResponse(context)
-        else:
-            return JsonResponse({"error": "로그인이 필요하거나 활성화된 사용자가 아닙니다."}, status=401)
-    else:
-        return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
-
-
-def mypage(request):
-    polls = Poll.objects.all()
-    print(polls)
-    context = {"polls": polls}
-    return render(request, "vote/mypage.html", context)
-
-
-def mypage_update(request):
-    if request.method == "POST":
-        form = UserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect("vote:mypage")
-    else:
-        form = UserChangeForm(instance=request.user)
-    context = {"form": form}
-    return render(request, "vote/update.html", context)
-
-
-# 해당 주제 디테일 페이지, PK로 받아오기.
-# 반복문 돌리기.
-# 결과 페이지
 
 
 def poll_nonusergender(request, poll_id, nonuservote_id):
