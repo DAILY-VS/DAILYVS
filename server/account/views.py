@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
+# 회원가입
+from django.contrib.auth.forms import UserCreationForm
+from .forms import SignupForm
 #회원가입
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignupForm 
