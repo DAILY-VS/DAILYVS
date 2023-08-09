@@ -150,37 +150,6 @@ def classifyuser(request, poll_id):
             )  # Generate the URL with poll_id
             return redirect(detail2_url)
 
-def classifyuser(request, poll_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
-    user = request.user
-    print(user)
-    print(choice_id)
-    if choice_id:
-        choice = Choice.objects.get(id=choice_id)
-        try : 
-            uservote = UserVote.objects.get
-            vote = UserVote(user=request.user, poll=poll, choice=choice)
-            vote.save()
-            print(poll_id)
-            user.voted_polls.add(poll_id)
-            user.save()
-            print('--------------------------')
-            print(poll)
-            print(user.voted_polls)
-            print('--------------------------')
-            print(vote)
-            calcstat_url = reverse("vote:calcstat", args=[poll_id])
-            return redirect(calcstat_url)
-        except ValueError: 
-            vote = NonUserVote(poll=poll, choice=choice)
-            vote.save()
-            nonuservote_id = vote.id
-            detail2_url = reverse(
-                "vote:nonusergender", args=[poll_id, nonuservote_id]
-            )  # Generate the URL with poll_id
-            return redirect(detail2_url)
-
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     mbtis = [
@@ -418,23 +387,6 @@ def poll_nonusergender(request, poll_id, nonuservote_id):
         detail2_url = reverse('vote:nonusermbti', args=[poll_id, nonuservote_id])  # Generate the URL with poll_id 
     return redirect(detail2_url)"""
 
-def poll_nonusergender(request, poll_id, nonuservote_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    context = {
-        "poll": poll,
-        "gender": ["M", "W"],
-        "nonuservote_id": nonuservote_id,
-        "loop_time": range(0, 2),
-    }
-    return render(request, "vote/detail2.html", context)
-
-    """     choice_id = request.POST.get('choice') # 뷰에서 선택 불러옴
-        if choice_id == 1: 
-            NonUserVote.objects.filter(pk=nonuservote_id).update(gender='M')
-        if choice_id == 2: 
-            NonUserVote.objects.filter(pk=nonuservote_id).update(gender='W')
-        detail2_url = reverse('vote:nonusermbti', args=[poll_id, nonuservote_id])  # Generate the URL with poll_id 
-    return redirect(detail2_url)"""
 
 def poll_nonusermbti(request, poll_id, nonuservote_id):
     choice_id = request.POST.get("choice")
