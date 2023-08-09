@@ -15,7 +15,4 @@ urlpatterns = [
     path("<int:poll_id>/calcstat", views.calcstat, name="calcstat"),
     path('<int:poll_id>/', views.poll_detail, name='detail'),
     path("<int:poll_id>/classifyuser", views.classifyuser, name="classifyuser"),
-    path('<int:poll_id>/reply/', views.reply, name='reply'),
-    path('<int:poll_id>/reply/delete/', views.reply_delete, name='reply_delete'), # 댓글 삭제
-    
     ]
