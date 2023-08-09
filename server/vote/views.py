@@ -102,12 +102,14 @@ def poll_like(request):
     else:
         return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
 
+@login_required(login_url='/account/login/') # 비로그인시 /mypage 막음
 def mypage(request):
     polls = Poll.objects.all()
     print(polls)
     context = {"polls": polls}
     return render(request, "vote/mypage.html", context)
 
+@login_required(login_url='/account/login/') # 비로그인시 mypage/update 막음
 def mypage_update(request):
     if request.method == "POST":
         form = UserChangeForm(request.POST, instance=request.user)
