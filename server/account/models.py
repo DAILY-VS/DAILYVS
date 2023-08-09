@@ -10,7 +10,6 @@ class NonUser(models.Model):
     )
     gender = models.CharField(verbose_name="성별", max_length=1, choices=GENDERS)
 
-
 # Create your models here.
 class User(AbstractUser):  # user 정보
     GENDERS = (

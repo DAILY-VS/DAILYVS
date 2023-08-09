@@ -1,15 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-# 회원가입
-from django.contrib.auth.forms import UserCreationForm
-from .forms import SignupForm
 #회원가입
-from django.contrib.auth.forms import UserCreationForm
 from .forms import SignupForm 
-from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth
-from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
@@ -26,9 +20,8 @@ from .forms import UserChangeForm, UserDeleteForm
 
 User = get_user_model()
 
-
 def main(request):
-    return render(request, "base.html")  ##
+    return render(request, "base.html") 
 
 
 def change_password(request):
@@ -90,25 +83,6 @@ def signup(request):
             "form": form,
         }
         return render(request, template_name="account/signup.html", context=ctx)
-
-
-def mypage(request):
-    polls = Poll.objects.all()
-    print(polls)
-    context = {"polls": polls}
-    return render(request, "vote/mypage.html", context)
-
-
-def mypage_update(request):
-    if request.method == "POST":
-        form = UserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect("account:mypage")
-    else:
-        form = UserChangeForm(instance=request.user)
-    context = {"form": form}
-    return render(request, "account/update.html", context)
 
 
 class UserDeleteView(DeleteView):
