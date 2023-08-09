@@ -9,13 +9,18 @@
   <div class="graph-container">
     {% include 'vote/result/result-chart.html' %}
   </div>
-  <button>공유하기</button>
-  <div class="graph-category-container"> {% include 'vote/result/category.html' %} </div>
+  <button class="result-share-btn">
+    공유하기<span
+      ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
+    /></span>
+  </button>
+  <div class="graph-category-container">
+    <div>{% include 'vote/result/category-gender.html' %}</div>
+    <div>{% include 'vote/result/category-mbti.html' %}</div>
+  </div>
+
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
 </section>
+<script src="{% static 'js/result.js' %}"></script>
 
 {% endblock %}
-
-
-
-

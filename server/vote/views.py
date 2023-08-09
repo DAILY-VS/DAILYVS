@@ -11,6 +11,7 @@ from account.models import *
 from account.forms import *
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+
 # Create your views here.
 def main(request):
     polls = Poll.objects.all()
@@ -43,15 +44,18 @@ def main(request):
 
     return render(request, "vote/main.html", context)
 
+
 def detail(request):
     return render(request, "vote/detail.html")
+
 
 def result(request):
     return render(request, "vote/result.html")
 
+
 # 디테일 페이지
 def poll_detail(request, poll_id):
-    user = request.user 
+    user = request.user
     poll = get_object_or_404(Poll, id=poll_id)
 
     if user.is_authenticated and user.voted_polls.filter(id=poll_id).exists():
@@ -67,6 +71,7 @@ def poll_detail(request, poll_id):
         }
         response = render(request, "vote/detail.html", context)
         return response
+
 
 @login_required
 def poll_like(request):
@@ -100,11 +105,13 @@ def poll_like(request):
     else:
         return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
 
+
 def mypage(request):
     polls = Poll.objects.all()
     print(polls)
     context = {"polls": polls}
     return render(request, "vote/mypage.html", context)
+
 
 def mypage_update(request):
     if request.method == "POST":
@@ -117,6 +124,7 @@ def mypage_update(request):
     context = {"form": form}
     return render(request, "vote/update.html", context)
 
+
 # 해당 주제 디테일 페이지, PK로 받아오기.
 # 반복문 돌리기.
 # 결과 페이지
@@ -128,20 +136,20 @@ def classifyuser(request, poll_id):
     print(choice_id)
     if choice_id:
         choice = Choice.objects.get(id=choice_id)
-        try : 
+        try:
             uservote = UserVote.objects.get
             vote = UserVote(user=request.user, poll=poll, choice=choice)
             vote.save()
             user.voted_polls.add(poll_id)
             print(poll_id)
-            print('--------------------------')
+            print("--------------------------")
             print(poll)
             print(user.voted_polls)
-            print('--------------------------')
+            print("--------------------------")
             print(vote)
             calcstat_url = reverse("vote:calcstat", args=[poll_id])
             return redirect(calcstat_url)
-        except ValueError: 
+        except ValueError:
             vote = NonUserVote(poll=poll, choice=choice)
             vote.save()
             nonuservote_id = vote.id
@@ -149,6 +157,7 @@ def classifyuser(request, poll_id):
                 "vote:nonusergender", args=[poll_id, nonuservote_id]
             )  # Generate the URL with poll_id
             return redirect(detail2_url)
+
 
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
@@ -176,11 +185,11 @@ def calcstat(request, poll_id):
     user_total_count = user_poll.count()
     print("user_total_count : " + str(user_total_count))
 
-    user_choice1 = user_poll.filter(choice_id=2*poll_id-1)
+    user_choice1 = user_poll.filter(choice_id=2 * poll_id - 1)
     user_choice1_count = user_choice1.count()
     print("user_choice1_count : " + str(user_choice1_count))
 
-    user_choice2 = user_poll.filter(choice_id=2*poll_id)
+    user_choice2 = user_poll.filter(choice_id=2 * poll_id)
     user_choice2_count = user_choice2.count()
     print("user_choice2_count : " + str(user_choice2_count))
 
@@ -188,11 +197,11 @@ def calcstat(request, poll_id):
     user_man_count = user_man.count()
     print("user_man_count : " + str(user_man_count))
 
-    user_man_choice1 = user_man.filter(choice_id=2*poll_id-1)
+    user_man_choice1 = user_man.filter(choice_id=2 * poll_id - 1)
     user_man_choice1_count = user_man_choice1.count()
     print("user_man_choice1_count : " + str(user_man_choice1_count))
 
-    user_man_choice2 = user_man.filter(choice_id=2*poll_id)
+    user_man_choice2 = user_man.filter(choice_id=2 * poll_id)
     user_man_choice2_count = user_man_choice2.count()
     print("user_man_choice2_count : " + str(user_man_choice2_count))
 
@@ -200,11 +209,11 @@ def calcstat(request, poll_id):
     user_woman_count = user_woman.count()
     print("user_woman_count : " + str(user_woman_count))
 
-    user_woman_choice1 = user_woman.filter(choice_id=2*poll_id-1)
+    user_woman_choice1 = user_woman.filter(choice_id=2 * poll_id - 1)
     user_woman_choice1_count = user_woman_choice1.count()
     print("user_woman_choice1_count : " + str(user_woman_choice1_count))
 
-    user_woman_choice2 = user_woman.filter(choice_id=2*poll_id)
+    user_woman_choice2 = user_woman.filter(choice_id=2 * poll_id)
     user_woman_choice2_count = user_woman_choice2.count()
     print("user_woman_choice2_count : " + str(user_woman_choice2_count))
 
@@ -217,11 +226,11 @@ def calcstat(request, poll_id):
         user_mbti_count = user_mbti.count()
         user_mbtis_count.append(user_mbti_count)
 
-        user_mbti_choice1 = user_mbti.filter(choice_id=2*poll_id-1)
+        user_mbti_choice1 = user_mbti.filter(choice_id=2 * poll_id - 1)
         user_mbti_choice1_count = user_mbti_choice1.count()
         user_mbtis_choice1_count.append(user_mbti_choice1_count)
 
-        user_mbti_choice2 = user_mbti.filter(choice_id=2*poll_id)
+        user_mbti_choice2 = user_mbti.filter(choice_id=2 * poll_id)
         user_mbti_choice2_count = user_mbti_choice2.count()
         user_mbtis_choice2_count.append(user_mbti_choice2_count)
 
@@ -234,11 +243,11 @@ def calcstat(request, poll_id):
     nonuser_total_count = nonuser_poll.count()
     print("nonuser_total_count : " + str(nonuser_total_count))
 
-    nonuser_choice1 = nonuser_poll.filter(choice_id=2*poll_id-1)
+    nonuser_choice1 = nonuser_poll.filter(choice_id=2 * poll_id - 1)
     nonuser_choice1_count = nonuser_choice1.count()
     print("nonuser_choice1_count : " + str(nonuser_choice1_count))
 
-    nonuser_choice2 = nonuser_poll.filter(choice_id=2*poll_id)
+    nonuser_choice2 = nonuser_poll.filter(choice_id=2 * poll_id)
     nonuser_choice2_count = nonuser_choice2.count()
     print("nonuser_choice2_count : " + str(nonuser_choice2_count))
 
@@ -246,11 +255,11 @@ def calcstat(request, poll_id):
     nonuser_man_count = nonuser_man.count()
     print("nonuser_man_count : " + str(nonuser_man_count))
 
-    nonuser_man_choice1 = nonuser_man.filter(choice_id=2*poll_id-1)
+    nonuser_man_choice1 = nonuser_man.filter(choice_id=2 * poll_id - 1)
     nonuser_man_choice1_count = nonuser_man_choice1.count()
     print("nonuser_man_choice1_count : " + str(nonuser_man_choice1_count))
 
-    nonuser_man_choice2 = nonuser_man.filter(choice_id=2*poll_id)
+    nonuser_man_choice2 = nonuser_man.filter(choice_id=2 * poll_id)
     nonuser_man_choice2_count = nonuser_man_choice2.count()
     print("nonuser_man_choice2_count : " + str(nonuser_man_choice2_count))
 
@@ -258,11 +267,11 @@ def calcstat(request, poll_id):
     nonuser_woman_count = nonuser_woman.count()
     print("nonuser_woman_count : " + str(nonuser_woman_count))
 
-    nonuser_woman_choice1 = nonuser_woman.filter(choice_id=2*poll_id-1)
+    nonuser_woman_choice1 = nonuser_woman.filter(choice_id=2 * poll_id - 1)
     nonuser_woman_choice1_count = nonuser_woman_choice1.count()
     print("nonuser_woman_choice1_count : " + str(nonuser_woman_choice1_count))
 
-    nonuser_woman_choice2 = nonuser_woman.filter(choice_id=2*poll_id)
+    nonuser_woman_choice2 = nonuser_woman.filter(choice_id=2 * poll_id)
     nonuser_woman_choice2_count = nonuser_woman_choice2.count()
     print("nonuser_woman_choice2_count : " + str(nonuser_woman_choice2_count))
 
@@ -275,11 +284,11 @@ def calcstat(request, poll_id):
         nonuser_mbti_count = nonuser_mbti.count()
         nonuser_mbtis_count.append(nonuser_mbti_count)
 
-        nonuser_mbti_choice1 = nonuser_mbti.filter(choice_id=2*poll_id-1)
+        nonuser_mbti_choice1 = nonuser_mbti.filter(choice_id=2 * poll_id - 1)
         nonuser_mbti_choice1_count = nonuser_mbti_choice1.count()
         nonuser_mbtis_choice1_count.append(nonuser_mbti_choice1_count)
 
-        nonuser_mbti_choice2 = nonuser_mbti.filter(choice_id=2*poll_id)
+        nonuser_mbti_choice2 = nonuser_mbti.filter(choice_id=2 * poll_id)
         nonuser_mbti_choice2_count = nonuser_mbti_choice2.count()
         nonuser_mbtis_choice2_count.append(nonuser_mbti_choice2_count)
 
@@ -348,6 +357,15 @@ def calcstat(request, poll_id):
     ]
     choice1_percentage = int(total_choice1_count / total_count * 100)
     choice2_percentage = int(total_choice2_count / total_count * 100)
+    choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
+    choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
+    choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
+    choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+
+    print("choice1_man_percentage", choice1_man_percentage)
+    print("choice2_man_percentage", choice2_man_percentage)
+    print("choice1_woman_percentage", choice1_woman_percentage)
+    print("choice2_woman_percentage", choice2_woman_percentage)
 
     ctx = {
         "total_count": total_count,
@@ -358,9 +376,13 @@ def calcstat(request, poll_id):
         "man_count": total_man_count,
         "man_choice1_count": total_man_choice1_count,
         "man_choice2_count": total_man_choice2_count,
+        "choice1_man_percentage": choice1_man_percentage,
+        "choice2_man_percentage": choice2_man_percentage,
         "woman_count": total_woman_count,
         "woman_choice1_count": total_woman_choice1_count,
         "woman_choice2_count": total_woman_choice2_count,
+        "choice1_woman_percentage": choice1_woman_percentage,
+        "choice2_woman_percentage": choice2_woman_percentage,
         "mbtis": mbtis,
         "mbtis_count": total_mbtis_count,
         "mbtis_choice1_count": total_mbtis_choice1_count,
@@ -368,6 +390,7 @@ def calcstat(request, poll_id):
         "poll": poll,
     }
     return render(request, template_name="vote/result.html", context=ctx)
+
 
 def poll_nonusergender(request, poll_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
@@ -403,6 +426,7 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
         "loop_time": range(0, 2),
     }
     return render(request, "vote/detail3.html", context)
+
 
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
     choice_id = request.POST.get("choice")
