@@ -10,6 +10,7 @@
   font-family: "GongGothicMedium";
   font-size: 34px;
   margin: 10px auto;
+  color: var(--darkblue-primary-color);
 }
 
 .graph-information {
@@ -24,10 +25,10 @@
   flex-direction: column;
 }
 
-.comment-container {
+/* .comment-container {
   height: 50vh;
   background-color: pink;
-}
+} */
 
 .result-graph-content {
   display: flex;
@@ -79,4 +80,86 @@
 .result-total-count strong {
   margin-left: 5px;
   color: var(--redpink-primary-color);
+}
+
+.result-share-btn {
+  border: none;
+  width: 200px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 5px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.result-share-btn:hover {
+  background-color: var(--redpink-primary-color);
+  color: white;
+}
+.result-share-btn img {
+  margin-left: 10px;
+}
+
+/*카테고리 차트 섹션*/
+.result-chart-category {
+  /* height: 500px; */
+}
+
+.result-category-title {
+  font-family: "GongGothicMedium";
+  color: var(--darkblue-primary-color);
+  font-size: 26px;
+  margin: 50px 50px 20px 50px;
+}
+
+.result-category-name {
+  font-family: "GongGothicMedium";
+  font-size: 20px;
+  font-weight: 400;
+  margin-left: 50px;
+  margin-top: 20px;
+  color: var(--turquois-secondary-color);
+}
+
+.gender-result,
+.mbti-result {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+}
+
+.result-man-chart,
+.result-woman-chart {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.small-choice-title {
+  font-family: "TheJamsil5Bold";
+}
+
+.chevron,
+.chevron1,
+.chevron3,
+.chevron4,
+.chevron5,
+.chevron6 {
+  transition: transform 0.3s ease;
+}
+
+.mbti-category-box {
+  margin-left: 50px;
+  margin-top: 5px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  color: #a7dcdd;
+}
+
+text {
+  font-size: 16px;
+  font-family: "NEXON Lv1 Gothic OTF";
 }

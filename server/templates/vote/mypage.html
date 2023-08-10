@@ -4,6 +4,7 @@
 
 
 <div class="mypage-container">
+    <p class="mypage-greeting">안녕하세요, {{user.username}}&nbsp님!</p>
     <div class="mypage-prof-container">
         <img src='https://picsum.photos/100/100' alt="">
         <div class="mypage-info-wrap">
@@ -26,6 +27,18 @@
         </div>
     </div>
     <span>나의 VOTE LIST</span>
+    <ul>
+      {% for voted_poll in user.voted_polls.all %}
+          {% for uservote in uservotes %}
+              {% if voted_poll.id == uservote.poll.id %}
+                  <a href="{% url 'vote:calcstat' uservote.poll.id%}">{{ voted_poll }}</a>
+                  {{ uservote.choice.choice_text }}
+              {% endif %}
+          {% endfor %}
+      {% endfor %}
+  </ul>
+
+    </ul>
     <div class="pagination-box">
         <div class="pagination">
             <a class="page-btn gray">
@@ -53,8 +66,6 @@
 </div>
 
 
-
-
 <!-- <div class="mypage-prof-detail"></div>
 <input value={{user.username}} disabled>
 <input value={{user.mbti}} disabled>
@@ -80,8 +91,29 @@ MBTI: {{user.mbti}}
    {{ poll.title }}
 </li>
 {% endfor %}
-</ul> -->
-{% endblock %}
+
+<div class="pagination-box">
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+      <a class="page-btn gray" href="?page={{ page_obj.previous_page_number }}">
+        <img src="{% static 'img/icon/left_page.png' %}" style="width: 30px" />
+      </a>
+      {% endif %} {% for page_number in page_obj.paginator.page_range %}
+      <a
+        class="page-btn {% if page_number == page_obj.number %}red-pink{% endif %}"
+        href="?page={{ page_number }}"
+      >
+        {{ page_number }}
+      </a>
+      {% endfor %} {% if page_obj.has_next %}
+      <a class="page-btn gray" href="?page={{ page_obj.next_page_number }}">
+        <img src="{% static 'img/icon/right_page.png' %}" style="width: 30px" />
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endblock %}
+</div>
 
 
 {% comment %}  {% endcomment %}

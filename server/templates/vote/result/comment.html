@@ -1,129 +1,121 @@
-{% comment %} {% load static %} {% block content %}
 
+    {% csrf_token %}
     <div>
-    <!-- 댓글 작성 폼 -->
-    <form id="commentForm" method="POST">
-        {% csrf_token %}
-        {{ comment_form.as_p }}
-        <button type="submit">댓글 작성</button>
-    </form>
-</div>
-
-<!-- 댓글 목록 표시 -->
-<div id="comment_list">
-    {% for comment in comments %}
-    <div id="comment_{{ comment.id }}">
-        <!-- 댓글 내용 및 정보 표시 -->
-        <strong>{{ comment.user_info.nickname }}</strong>
-        <strong>{{ comment.user_info.mbti }}</strong>
-        <strong>{{ comment.user_info.gender }}</strong>
-        <span>{{ comment.created_at }}</span>
-        <div>{{ comment.content }}</div>
-        <div>
-            <a class="btnDelete" data-comment-id="{{ comment.id }}">댓글 삭제</a>
-        </div>
-        <hr>
+        <textarea class="replyContent" id="content_id" placeholder="댓글을 입력해주세요."></textarea>
+        <button id="comment_write" class="btnReply">댓글달기</button>
     </div>
-    {% endfor %}
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<hr>
+
+<table class="replyTable">
+    <tr>
+        <td>작성자  </td>
+        <td>mbti  </td>
+        <td>gender  </td>
+        <td>내용  </td>
+        <td>작성일  </td>
+    </tr>
+    <tbody class="replyTody">
+        {% for comment in comments %}
+        <tr class="replyTr{{ comment.id }}">
+            <td>{{ comment.user_info.nickname }}</td>
+            <td>{{ comment.user_info.mbti}}</td>
+            <td>{{ comment.user_info.gender}}</td>
+            <td>{{ comment.content }}</td>
+            <td>{{ comment.created_at }}</td>
+            <td>
+                <input type="button" value="삭제" onclick="replyDelete({{ comment.id }})">
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.querySelector("#commentForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+    //댓글 달기
+    $(document).ready(function () {
+        $('#comment_write').click(function () {
+            var content = $(".replyContent").val();  
+            
+            // 로그인 여부 확인
+            var isAuthenticated = "{{ user.is_authenticated }}"; 
 
-    let formData = new FormData(this);
-    let pollId = "{{ poll.id }}";
-
-    axios({
-        method: 'post',
-        url: `/${pollId}/reply/`,
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken")
-        },
-        data: formData
-    })
-    .then(response => {
-        let data = response.data.comment;
-        addCommentToDOM(data); // 댓글을 DOM에 추가
-        document.querySelector(".replyContent").value = ''; // 입력창 비우기
-    })
-    .catch(error => {
-        console.error("댓글 작성 중 오류가 발생했습니다.", error);
-    });
-});
-
-// 댓글을 DOM에 추가하는 함수
-function addCommentToDOM(comment) {
-    let commentList = document.getElementById("comment_list");
-    
-    let newCommentDiv = document.createElement("div");
-    newCommentDiv.id = `comment_${comment.comment_id}`;
-    newCommentDiv.innerHTML = `
-        <strong>${comment.nickname}</strong>
-        <span style="float:right">${comment.created_at}</span>
-        <div>${comment.content}</div>
-        <div>
-            <a class="btnDelete" data-comment-id="${comment.comment_id}">댓글 삭제</a>
-        </div>
-        <hr>
-    `;
-    
-    commentList.appendChild(newCommentDiv);
-}
-
-//댓글 삭제
-document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll(".btnDelete");
-    
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const commentId = this.getAttribute("data-comment-id");
-            let pollId = "{{ poll.id }}";
-            axios({
-                method: "post",
-                url: `/${pollId}/reply/delete/`,  // 적절한 URL로 수정
-                headers: {
-                    "X-CSRFToken": getCookie("csrftoken") // CSRF 토큰 추가
-                },
+            if (isAuthenticated === "True") {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'vote:comment_write' poll.id %}",
+                dataType: "json",
                 data: {
-                    comment_id: commentId
-                }
-            })
-            .then(response => {
-                if (response.data.success) {
-                    // 성공적으로 삭제되면 해당 댓글 행 삭제
-                    const deletedRow = document.querySelector(`#comment_${commentId}`);
-                    if (deletedRow) {
-                        deletedRow.remove();
+                    'content': content,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                success: function (response) {
+                    // 새로운 댓글 생성
+                    var newComment = '<tr class="replyTr' + response.comment_id + '">' +
+                        '<td>' + response.nickname + '</td>' +
+                        '<td>' + response.mbti + '</td>' +
+                        '<td>' + response.gender + '</td>' +
+                        '<td>' + response.content + '</td>' +
+                        '<td>' + response.created_at + '</td>' +
+                        '<td><input type="button" value="삭제" onclick="replyDelete(' + response.comment_id + ')"></td>' +
+                        '</tr>';
+                    $('.replyTody').append(newComment);
+                    $('.replyContent').val("");  // 입력창 비우기
+                },
+                error: function () {
+                    if ($('.replyContent').val() == "") {
+                        alert('댓글을 입력해주세요.');
+                    } else {
+                        alert('오류가 발생했습니다.');
                     }
-                } else {
-                    console.error(response.data.error);
-                }
-            })
-            .catch(error => {
-                console.error("댓글 삭제 중 오류가 발생했습니다.", error);
+                },
             });
+        } else {
+            alert("로그인 후 댓글을 작성할 수 있습니다.");
+        }
         });
     });
-});
 
-
-// CSRF 토큰을 가져오는 함수
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === name + "=") {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
+    // 댓글 삭제
+    function replyDelete(value) { 
+        var comment_id = value;
+        var delete_warning = confirm('댓글을 삭제하시겠습니까?');
+        
+        if (delete_warning == true) {
+            // 로그인 여부 확인
+            var isAuthenticated = "{{ user.is_authenticated }}";
+            if (isAuthenticated === "True") {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'vote:comment_delete' poll.id %}",
+                dataType: "json",
+                data: {
+                    'comment_id': comment_id,
+                    'csrfmiddlewaretoken': '{{csrf_token}}',
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#' + response.comment_id).remove(); 
+                        var replyTr = document.querySelector(`.replyTr${response.comment_id}`);
+                        if (replyTr){
+                            console.log(replyTr);
+                            replyTr.remove();
+                        }
+                    } 
+                    else { 
+                        alert(response.error);
+                    }
+                },
+                error: function () {
+                    alert('오류가 발생했습니다.');
+                },
+          });
+        } else {
+            alert("로그인을 해주세요");
         }
     }
-    return cookieValue;
 }
 </script>
 
-{% endblock %} {% endcomment %}

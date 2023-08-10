@@ -12,7 +12,7 @@
 .carousel-container {
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 300px;
   max-width: 500px;
   margin: 0 auto;
 }
@@ -24,6 +24,39 @@
   height: 900px;
 }
 
+.carousel-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 380px;
+  height: 220px;
+  overflow: hidden;
+}
+
+.carousel-image-container:before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.carousel-image {
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  object-fit: cover;
+}
+
+.carousel-poll-title {
+  color: var(--blue-bg-color);
+  font-family: "GongGothicMedium";
+}
+
+.carousel-poll-content {
+  color: var(--blue-bg-color);
+}
 /*editor-pick*/
 .editor-pick-container {
   height: 500px;
@@ -49,7 +82,7 @@
 
 .editor-card {
   width: 13rem;
-  height: 60vh;
+  height: 450px; /* 이 부분 필요하면 더 줄이기 */
   border-radius: 10px;
   background-color: white;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -98,7 +131,7 @@
   margin: 20px 30px auto auto;
   padding-left: 15px;
   border: none;
-  font-size: 20px;
+  font-size: 15px;
   color: white;
   background-color: var(--darkblue-primary-color);
 }
