@@ -1,77 +1,77 @@
-<div>
+
     {% csrf_token %}
     <div>
-        <textarea id="content_id" rows="3" placeholder="댓글을 입력해주세요."></textarea>
+        <textarea class="replyContent" id="content_id" placeholder="댓글을 입력해주세요."></textarea>
+        <button id="comment_write" class="btnReply">댓글달기</button>
     </div>
-    <div>
-        <button id="comment_write" class="btn btn-sm">댓글달기</button>
-    </div>
-</div>
+
 <hr>
-    <div id="more_comment">
-        {% if comments %}
-            {% for comment in comments %}
-            {% if comment.post_id.pk == post.pk %}
-            <div id='{{ comment.id }}'>
-                
-                    <span>닉네임: {{ comment.user_info.nickname }}, 
-                          MBTI: {{ comment.user_info.mbti}}, 
-                          gender: {{ comment.user_info.gender}}
-                    </span>
-                    <br>
-                    <span>{{ comment.created_at }}</span>
-                    <div>
-                        <div>{{ comment.content }}</div>
-                        <div>
-                            <a onclick="commentDelete('{{comment.id}}');">댓글삭제</a>
-                        </div>
-                    </div>
-                    <hr>
-                {% endif %}
-            </div>
-            <div class='{{ comment.id }}'></div>
-            {% endif %}
-            {% endfor %}
-        {% endif %}
-        <input type="hidden" id="comment_writer" value={{request.user}}>
-        <div id="comment_list"></div>
-    </div>
+
+<table class="replyTable">
+    <tr>
+        <td>작성자  </td>
+        <td>mbti  </td>
+        <td>gender  </td>
+        <td>내용  </td>
+        <td>작성일  </td>
+    </tr>
+    <tbody class="replyTody">
+        {% for comment in comments %}
+        <tr class="replyTr{{ comment.id }}">
+            <td>{{ comment.user_info.nickname }}</td>
+            <td>{{ comment.user_info.mbti}}</td>
+            <td>{{ comment.user_info.gender}}</td>
+            <td>{{ comment.content }}</td>
+            <td>{{ comment.created_at }}</td>
+            <td>
+                <input type="button" value="삭제" onclick="replyDelete({{ comment.id }})">
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    //댓글 달기
     $(document).ready(function () {
         $('#comment_write').click(function () {
-            var content= $("#content_id").val();
-            var writer= $("#comment_writer").val();
+            var content = $(".replyContent").val();  // textarea의 class를 참조
             $.ajax({
                 type: "POST",
                 url: "{% url 'vote:comment_write' poll.id %}",
                 dataType: "json",
                 data: {
-                    // 'user_info': user_info,
                     'content': content,
-                    'csrfmiddlewaretoken': '{{csrf_token}}',
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
                 },
                 success: function (response) {
-                    $('#comment_list').append(
-                        '<div><div id='+response.mbti+'><strong>'+response.nickname+'&nbsp;<span style="color:gray";>'+response.self_comment+'</span></strong>'+
-                        '<span style="float:right; color:#d14040f2;">'+response.created_at+'</span>'+
-                        '<div><div style="white-space:pre-wrap; text-align:left;">'+response.content+'</div><div style="text-align:right; margin:-20px 0px -10px 0;"><a style="color: #d14040f2;" onclick="createReplyArea('+response.comment_id+');">답글달기</a>&nbsp;&middot;&nbsp;<a style="color: #d14040f2;" onclick="commentDelete('+response.comment_id+');">댓글삭제</a></div></div><hr></div><div class='+response.comment_id+'></div>'
-                    );
-                    $('#content_id').val("");
+                    // 새로운 댓글 생성
+                    var newComment = '<tr class="replyTr' + response.comment_id + '">' +
+                        '<td>' + response.nickname + '</td>' +
+                        '<td>' + response.mbti + '</td>' +
+                        '<td>' + response.gender + '</td>' +
+                        '<td>' + response.content + '</td>' +
+                        '<td>' + response.created_at + '</td>' +
+                        '<td><input type="button" value="삭제" onclick="replyDelete(' + response.comment_id + ')"></td>' +
+                        '</tr>';
+                    $('.replyTody').append(newComment);
+                    $('.replyContent').val("");  // 입력창 비우기
                 },
                 error: function () {
-                    if ($('#content_id').val()=="") {
+                    if ($('.replyContent').val() == "") {
                         alert('댓글을 입력해주세요.');
+                    } else {
+                        alert('오류가 발생했습니다.');
                     }
                 },
-            })
+            });
         });
     });
 
-</script>
-<script>
-    function commentDelete(value) {
+    // 댓글 삭제
+    function replyDelete(value) { 
         var comment_id = value;
         var delete_warning = confirm('댓글을 삭제하시겠습니까?');
         if (delete_warning == true) {
@@ -85,8 +85,14 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        $('#' + response.comment_id).remove(); // 엘리먼트제거
-                    } else {
+                        $('#' + response.comment_id).remove(); 
+                        var replyTr = document.querySelector(`.replyTr${response.comment_id}`);
+                        if (replyTr){
+                            console.log(replyTr);
+                            replyTr.remove();
+                        }
+                    } 
+                    else { 
                         alert(response.error);
                     }
                 },
@@ -96,5 +102,5 @@
           });
         }
     }
-</script> 
+</script>
 
