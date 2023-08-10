@@ -14,41 +14,69 @@
       />
       MBTI
     </div>
-    <div class="result-category-chart" id="mbtiChart">
-      <div class="mbti-result">
-        <div class="result-man-chart">
-          <div class="small-choice-title">E vs I</div>
-          <canvas id="EIChart"></canvas>
-          <div>
-            <span class="small-choice-title"
-              >{{ poll.choice_set.all.0.choice_text }} : </span
-            ><span>{{choice1_man_percentage}}%</span>
-          </div>
-          <div>
-            <span class="small-choice-title"
-              >{{ poll.choice_set.all.1.choice_text }} : </span
-            ><span>{{choice2_man_percentage}}%</span>
-          </div>
-        </div>
-        <div class="result-woman-chart">
-          <div class="small-choice-title">S vs N</div>
-          <canvas id="SNChart"></canvas>
-          <div>
-            <span class="small-choice-title"
-              >{{ poll.choice_set.all.0.choice_text }} : </span
-            ><span>{{choice1_woman_percentage}}%</span>
-          </div>
-          <div>
-            <span class="small-choice-title"
-              >{{ poll.choice_set.all.1.choice_text }} : </span
-            ><span>{{choice2_woman_percentage}}%</span>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
+  <div id="EImbti-chart"></div>
 </div>
 
+<script>
+  var options = {
+    series: [
+      {
+        name: "민초파",
+        data: [47, 68],
+      },
+      {
+        name: "반민초파",
+        data: [53, 32],
+      },
+    ],
+    chart: {
+      type: "bar",
+      height: 350,
+      stacked: true,
+      stackType: "100%",
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+      },
+    },
+    stroke: {
+      width: 1,
+      colors: ["#fff"],
+    },
+    title: {
+      text: "E vs I Chart",
+    },
+    xaxis: {
+      categories: ["E", "I"],
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return val + "K";
+        },
+      },
+    },
+    fill: {
+      opacity: 1,
+    },
+    legend: {
+      position: "top",
+      horizontalAlign: "left",
+      offsetX: 40,
+    },
+  };
+
+  // Wait for the document to load
+  document.addEventListener("DOMContentLoaded", function (event) {
+    var chart = new ApexCharts(
+      document.querySelector("#EImbti-chart"),
+      options
+    );
+    chart.render();
+  });
+</script>
 <script>
   let isRotated = false;
 
@@ -64,14 +92,5 @@
     isRotated = !isRotated;
   }
 </script>
-<style>
-  .chevron {
-    width: 30px;
-    transition: transform 0.3s ease;
-  }
-  .rotate {
-    transform: rotate(180deg);
-  }
-</style>
 
 {% endblock %}
