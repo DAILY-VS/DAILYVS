@@ -15,7 +15,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 def main(request):
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
-
+    promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
     if sort == "popular":
         polls = polls.order_by("-views_count")  # 인기순
     elif sort == "latest":
@@ -35,8 +35,6 @@ def main(request):
     except EmptyPage:
         page = paginator.num_pages
         page_obj = paginator.page(page)
-
-    promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
     context = {
         "polls": polls,
         "page_obj": page_obj,
@@ -138,27 +136,33 @@ def mypage_update(request):
 # 댓글
 
 
-# 투표 시 회원, 비회원 구분
+# 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
 def classifyuser(request, poll_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
-    user = request.user
-    if choice_id:
-        choice = Choice.objects.get(id=choice_id)
-        try:
-            vote = UserVote(user=request.user, poll=poll, choice=choice)
-            vote.save()
-            user.voted_polls.add(poll_id)
-            calcstat_url = reverse("vote:calcstat", args=[poll_id])
-            return redirect(calcstat_url)
-        except ValueError:
-            vote = NonUserVote(poll=poll, choice=choice)
-            vote.save()
-            nonuservote_id = vote.id
-            detail2_url = reverse(
-                "vote:nonusergender", args=[poll_id, nonuservote_id]
-            )  # Generate the URL with poll_id
-            return redirect(detail2_url)
+    if request.method == "POST":
+        poll = get_object_or_404(Poll, pk=poll_id)
+        choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
+        user = request.user
+        if choice_id:
+            choice = Choice.objects.get(id=choice_id)
+            try:
+                vote = UserVote(user=request.user, poll=poll, choice=choice)
+                vote.save()
+                user.voted_polls.add(poll_id)
+                calcstat_url = reverse("vote:calcstat", args=[poll_id])
+                voted_polls = user.voted_polls.all()
+                return redirect(calcstat_url)
+            except ValueError:
+                vote = NonUserVote(poll=poll, choice=choice)
+                vote.save()
+                nonuservote_id = vote.id
+                poll = get_object_or_404(Poll, pk=poll_id)
+                context = {
+                    "poll": poll,
+                    "gender": ["M", "W"],
+                    "nonuservote_id": nonuservote_id,
+                    "loop_time": range(0, 2),
+                }
+                return render(request, "vote/detail2.html", context)
 
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
@@ -227,7 +231,12 @@ def calcstat(request, poll_id):
         user_mbti_choice2_count = user_mbti_choice2.count()
         user_mbtis_choice2_count.append(user_mbti_choice2_count)
 
-    nonuser_poll = NonUserVote.objects.filter(choice__poll__pk=poll_id)
+    nonuser_poll = NonUserVote.objects.filter(
+        choice__poll__pk=poll_id, MBTI__isnull=False, gender__isnull=False
+    )
+    print(nonuser_poll)
+    for vote in nonuser_poll:
+        print(vote)
     nonuser_total_count = nonuser_poll.count()
 
     nonuser_choice1 = nonuser_poll.filter(choice_id=2 * poll_id - 1)
@@ -538,13 +547,9 @@ def calcstat(request, poll_id):
         "man_count": total_man_count,
         "man_choice1_count": total_man_choice1_count,
         "man_choice2_count": total_man_choice2_count,
-        "choice1_man_percentage": choice1_man_percentage,
-        "choice2_man_percentage": choice2_man_percentage,
         "woman_count": total_woman_count,
         "woman_choice1_count": total_woman_choice1_count,
         "woman_choice2_count": total_woman_choice2_count,
-        "choice1_woman_percentage": choice1_woman_percentage,
-        "choice2_woman_percentage": choice2_woman_percentage,
         "mbtis": mbtis,
         "mbtis_count": total_mbtis_count,
         "mbtis_choice1_count": total_mbtis_choice1_count,
@@ -570,33 +575,22 @@ def calcstat(request, poll_id):
     return render(request, template_name="vote/result.html", context=ctx)
 
 
-# 비회원 투표시 성별 기입
-def poll_nonusergender(request, poll_id, nonuservote_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    context = {
-        "poll": poll,
-        "gender": ["M", "W"],
-        "nonuservote_id": nonuservote_id,
-        "loop_time": range(0, 2),
-    }
-    return render(request, "vote/detail2.html", context)
-
-
 # 비회원 투표시 MBTI 기입
 def poll_nonusermbti(request, poll_id, nonuservote_id):
-    choice_id = request.POST.get("choice")
-    if choice_id == "M":
-        NonUserVote.objects.filter(pk=nonuservote_id).update(gender="M")
-    if choice_id == "W":
-        NonUserVote.objects.filter(pk=nonuservote_id).update(gender="W")
-    poll = get_object_or_404(Poll, id=poll_id)
-    context = {
-        "poll": poll,
-        "mbti": ["INTP", "ESFJ"],
-        "nonuservote_id": nonuservote_id,
-        "loop_time": range(0, 2),
-    }
-    return render(request, "vote/detail3.html", context)
+    if request.method == "POST":
+        choice_id = request.POST.get("choice")
+        if choice_id == "M":
+            NonUserVote.objects.filter(pk=nonuservote_id).update(gender="M")
+        if choice_id == "W":
+            NonUserVote.objects.filter(pk=nonuservote_id).update(gender="W")
+        poll = get_object_or_404(Poll, id=poll_id)
+        context = {
+            "poll": poll,
+            "mbti": ["INTP", "ESFJ"],
+            "nonuservote_id": nonuservote_id,
+            "loop_time": range(0, 2),
+        }
+        return render(request, "vote/detail3.html", context)
 
 
 # 비회원 투표시 투표 정보 전송

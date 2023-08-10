@@ -26,6 +26,11 @@
         </div>
     </div>
     <span>나의 VOTE LIST</span>
+    <ul>
+      {% for voted_poll in user.voted_polls.all %}
+          <li>{{ voted_poll }}</li>
+      {% endfor %}
+    </ul>
     <div class="pagination-box">
         <div class="pagination">
             <a class="page-btn gray">
