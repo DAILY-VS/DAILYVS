@@ -140,7 +140,14 @@
   font-family: "TheJamsil5Bold";
 }
 
-.result-EI-chart {
-  display: block;
-  width: 500px;
+.chevron {
+  width: 30px;
+  transition: transform 0.3s ease;
+}
+.rotate {
+  transform: rotate(180deg);
+}
+
+#EImbti-chart text {
+  font-family: "GongGothicMedium";
 }
