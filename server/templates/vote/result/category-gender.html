@@ -2,12 +2,15 @@
 <div class="result-chart-category">
   <div class="result-category-title">카테고리</div>
   <div class="result-category-box">
-    <div class="result-category-name" id="genderToggle">
+    <div
+      class="result-category-name"
+      id="genderToggle"
+      onclick="toggleRotation1()"
+    >
       <img
         src="{% static 'img/icon/chevron_up.png'%}"
         style="width: 30px"
-        id="chevronImage"
-        class="chevron2"
+        class="chevron1"
       />
       성별
     </div>
@@ -95,44 +98,31 @@
       });
 </script>
 <script>
-  // let isRotated = false;
-
-  // function toggleRotation2() {
-  //   const chevron = document.querySelector(".chevron2");
-
-  //   if (isRotated) {
-  //     chevron.style.transform = "rotate(0deg)";
-  //   } else {
-  //     chevron.style.transform = "rotate(180deg)";
-  //   }
-
-  //   isRotated = !isRotated;
-  // }
-
   document.addEventListener("DOMContentLoaded", function () {
     const genderToggle = document.getElementById("genderToggle");
     const genderChart = document.getElementById("genderChart");
-    const chevronImage = document.getElementById("chevronImage");
 
     genderToggle.addEventListener("click", function () {
       genderChart.style.display =
         genderChart.style.display === "none" ? "block" : "none";
-      chevronImage.style.transform =
-        chevronImage.style.transform === "rotate(180deg)"
-          ? "none"
-          : "rotate(180deg)";
     });
   });
 </script>
 
-<style>
-  .chevron {
-    width: 30px;
-    transition: transform 0.3s ease;
+<script>
+  let isRotated1 = false;
+
+  function toggleRotation1() {
+    const chevron1 = document.querySelector(".chevron1");
+
+    if (isRotated1) {
+      chevron1.style.transform = "rotate(0deg)";
+    } else {
+      chevron1.style.transform = "rotate(180deg)";
+    }
+
+    isRotated1 = !isRotated1;
   }
-  .rotate {
-    transform: rotate(180deg);
-  }
-</style>
+</script>
 
 {% endblock %}

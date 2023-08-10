@@ -1,12 +1,17 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
-
-<section class="result-container">
+<style>
+  .panel {
+    /* min height incase content is higher than window height */
+    min-height: 5vh;
+  }
+</style>
+<section class="result-container" data-color="pink">
   <div class="result-title">{{poll.title}}</div>
   <div class="result-graph-content">{{poll.content}}</div>
   <div class="graph-information-container">
     {% include 'vote/result/graph-information.html' %}
   </div>
-  <div class="graph-container">
+  <div class="graph-container" data-color="skyblue">
     {% include 'vote/result/result-chart.html' %}
   </div>
   <button class="result-share-btn">
@@ -16,11 +21,64 @@
   </button>
   <div class="graph-category-container">
     <div>{% include 'vote/result/category-gender.html' %}</div>
-    <div>{% include 'vote/result/category-mbti.html' %}</div>
+    <div class="result-category-box">
+      <div
+        class="result-category-name"
+        id="mbtiToggle"
+        onclick="toggleRotation2()"
+      >
+        <img
+          src="{% static 'img/icon/chevron_up.png'%}"
+          style="width: 30px"
+          class="chevron"
+        />
+        MBTI
+      </div>
+    </div>
+    <div id="mbtiChart" style="display: none">
+      <div class="panel" data-color="pink">
+        {% include 'vote/result/category-EImbti.html' %}
+      </div>
+      <div class="panel" data-color="purple">
+        {% include 'vote/result/category-SNmbti.html' %}
+      </div>
+      <div class="panel" data-color="skyblue">
+        {% include 'vote/result/category-TFmbti.html' %}
+      </div>
+      <div class="panel" data-color="purple">
+        {% include 'vote/result/category-PJmbti.html' %}
+      </div>
+    </div>
   </div>
 
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
+<script>
+  let isRotated2 = false;
+
+  function toggleRotation2() {
+    const chevron = document.querySelector(".chevron");
+    if (isRotated2) {
+      chevron.style.transform = "rotate(0deg)";
+    } else {
+      chevron.style.transform = "rotate(180deg)";
+    }
+
+    isRotated2 = !isRotated2;
+  }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const mbtiToggle = document.getElementById("mbtiToggle");
+    const mbtiChart = document.getElementById("mbtiChart");
+
+    mbtiToggle.addEventListener("click", function () {
+      mbtiChart.style.display =
+        mbtiChart.style.display === "none" ? "block" : "none";
+    });
+  });
+</script>
 
 {% endblock %}

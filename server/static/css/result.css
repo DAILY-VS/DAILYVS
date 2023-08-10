@@ -10,6 +10,7 @@
   font-family: "GongGothicMedium";
   font-size: 34px;
   margin: 10px auto;
+  color: var(--darkblue-primary-color);
 }
 
 .graph-information {
@@ -107,7 +108,7 @@
 
 .result-category-title {
   font-family: "GongGothicMedium";
-  color: var(--turquois-secondary-color);
+  color: var(--darkblue-primary-color);
   font-size: 26px;
   margin: 50px 50px 20px 50px;
 }
@@ -117,6 +118,8 @@
   font-size: 20px;
   font-weight: 400;
   margin-left: 50px;
+  margin-top: 20px;
+  color: var(--turquois-secondary-color);
 }
 
 .gender-result,
@@ -140,14 +143,23 @@
   font-family: "TheJamsil5Bold";
 }
 
-.chevron {
-  width: 30px;
+.chevron,
+.chevron1,
+.chevron3,
+.chevron4,
+.chevron5,
+.chevron6 {
   transition: transform 0.3s ease;
 }
-.rotate {
-  transform: rotate(180deg);
+
+.mbti-category-box {
+  margin-left: 50px;
+  margin-top: 5px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  color: #a7dcdd;
 }
 
-#EImbti-chart text {
-  font-family: "GongGothicMedium";
+text {
+  font-size: 16px;
+  font-family: "NEXON Lv1 Gothic OTF";
 }
