@@ -1,6 +1,5 @@
 import json
 from .models import *
-import pandas as pd
 from account.forms import *
 from account.models import *
 from django.urls import reverse
