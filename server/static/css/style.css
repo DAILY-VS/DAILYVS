@@ -4,6 +4,7 @@
 @import url("./detail.css");
 @import url("./result.css");
 @import url("./login.css");
+@import url("./mypage.css");
 @font-face {
   font-family: "GongGothicMedium";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff")

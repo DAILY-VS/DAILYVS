@@ -1,144 +1,56 @@
 {% extends 'vote/base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        .mypage-container {
-            width: 100%;
-            height: auto;
-            display: flex;
-            flex-direction: column;
-        }
 
-        .mypage-prof-container {
-            width: 100%;
-            height: 300px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        }
 
-        .mypage-prof-container img {
-            margin-right: 30px;
-            margin-left: 20px;
-        }
-
-        .mypage-info-wrap {
-            display: flex;
-            flex-direction: column;
-            width: 300px;
-        }
-
-        .mypage-nickname-wrap {
-            display: flex;
-            flex-direction: row;
-            width: 200px;
-            margin-left: 10px;
-            align-items: center;
-        }
-
-        .mypage-revise-btn {
-            width: 100px;
-            height: 30px;
-            background-color: #FF495A;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-left: 15px;
-            font-size: 10px;
-            font-weight: 800;
-            text-align: center;
-            line-height: 30px;
-            text-decoration: none;
-        }
-
-        .mypage-revise-btn:visited {
-            color: white;
-            text-decoration: none;
-        }
-
-        .mypage-blue{
-            color: #282732;
-            font-weight: 800;
-        }
-
-        #mypage-gray {
-            color: #C4C4C4;
-            font-weight: 800;
-        }
-
-        .mypage-red {
-            color: #FF495A;
-            font-weight: 800;
-        }
-        .mypage-hr {
-            width: 200px;
-            margin-left: 10px;
-        }
-
-        .mypage-prof-detail {
-            display: flex;
-            flex-direction: row;
-        }
-    </style>
-</head>
-<body>
-    <div class="mypage-container">
-        <div class="mypage-prof-container">
-            <img src='https://picsum.photos/100/100' alt="">
-            <div class="mypage-info-wrap">
+<div class="mypage-container">
+    <div class="mypage-prof-container">
+        <img src='https://picsum.photos/100/100' alt="">
+        <div class="mypage-info-wrap">
+            <div class="mypage-nickname-wrap">
+                <span class="mypage-blue">{{user.username}}&nbsp</span>
+                <span id="mypage-gray" class="mypage-blue">님</span>
+                <a href="{% url 'vote:update' %}" class="mypage-revise-btn">회원 수정</a>
+            </div>
+            <hr class="mypage-hr">
+            <div class="mypage-prof-detail">
                 <div class="mypage-nickname-wrap">
-                    <span class="mypage-blue">{{user.username}}&nbsp</span>
-                    <span id="mypage-gray" class="mypage-blue">님</span>
-                    <a href="{% url 'vote:update' %}" class="mypage-revise-btn">회원 수정</a>
+                    <span class="mypage-red">MBTI:</span>
+                    <span class="mypage-blue">&nbsp&nbsp{{user.mbti}}</span>
                 </div>
-                <hr class="mypage-hr">
-                <div class="mypage-prof-detail">
-                    <div class="mypage-nickname-wrap">
-                        <span class="mypage-red">MBTI:</span>
-                        <span class="mypage-blue">&nbsp&nbsp{{user.mbti}}</span>
-                    </div>
-                    <div class="mypage-nickname-wrap">
-                        <span class="mypage-red">성별:</span>
-                        <span class="mypage-blue">&nbsp&nbsp{{user.gender}}</span>
-                    </div>
+                <div class="mypage-nickname-wrap">
+                    <span class="mypage-red">성별:</span>
+                    <span class="mypage-blue">&nbsp&nbsp{{user.gender}}</span>
                 </div>
             </div>
-        </div>
-        <span>나의 VOTE LIST</span>
-        <div class="pagination-box">
-            <div class="pagination">
-                <a class="page-btn gray">
-                <img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
-                </a>
-        
-            <br/>
-            <a class="page-btn">
-                {% comment %} <a class="page-btn gray"> {% endcomment %}
-                {% for page in paginator.page_range %}
-                <a class = "page-btn gray" href="?page={{ page}}">{{page}}</a>
-                {% endfor %}
-                {% comment %} </a> {% endcomment %}
-                <img src="{% static 'img/icon/right_page.png'%}" style="width: 30px" />
-                </a>
-            </div>
-        </div>
-        <hr>
-    
-        <span>나의 stat gallery</span>
-        <hr>
-        <div class="stat-gallery">
-    
         </div>
     </div>
-</body>
-</html>
+    <span>나의 VOTE LIST</span>
+    <div class="pagination-box">
+        <div class="pagination">
+            <a class="page-btn gray">
+            <img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
+            </a>
+    
+        <br/>
+        <a class="page-btn">
+            {% comment %} <a class="page-btn gray"> {% endcomment %}
+            {% for page in paginator.page_range %}
+            <a class = "page-btn gray" href="?page={{ page}}">{{page}}</a>
+            {% endfor %}
+            {% comment %} </a> {% endcomment %}
+            <img src="{% static 'img/icon/right_page.png'%}" style="width: 30px" />
+            </a>
+        </div>
+    </div>
+    <hr>
+
+    <span>나의 stat gallery</span>
+    <hr>
+    <div class="stat-gallery">
+
+    </div>
+</div>
 
 
 
