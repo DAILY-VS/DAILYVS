@@ -43,11 +43,13 @@ def login(request):
             auth.login(request, user)
             return redirect("/")
         else:
+            # Review : 아이디가 틀리는 경우는 없는건가요?
             wrong_password = True  # 비밀번호가 틀렸을 때 변수를 설정하여 템플릿으로 전달
             context = {
                 "form": form,
                 "wrong_password": wrong_password,  # 변수를 템플릿으로 전달
             }
+            # Review : 위에서 ctx를 쓰고 여기서 context를 쓰는데, 변수명 통일이 필요합니다.
             return render(request, "account/login.html", context=context)
     else:
         form = AuthenticationForm()
@@ -76,6 +78,7 @@ def change_password(request):
 
 #회원탈퇴
 class UserDeleteView(DeleteView):
+    # Review : 갑자기 탈퇴 부분만 DRF가 된 이유가 있나요??
     model = User
     template_name = "account/delete.html"
     success_url = reverse_lazy("vote:mypage")

@@ -15,12 +15,16 @@ def main(request):
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
 
-    if sort == "popular":
-        polls = polls.order_by("-views_count")  # 인기순
-    elif sort == "latest":
-        polls = polls.order_by("-id")  # 최신순
-    elif sort == "oldest":
-        polls = polls.order_by("id")  # 등록순
+    # Review : 정렬 방식이 많아지면 관리가 까다로워질 수 있으니 아래처럼 딕셔너리 사용하는 것을 추천드립니다.
+
+    SORT_KEY_ORDER_BY_MAPPING = {
+        "popular": "-views_count",
+        "latest": "-id",
+        "oldest": "id",
+        "default": "-id"
+    }
+
+    polls = pools.order_by(SORT_KEY_ORDER_BY_MAPPING.get(sort, "default"))
 
     page = request.GET.get("page")
 
@@ -78,9 +82,11 @@ def poll_like(request):
 
         if request.user.is_authenticated:
             user = request.user
+        # Review : login_required 인데 이 부분으로 들어올 수 있나요?
         else:
             user = AnonymousUser()
 
+        # Review : login_required 인데 is_authenticated는 항상 참 아닌가요?
         if user.is_authenticated and user.is_active:  # 인증된 사용자 중 활성화된 사용자만 고려
             if poll.poll_like.filter(id=user.id).exists():
                 poll.poll_like.remove(user)
@@ -162,6 +168,7 @@ def classifyuser(request, poll_id):
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id):
+    # Review : 반복되는 부분은 반복문 사용해서 없앨 수 있을 것 같습니다.
     poll = get_object_or_404(Poll, pk=poll_id)
     mbtis = [
         "ISTJ",
