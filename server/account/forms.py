@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 
-
 class SignupForm(UserCreationForm):
     username = forms.CharField(
         label="아이디",
@@ -80,7 +79,6 @@ class SignupForm(UserCreationForm):
             ),
         }
 
-
 class UserChangeForm(UserChangeForm):
     password = None
     def clean_nickname(self):
@@ -111,4 +109,3 @@ class UserDeleteForm(forms.ModelForm):
     class Meta:
         model = User
         fields = []
-        
