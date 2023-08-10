@@ -1,6 +1,5 @@
 import json
 from .models import *
-import pandas as pd
 from account.forms import *
 from account.models import *
 from django.urls import reverse
@@ -9,7 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from django.core.serializers.json import DjangoJSONEncoder
 
 # 메인페이지
 def main(request):
@@ -70,17 +69,14 @@ def poll_like(request):
     if request.method == "POST":
         req = json.loads(request.body)
         poll_id = req["poll_id"]
+        
         try:
             poll = Poll.objects.get(id=poll_id)
         except Poll.DoesNotExist:
             return JsonResponse({"error": "해당 투표가 존재하지 않습니다."}, status=404)
-
         if request.user.is_authenticated:
             user = request.user
-        else:
-            user = AnonymousUser()
-
-        if user.is_authenticated and user.is_active:  # 인증된 사용자 중 활성화된 사용자만 고려
+            
             if poll.poll_like.filter(id=user.id).exists():
                 poll.poll_like.remove(user)
                 message = "좋아요 취소"
@@ -91,10 +87,7 @@ def poll_like(request):
             like_count = poll.poll_like.count()
             context = {"like_count": like_count, "message": message}
             return JsonResponse(context)
-        else:
-            return JsonResponse({"error": "로그인이 필요하거나 활성화된 사용자가 아닙니다."}, status=401)
-    else:
-        return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
+        return redirect('/')
 
 
 # 유저 마이페이지
@@ -102,7 +95,9 @@ def poll_like(request):
 def mypage(request):
     polls = Poll.objects.all()
     page = request.GET.get("page")
+
     paginator = Paginator(polls, 4)
+
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -116,6 +111,7 @@ def mypage(request):
         "page_obj": page_obj,
         "paginator": paginator,
     }
+    
     return render(request, "vote/mypage.html", context)
 
 
@@ -132,9 +128,50 @@ def mypage_update(request):
     context = {"form": form}
     return render(request, "vote/update.html", context)
 
+#댓글 추가
+@login_required
+def comment_write_view(request, poll_id):
+    poll = get_object_or_404(Poll, id=poll_id)
+    user_info = request.user  # 현재 로그인한 사용자
+    content = request.POST.get('content')
+    
+    if content:
+        comment = Comment.objects.create(poll=poll, content=content, user_info=request.user)
+        poll.save()
+        comment_id = Comment.objects.last().pk
+    
+        data = {
+            'nickname': user_info.nickname,
+            'mbti': user_info.mbti,
+            'gender': user_info.gender,
+            'content': content,
+            'created_at': comment.created_at.strftime("%Y년 %m월 %d일"),
+            'comment_id': comment_id
+        }
+        print(comment_id)
+        return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
-# 댓글
+#댓글 삭제
+@login_required
+def comment_delete_view(request, pk):
+    poll = get_object_or_404(Poll, id=pk)
+    comment_id = request.POST.get('comment_id')
+    target_comment = Comment.objects.get(pk = comment_id)
 
+    if request.user == target_comment.user_info:
+        target_comment.delete()
+        poll.save()
+        data = {
+            'comment_id': comment_id,
+            'success': True
+        }
+    else:
+        data = {
+            'success': False,
+            'error': '본인 댓글이 아닙니다.'
+        }
+    print(comment_id)
+    return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
 def classifyuser(request, poll_id):
@@ -168,6 +205,8 @@ def classifyuser(request, poll_id):
 # 회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    comments = Comment.objects.filter(poll_id=poll_id)
+    
     mbtis = [
         "ISTJ",
         "ISFJ",
@@ -575,6 +614,7 @@ def calcstat(request, poll_id):
         "j_choice1_percentage": j_choice1_percentage,
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
+        'comments': comments,
     }
     return render(request, template_name="vote/result.html", context=ctx)
 
