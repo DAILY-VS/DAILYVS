@@ -135,7 +135,7 @@ def mypage_update(request):
 # 댓글
 
 
-# 투표 시 회원, 비회원 구분
+# 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
 def classifyuser(request, poll_id):
     if request.method == "POST":
         poll = get_object_or_404(Poll, pk=poll_id)
@@ -148,6 +148,7 @@ def classifyuser(request, poll_id):
                 vote.save()
                 user.voted_polls.add(poll_id)
                 calcstat_url = reverse("vote:calcstat", args=[poll_id])
+                voted_polls = user.voted_polls.all()
                 return redirect(calcstat_url)
             except ValueError:
                 vote = NonUserVote(poll=poll, choice=choice)
