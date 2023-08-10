@@ -1,43 +1,41 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-#회원가입
 from .forms import SignupForm 
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib import auth
-from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import *
 from vote.models import *
-# 비밀번호 변경
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-# 회원 탈퇴
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import User
-from .forms import UserChangeForm, UserDeleteForm
 
 User = get_user_model()
 
-def main(request):
-    return render(request, "base.html") 
-
-
-def change_password(request):
+#회원가입
+def signup(request):
     if request.method == "POST":
-        form = PasswordChangeForm(request.user, request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  # 변경 후 로그인 상태 유지
-            return redirect("vote:mypage")  # 변경 후 이동할 페이지
+            auth.login(request, user)
+
+            return redirect("/")
+        else:
+            ctx = {
+                "form": form,
+            }
+            return render(request, "account/signup.html", context=ctx)
     else:
-        form = PasswordChangeForm(request.user)
-    context = {"form": form}
-    return render(request, "account/change_password.html", context)
-
-
-def login(request):  # 로그인
+        form = SignupForm()
+        ctx = {
+            "form": form,
+        }
+        return render(request, template_name="account/signup.html", context=ctx)
+    
+#로그인
+def login(request):  
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -58,33 +56,25 @@ def login(request):  # 로그인
         }
         return render(request, "account/login.html", context=context)
 
-
-def logout(request):  # 로그아웃
+#로그아웃
+def logout(request):  
     auth.logout(request)
     return redirect("/")
 
-
-def signup(request):
+#비밀번호 변경
+def change_password(request):
     if request.method == "POST":
-        form = SignupForm(request.POST)
+        form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            auth.login(request, user)
-
-            return redirect("/")
-        else:
-            ctx = {
-                "form": form,
-            }
-            return render(request, "account/signup.html", context=ctx)
+            update_session_auth_hash(request, user)  # 변경 후 로그인 상태 유지
+            return redirect("vote:mypage")  # 변경 후 이동할 페이지
     else:
-        form = SignupForm()
-        ctx = {
-            "form": form,
-        }
-        return render(request, template_name="account/signup.html", context=ctx)
+        form = PasswordChangeForm(request.user)
+    context = {"form": form}
+    return render(request, "account/change_password.html", context)
 
-
+#회원탈퇴
 class UserDeleteView(DeleteView):
     model = User
     template_name = "account/delete.html"
