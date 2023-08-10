@@ -9,6 +9,7 @@ class User(AbstractUser):
     )
     gender = models.CharField(verbose_name="성별", max_length=1, choices=GENDERS)
     nickname = models.CharField(max_length=20)
+    # Review : MBTI 셋 변수가 다른 파일에서도 사용되고 있는데, 통합 관리가 필요할 것 같습니다.
     MBTI_set = (
         ("INFP", "INFP"),
         ("ENFP", "ENFP"),
