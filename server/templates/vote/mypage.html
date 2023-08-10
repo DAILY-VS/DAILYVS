@@ -74,69 +74,18 @@ MBTI: {{user.mbti}}
 {% endif %}
 
 <h5>나의 vote list</h5>
-{% for page in page_obj %}
-    <span>{{page.title}}</span>
+<ul>
+{% for poll in polls %}
+<li>
+   {{ poll.title }}
+</li>
 {% endfor %}
-<<<<<<< HEAD
 </ul> -->
 {% endblock %}
-=======
-
-<div class="pagination-box">
-    <div class="pagination">
-      {% if page_obj.has_previous %}
-      <a class="page-btn gray" href="?page={{ page_obj.previous_page_number }}">
-        <img src="{% static 'img/icon/left_page.png' %}" style="width: 30px" />
-      </a>
-      {% endif %} {% for page_number in page_obj.paginator.page_range %}
-      <a
-        class="page-btn {% if page_number == page_obj.number %}red-pink{% endif %}"
-        href="?page={{ page_number }}"
-      >
-        {{ page_number }}
-      </a>
-      {% endfor %} {% if page_obj.has_next %}
-      <a class="page-btn gray" href="?page={{ page_obj.next_page_number }}">
-        <img src="{% static 'img/icon/right_page.png' %}" style="width: 30px" />
-      </a>
-      {% endif %}
-    </div>
-  </div>
-  {% endblock %}
-</div>
->>>>>>> fce295402d3b0a02f84deb4bfc61bf3993ea4f57
 
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const pollList = document.querySelector(".main-grid-content");
-      const pagination = document.querySelector(".pagination");
-  
-      pagination.addEventListener("click", function (event) {
-        if (event.target.tagName === "A") {
-          event.preventDefault();
-          const pageUrl = event.target.getAttribute("href");
-  
-          fetch(pageUrl)
-            .then((response) => response.text())
-            .then((data) => {
-              const parser = new DOMParser();
-              const newDoc = parser.parseFromString(data, "text/html");
-  
-              pollList.innerHTML =
-                newDoc.querySelector(".main-grid-content").innerHTML;
-              pagination.innerHTML =
-                newDoc.querySelector(".pagination").innerHTML;
-            })
-            .catch((error) => console.error("Error fetching page:", error));
-        }
-      });
-    });
-  
-    selectSort.addEventListener("change", function () {
-    const sortValue = selectSort.value;
-    const pageUrl = `{% url 'vote:main' %}?sort=${sortValue}`;
-    updateContent(pageUrl);
-  });
-  
-  </script>
+{% comment %}  {% endcomment %}
+
+    {% comment %} <form action="{% url 'account:delete' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-secondary">회원 탈퇴</button> {% endcomment %} 
