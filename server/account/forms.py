@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 
-
 class SignupForm(UserCreationForm):
     username = forms.CharField(
         label="아이디",
@@ -80,23 +79,18 @@ class SignupForm(UserCreationForm):
             ),
         }
 
-
 class UserChangeForm(UserChangeForm):
     password = None
-
-    class Meta:
-        model = get_user_model()
-        fields = ['nickname','mbti','gender']
-
-
-class UserDeleteForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = []
-        fields = ["nickname", "mbti", "gender"]
-
-
-class UserDeleteForm(forms.ModelForm):
+    def clean_nickname(self):
+        nickname = self.cleaned_data.get("nickname")
+        user_model = get_user_model()
+        # 현재 이름과 같다면 상관없이 PASS
+        user_instance = self.instance
+        # 다른 유저랑 이름이 같다면 제한
+        other_users_with_same_nickname = user_model.objects.exclude(id=user_instance.id).filter(nickname=nickname)
+        if other_users_with_same_nickname.exists():
+            raise forms.ValidationError("이미 사용 중인 닉네임입니다.")
+        return nickname
     class Meta:
         model = User
         fields = []
@@ -109,3 +103,9 @@ class UserDeleteForm(forms.ModelForm):
                 attrs={"class": "form-control", "placeholder": "성별을 입력하세요"}
             ),
         }
+
+
+class UserDeleteForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = []
