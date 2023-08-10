@@ -129,25 +129,30 @@ def mypage_update(request):
 
 #투표 시 회원, 비회원 구분 
 def classifyuser(request, poll_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
-    user = request.user
-    if choice_id:
-        choice = Choice.objects.get(id=choice_id)
-        try : 
-            vote = UserVote(user=request.user, poll=poll, choice=choice)
-            vote.save()
-            user.voted_polls.add(poll_id)
-            calcstat_url = reverse("vote:calcstat", args=[poll_id])
-            return redirect(calcstat_url)
-        except ValueError: 
-            vote = NonUserVote(poll=poll, choice=choice)
-            vote.save()
-            nonuservote_id = vote.id
-            detail2_url = reverse(
-                "vote:nonusergender", args=[poll_id, nonuservote_id]
-            )  # Generate the URL with poll_id
-            return redirect(detail2_url)
+    if request.method == "POST" : 
+        poll = get_object_or_404(Poll, pk=poll_id)
+        choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
+        user = request.user
+        if choice_id:
+            choice = Choice.objects.get(id=choice_id)
+            try : 
+                vote = UserVote(user=request.user, poll=poll, choice=choice)
+                vote.save()
+                user.voted_polls.add(poll_id)
+                calcstat_url = reverse("vote:calcstat", args=[poll_id])
+                return redirect(calcstat_url)
+            except ValueError: 
+                vote = NonUserVote(poll=poll, choice=choice)
+                vote.save()
+                nonuservote_id = vote.id 
+                poll = get_object_or_404(Poll, pk=poll_id)
+                context = {
+                    "poll": poll,
+                    "gender": ["M", "W"],
+                    "nonuservote_id": nonuservote_id,
+                    "loop_time": range(0, 2),
+                }
+                return render(request, "vote/detail2.html", context)
 
 #회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id):
@@ -327,32 +332,22 @@ def calcstat(request, poll_id):
     }
     return render(request, template_name="vote/result.html", context=ctx)
 
-#비회원 투표시 성별 기입 
-def poll_nonusergender(request, poll_id, nonuservote_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    context = {
-        "poll": poll,
-        "gender": ["M", "W"],
-        "nonuservote_id": nonuservote_id,
-        "loop_time": range(0, 2),
-    }
-    return render(request, "vote/detail2.html", context)
-
 #비회원 투표시 MBTI 기입 
 def poll_nonusermbti(request, poll_id, nonuservote_id):
-    choice_id = request.POST.get("choice")
-    if choice_id == "M":
-        NonUserVote.objects.filter(pk=nonuservote_id).update(gender="M")
-    if choice_id == "W":
-        NonUserVote.objects.filter(pk=nonuservote_id).update(gender="W")
-    poll = get_object_or_404(Poll, id=poll_id)
-    context = {
-        "poll": poll,
-        "mbti": ["INTP", "ESFJ"],
-        "nonuservote_id": nonuservote_id,
-        "loop_time": range(0, 2),
-    }
-    return render(request, "vote/detail3.html", context)
+    if request.method == "POST":
+        choice_id = request.POST.get("choice")
+        if choice_id == "M":
+            NonUserVote.objects.filter(pk=nonuservote_id).update(gender="M")
+        if choice_id == "W":
+            NonUserVote.objects.filter(pk=nonuservote_id).update(gender="W")
+        poll = get_object_or_404(Poll, id=poll_id)
+        context = {
+            "poll": poll,
+            "mbti": ["INTP", "ESFJ"],
+            "nonuservote_id": nonuservote_id,
+            "loop_time": range(0, 2),
+        }
+        return render(request, "vote/detail3.html", context)
 
 #비회원 투표시 투표 정보 전송
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
