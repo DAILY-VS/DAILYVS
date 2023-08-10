@@ -181,6 +181,7 @@ def classifyuser(request, poll_id):
 #회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    comments = Comment.objects.filter(poll=poll_id)
     mbtis = [
         "ISTJ",
         "ISFJ",
@@ -353,6 +354,7 @@ def calcstat(request, poll_id):
         "mbtis_choice1_count": total_mbtis_choice1_count,
         "mbtis_choice2_count": total_mbtis_choice2_count,
         "poll": poll,
+        'comments': comments
     }
     return render(request, template_name="vote/result.html", context=ctx)
 
