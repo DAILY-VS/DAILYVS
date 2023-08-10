@@ -28,8 +28,15 @@
     <span>나의 VOTE LIST</span>
     <ul>
       {% for voted_poll in user.voted_polls.all %}
-          <li>{{ voted_poll }}</li>
+          {% for uservote in uservotes %}
+              {% if voted_poll.id == uservote.poll.id %}
+                  <a href="{% url 'vote:calcstat' uservote.poll.id%}">{{ voted_poll }}</a>
+                  {{ uservote.choice.choice_text }}
+              {% endif %}
+          {% endfor %}
       {% endfor %}
+  </ul>
+
     </ul>
     <div class="pagination-box">
         <div class="pagination">
