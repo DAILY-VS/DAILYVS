@@ -1,0 +1,77 @@
+{% load static %} {% block content %}
+<div class="result-chart-category">
+  <div class="result-category-title">카테고리</div>
+  <div class="result-category-box">
+    <div
+      class="result-category-name"
+      id="mbtiToggle"
+      onclick="toggleRotation()"
+    >
+      <img
+        src="{% static 'img/icon/chevron_up.png'%}"
+        style="width: 30px"
+        class="chevron"
+      />
+      MBTI
+    </div>
+    <div class="result-category-chart" id="mbtiChart">
+      <div class="mbti-result">
+        <div class="result-man-chart">
+          <div class="small-choice-title">E vs I</div>
+          <canvas id="EIChart"></canvas>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.0.choice_text }} : </span
+            ><span>{{choice1_man_percentage}}%</span>
+          </div>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.1.choice_text }} : </span
+            ><span>{{choice2_man_percentage}}%</span>
+          </div>
+        </div>
+        <div class="result-woman-chart">
+          <div class="small-choice-title">S vs N</div>
+          <canvas id="SNChart"></canvas>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.0.choice_text }} : </span
+            ><span>{{choice1_woman_percentage}}%</span>
+          </div>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.1.choice_text }} : </span
+            ><span>{{choice2_woman_percentage}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let isRotated = false;
+
+  function toggleRotation() {
+    const chevron = document.querySelector(".chevron");
+
+    if (isRotated) {
+      chevron.style.transform = "rotate(0deg)";
+    } else {
+      chevron.style.transform = "rotate(180deg)";
+    }
+
+    isRotated = !isRotated;
+  }
+</script>
+<style>
+  .chevron {
+    width: 30px;
+    transition: transform 0.3s ease;
+  }
+  .rotate {
+    transform: rotate(180deg);
+  }
+</style>
+
+{% endblock %}

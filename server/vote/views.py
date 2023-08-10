@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-#메인페이지
+
+# 메인페이지
 def main(request):
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
@@ -33,17 +34,21 @@ def main(request):
     except EmptyPage:
         page = paginator.num_pages
         page_obj = paginator.page(page)
+
+    promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
     context = {
         "polls": polls,
         "page_obj": page_obj,
         "paginator": paginator,
+        "promotion_polls": promotion_polls,
     }
 
     return render(request, "vote/main.html", context)
 
+
 # 투표 디테일 페이지
 def poll_detail(request, poll_id):
-    user = request.user 
+    user = request.user
     poll = get_object_or_404(Poll, id=poll_id)
 
     if user.is_authenticated and user.voted_polls.filter(id=poll_id).exists():
@@ -59,7 +64,8 @@ def poll_detail(request, poll_id):
         response = render(request, "vote/detail.html", context)
         return response
 
-#투표 게시글 좋아요 
+
+# 투표 게시글 좋아요
 @login_required
 def poll_like(request):
     if request.method == "POST":
@@ -91,8 +97,9 @@ def poll_like(request):
     else:
         return JsonResponse({"error": "잘못된 요청입니다."}, status=400)
 
-#유저 마이페이지
-@login_required(login_url='/account/login/') # 비로그인시 /mypage 막음
+
+# 유저 마이페이지
+@login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
     polls = Poll.objects.all()
     page = request.GET.get("page")
@@ -112,8 +119,9 @@ def mypage(request):
     }
     return render(request, "vote/mypage.html", context)
 
-#마이페이지 정보 수정
-@login_required(login_url='/account/login/') # 비로그인시 mypage/update 막음
+
+# 마이페이지 정보 수정
+@login_required(login_url="/account/login/")  # 비로그인시 mypage/update 막음
 def mypage_update(request):
     if request.method == "POST":
         form = UserChangeForm(request.POST, instance=request.user)
@@ -125,22 +133,24 @@ def mypage_update(request):
     context = {"form": form}
     return render(request, "vote/update.html", context)
 
-#댓글
 
-#투표 시 회원, 비회원 구분 
+# 댓글
+
+
+# 투표 시 회원, 비회원 구분
 def classifyuser(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
     user = request.user
     if choice_id:
         choice = Choice.objects.get(id=choice_id)
-        try : 
+        try:
             vote = UserVote(user=request.user, poll=poll, choice=choice)
             vote.save()
             user.voted_polls.add(poll_id)
             calcstat_url = reverse("vote:calcstat", args=[poll_id])
             return redirect(calcstat_url)
-        except ValueError: 
+        except ValueError:
             vote = NonUserVote(poll=poll, choice=choice)
             vote.save()
             nonuservote_id = vote.id
@@ -149,7 +159,8 @@ def classifyuser(request, poll_id):
             )  # Generate the URL with poll_id
             return redirect(detail2_url)
 
-#회원/비회원 투표 통계 계산 및 결과 페이지
+
+# 회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     mbtis = [
@@ -174,28 +185,28 @@ def calcstat(request, poll_id):
     user_poll = UserVote.objects.filter(choice__poll__pk=poll_id)
     user_total_count = user_poll.count()
 
-    user_choice1 = user_poll.filter(choice_id=2*poll_id-1)
+    user_choice1 = user_poll.filter(choice_id=2 * poll_id - 1)
     user_choice1_count = user_choice1.count()
 
-    user_choice2 = user_poll.filter(choice_id=2*poll_id)
+    user_choice2 = user_poll.filter(choice_id=2 * poll_id)
     user_choice2_count = user_choice2.count()
 
     user_man = UserVote.objects.filter(choice__poll__pk=poll_id, user__gender="M")
     user_man_count = user_man.count()
 
-    user_man_choice1 = user_man.filter(choice_id=2*poll_id-1)
+    user_man_choice1 = user_man.filter(choice_id=2 * poll_id - 1)
     user_man_choice1_count = user_man_choice1.count()
 
-    user_man_choice2 = user_man.filter(choice_id=2*poll_id)
+    user_man_choice2 = user_man.filter(choice_id=2 * poll_id)
     user_man_choice2_count = user_man_choice2.count()
 
     user_woman = UserVote.objects.filter(choice__poll__pk=poll_id, user__gender="W")
     user_woman_count = user_woman.count()
 
-    user_woman_choice1 = user_woman.filter(choice_id=2*poll_id-1)
+    user_woman_choice1 = user_woman.filter(choice_id=2 * poll_id - 1)
     user_woman_choice1_count = user_woman_choice1.count()
 
-    user_woman_choice2 = user_woman.filter(choice_id=2*poll_id)
+    user_woman_choice2 = user_woman.filter(choice_id=2 * poll_id)
     user_woman_choice2_count = user_woman_choice2.count()
 
     user_mbtis_count = []
@@ -207,39 +218,39 @@ def calcstat(request, poll_id):
         user_mbti_count = user_mbti.count()
         user_mbtis_count.append(user_mbti_count)
 
-        user_mbti_choice1 = user_mbti.filter(choice_id=2*poll_id-1)
+        user_mbti_choice1 = user_mbti.filter(choice_id=2 * poll_id - 1)
         user_mbti_choice1_count = user_mbti_choice1.count()
         user_mbtis_choice1_count.append(user_mbti_choice1_count)
 
-        user_mbti_choice2 = user_mbti.filter(choice_id=2*poll_id)
+        user_mbti_choice2 = user_mbti.filter(choice_id=2 * poll_id)
         user_mbti_choice2_count = user_mbti_choice2.count()
         user_mbtis_choice2_count.append(user_mbti_choice2_count)
 
     nonuser_poll = NonUserVote.objects.filter(choice__poll__pk=poll_id)
     nonuser_total_count = nonuser_poll.count()
 
-    nonuser_choice1 = nonuser_poll.filter(choice_id=2*poll_id-1)
+    nonuser_choice1 = nonuser_poll.filter(choice_id=2 * poll_id - 1)
     nonuser_choice1_count = nonuser_choice1.count()
 
-    nonuser_choice2 = nonuser_poll.filter(choice_id=2*poll_id)
+    nonuser_choice2 = nonuser_poll.filter(choice_id=2 * poll_id)
     nonuser_choice2_count = nonuser_choice2.count()
 
     nonuser_man = NonUserVote.objects.filter(choice__poll__pk=poll_id, gender="M")
     nonuser_man_count = nonuser_man.count()
 
-    nonuser_man_choice1 = nonuser_man.filter(choice_id=2*poll_id-1)
+    nonuser_man_choice1 = nonuser_man.filter(choice_id=2 * poll_id - 1)
     nonuser_man_choice1_count = nonuser_man_choice1.count()
 
-    nonuser_man_choice2 = nonuser_man.filter(choice_id=2*poll_id)
+    nonuser_man_choice2 = nonuser_man.filter(choice_id=2 * poll_id)
     nonuser_man_choice2_count = nonuser_man_choice2.count()
 
     nonuser_woman = NonUserVote.objects.filter(choice__poll__pk=poll_id, gender="W")
     nonuser_woman_count = nonuser_woman.count()
 
-    nonuser_woman_choice1 = nonuser_woman.filter(choice_id=2*poll_id-1)
+    nonuser_woman_choice1 = nonuser_woman.filter(choice_id=2 * poll_id - 1)
     nonuser_woman_choice1_count = nonuser_woman_choice1.count()
 
-    nonuser_woman_choice2 = nonuser_woman.filter(choice_id=2*poll_id)
+    nonuser_woman_choice2 = nonuser_woman.filter(choice_id=2 * poll_id)
     nonuser_woman_choice2_count = nonuser_woman_choice2.count()
 
     nonuser_mbtis_count = []
@@ -251,11 +262,11 @@ def calcstat(request, poll_id):
         nonuser_mbti_count = nonuser_mbti.count()
         nonuser_mbtis_count.append(nonuser_mbti_count)
 
-        nonuser_mbti_choice1 = nonuser_mbti.filter(choice_id=2*poll_id-1)
+        nonuser_mbti_choice1 = nonuser_mbti.filter(choice_id=2 * poll_id - 1)
         nonuser_mbti_choice1_count = nonuser_mbti_choice1.count()
         nonuser_mbtis_choice1_count.append(nonuser_mbti_choice1_count)
 
-        nonuser_mbti_choice2 = nonuser_mbti.filter(choice_id=2*poll_id)
+        nonuser_mbti_choice2 = nonuser_mbti.filter(choice_id=2 * poll_id)
         nonuser_mbti_choice2_count = nonuser_mbti_choice2.count()
         nonuser_mbtis_choice2_count.append(nonuser_mbti_choice2_count)
 
@@ -306,6 +317,15 @@ def calcstat(request, poll_id):
     ]
     choice1_percentage = int(total_choice1_count / total_count * 100)
     choice2_percentage = int(total_choice2_count / total_count * 100)
+    choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
+    choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
+    choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
+    choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+
+    print("choice1_man_percentage", choice1_man_percentage)
+    print("choice2_man_percentage", choice2_man_percentage)
+    print("choice1_woman_percentage", choice1_woman_percentage)
+    print("choice2_woman_percentage", choice2_woman_percentage)
 
     ctx = {
         "total_count": total_count,
@@ -316,9 +336,13 @@ def calcstat(request, poll_id):
         "man_count": total_man_count,
         "man_choice1_count": total_man_choice1_count,
         "man_choice2_count": total_man_choice2_count,
+        "choice1_man_percentage": choice1_man_percentage,
+        "choice2_man_percentage": choice2_man_percentage,
         "woman_count": total_woman_count,
         "woman_choice1_count": total_woman_choice1_count,
         "woman_choice2_count": total_woman_choice2_count,
+        "choice1_woman_percentage": choice1_woman_percentage,
+        "choice2_woman_percentage": choice2_woman_percentage,
         "mbtis": mbtis,
         "mbtis_count": total_mbtis_count,
         "mbtis_choice1_count": total_mbtis_choice1_count,
@@ -327,7 +351,8 @@ def calcstat(request, poll_id):
     }
     return render(request, template_name="vote/result.html", context=ctx)
 
-#비회원 투표시 성별 기입 
+
+# 비회원 투표시 성별 기입
 def poll_nonusergender(request, poll_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     context = {
@@ -338,7 +363,8 @@ def poll_nonusergender(request, poll_id, nonuservote_id):
     }
     return render(request, "vote/detail2.html", context)
 
-#비회원 투표시 MBTI 기입 
+
+# 비회원 투표시 MBTI 기입
 def poll_nonusermbti(request, poll_id, nonuservote_id):
     choice_id = request.POST.get("choice")
     if choice_id == "M":
@@ -354,7 +380,8 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
     }
     return render(request, "vote/detail3.html", context)
 
-#비회원 투표시 투표 정보 전송
+
+# 비회원 투표시 투표 정보 전송
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
     choice_id = request.POST.get("choice")
     NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))

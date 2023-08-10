@@ -1,0 +1,138 @@
+{% load static %} {% block content %}
+<div class="result-chart-category">
+  <div class="result-category-title">카테고리</div>
+  <div class="result-category-box">
+    <div class="result-category-name" id="genderToggle">
+      <img
+        src="{% static 'img/icon/chevron_up.png'%}"
+        style="width: 30px"
+        id="chevronImage"
+        class="chevron2"
+      />
+      성별
+    </div>
+    <div class="result-category-chart" id="genderChart" style="display: none">
+      <div class="gender-result">
+        <div class="result-man-chart">
+          <div class="small-choice-title">남성</div>
+          <canvas id="manChart"></canvas>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.0.choice_text }} : </span
+            ><span>{{choice1_man_percentage}}%</span>
+          </div>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.1.choice_text }} : </span
+            ><span>{{choice2_man_percentage}}%</span>
+          </div>
+        </div>
+        <div class="result-woman-chart">
+          <div class="small-choice-title">여성</div>
+          <canvas id="womanChart"></canvas>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.0.choice_text }} : </span
+            ><span>{{choice1_woman_percentage}}%</span>
+          </div>
+          <div>
+            <span class="small-choice-title"
+              >{{ poll.choice_set.all.1.choice_text }} : </span
+            ><span>{{choice2_woman_percentage}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    var ctx1 = document.getElementById("manChart").getContext("2d");
+    var manChart = new Chart(ctx1, {
+        type: "pie",
+        data: {
+          labels:[ {% for choice in poll.choice_set.all %}
+        "{{ choice.choice_text }}",
+          {% endfor %}],
+          datasets: [{
+            label: "남성",
+            backgroundColor: ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)"],
+            borderColor: ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
+            borderWidth: 1,
+            data: [{{choice1_man_percentage}}, {{choice2_man_percentage}}]
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+  var ctx2 = document.getElementById("womanChart").getContext("2d");
+    var womanChart = new Chart(ctx2, {
+        type: "pie",
+        data: {
+          labels:[ {% for choice in poll.choice_set.all %}
+        "{{ choice.choice_text }}",
+          {% endfor %}],
+          datasets: [{
+            label: "여성",
+            backgroundColor: ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)"],
+            borderColor: ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
+            borderWidth: 1,
+            data: [{{choice1_woman_percentage}}, {{choice2_woman_percentage}}]
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+</script>
+<script>
+  // let isRotated = false;
+
+  // function toggleRotation2() {
+  //   const chevron = document.querySelector(".chevron2");
+
+  //   if (isRotated) {
+  //     chevron.style.transform = "rotate(0deg)";
+  //   } else {
+  //     chevron.style.transform = "rotate(180deg)";
+  //   }
+
+  //   isRotated = !isRotated;
+  // }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const genderToggle = document.getElementById("genderToggle");
+    const genderChart = document.getElementById("genderChart");
+    const chevronImage = document.getElementById("chevronImage");
+
+    genderToggle.addEventListener("click", function () {
+      genderChart.style.display =
+        genderChart.style.display === "none" ? "block" : "none";
+      chevronImage.style.transform =
+        chevronImage.style.transform === "rotate(180deg)"
+          ? "none"
+          : "rotate(180deg)";
+    });
+  });
+</script>
+
+<style>
+  .chevron {
+    width: 30px;
+    transition: transform 0.3s ease;
+  }
+  .rotate {
+    transform: rotate(180deg);
+  }
+</style>
+
+{% endblock %}
