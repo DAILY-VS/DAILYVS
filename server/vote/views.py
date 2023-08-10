@@ -34,10 +34,13 @@ def main(request):
     except EmptyPage:
         page = paginator.num_pages
         page_obj = paginator.page(page)
+
+    promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
     context = {
         "polls": polls,
         "page_obj": page_obj,
         "paginator": paginator,
+        "promotion_polls": promotion_polls,
     }
 
     return render(request, "vote/main.html", context)
