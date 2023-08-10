@@ -96,7 +96,24 @@ def poll_like(request):
 @login_required(login_url='/account/login/') # 비로그인시 /mypage 막음
 def mypage(request):
     polls = Poll.objects.all()
-    context = {"polls": polls}
+    page = request.GET.get("page")
+
+    paginator = Paginator(polls, 4)
+
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        page_obj = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        page_obj = paginator.page(page)
+    context = {
+        "polls": polls,
+        "page_obj": page_obj,
+        "paginator": paginator,
+    }
+    
     return render(request, "vote/mypage.html", context)
 
 #마이페이지 정보 수정
