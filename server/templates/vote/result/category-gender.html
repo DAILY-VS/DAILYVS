@@ -7,6 +7,7 @@
         src="{% static 'img/icon/chevron_up.png'%}"
         style="width: 30px"
         id="chevronImage"
+        class="chevron2"
       />
       성별
     </div>
@@ -94,6 +95,20 @@
       });
 </script>
 <script>
+  // let isRotated = false;
+
+  // function toggleRotation2() {
+  //   const chevron = document.querySelector(".chevron2");
+
+  //   if (isRotated) {
+  //     chevron.style.transform = "rotate(0deg)";
+  //   } else {
+  //     chevron.style.transform = "rotate(180deg)";
+  //   }
+
+  //   isRotated = !isRotated;
+  // }
+
   document.addEventListener("DOMContentLoaded", function () {
     const genderToggle = document.getElementById("genderToggle");
     const genderChart = document.getElementById("genderChart");
