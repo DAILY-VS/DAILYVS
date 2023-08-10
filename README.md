@@ -4,6 +4,7 @@
 
 ------------------
 코드 리뷰 guideline </br>
+0. pip install -r requirements.txt </br>
 1. db.sqlite3 파일 받기. </br>
 2. 메인페이지 </br>
     좌측 상단 바 로그인/회원가입 가능 </br>
