@@ -230,7 +230,10 @@ def calcstat(request, poll_id):
         user_mbti_choice2_count = user_mbti_choice2.count()
         user_mbtis_choice2_count.append(user_mbti_choice2_count)
 
-    nonuser_poll = NonUserVote.objects.filter(choice__poll__pk=poll_id)
+    nonuser_poll = NonUserVote.objects.filter(choice__poll__pk=poll_id, MBTI__isnull=False, gender__isnull=False)
+    print(nonuser_poll)
+    for vote in nonuser_poll:
+        print(vote)
     nonuser_total_count = nonuser_poll.count()
 
     nonuser_choice1 = nonuser_poll.filter(choice_id=2 * poll_id - 1)
