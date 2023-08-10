@@ -1,9 +1,4 @@
-from django.shortcuts import redirect
-from django.urls import path, include
-from .views import *
-from django.contrib.auth import views as auth_views
-from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path
 from . import views
 
 app_name = "account"
