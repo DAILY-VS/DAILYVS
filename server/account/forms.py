@@ -94,19 +94,6 @@ class UserChangeForm(UserChangeForm):
             raise forms.ValidationError("이미 사용 중인 닉네임입니다.")
         return nickname
     class Meta:
-        model = get_user_model()
-        fields = ['nickname','mbti','gender']
-
-
-class UserDeleteForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = []
-        fields = ["nickname", "mbti", "gender"]
-
-
-class UserDeleteForm(forms.ModelForm):
-    class Meta:
         model = User
         fields = []
         fields = ["nickname", "mbti", "gender"]
@@ -118,3 +105,10 @@ class UserDeleteForm(forms.ModelForm):
                 attrs={"class": "form-control", "placeholder": "성별을 입력하세요"}
             ),
         }
+
+
+class UserDeleteForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = []
+        
