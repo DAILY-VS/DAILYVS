@@ -3,6 +3,12 @@ const pollId = likeButton.getAttribute("data-poll-id");
 let userLikesPoll = likeButton.getAttribute("data-user-likes") === "True";
 
 likeButton.addEventListener("click", () => {
+  if (!userLikesPoll) {
+    // 사용자가 로그인하지 않은 경우
+    alert("로그인이 필요합니다."); // 변경 가능한 메시지
+    return;
+  }
+
   axios
     .post(
       "/like/",

@@ -74,23 +74,20 @@ def poll_like(request):
             poll = Poll.objects.get(id=poll_id)
         except Poll.DoesNotExist:
             return JsonResponse({"error": "해당 투표가 존재하지 않습니다."}, status=404)
+        if request.user.is_authenticated:
+            user = request.user
+            
+            if poll.poll_like.filter(id=user.id).exists():
+                poll.poll_like.remove(user)
+                message = "좋아요 취소"
+            else:
+                poll.poll_like.add(user)
+                message = "좋아요"
 
-        user = request.user
-        
-        if poll.poll_like.filter(id=user.id).exists():
-            poll.poll_like.remove(user)
-            message = "좋아요 취소"
-        else:
-            poll.poll_like.add(user)
-            message = "좋아요"
-
-        like_count = poll.poll_like.count()
-        context = {"like_count": like_count, "message": message}
-        return JsonResponse(context)
-    else:
-        login_message = "로그인을 해주세요"
-        context = {"message": login_message}
-        return JsonResponse(context, status=401)
+            like_count = poll.poll_like.count()
+            context = {"like_count": like_count, "message": message}
+            return JsonResponse(context)
+        return redirect('/')
 
 
 # 유저 마이페이지
