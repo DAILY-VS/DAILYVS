@@ -149,6 +149,7 @@ def comment_write_view(request, poll_id):
             'created_at': comment.created_at.strftime("%Y년 %m월 %d일"),
             'comment_id': comment_id
         }
+        print(comment_id)
         return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
 #댓글 삭제
@@ -170,7 +171,7 @@ def comment_delete_view(request, pk):
             'success': False,
             'error': '본인 댓글이 아닙니다.'
         }
-    
+    print(comment_id)
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
 #투표 시 회원, 비회원 구분 

@@ -11,10 +11,9 @@
     <div id="more_comment">
         {% if comments %}
             {% for comment in comments %}
+            {% if comment.post_id.pk == post.pk %}
             <div id='{{ comment.id }}'>
-                {% if comment.deleted %}
-                <span>삭제된 댓글입니다.</span><hr>
-                {% else %}
+                
                     <span>닉네임: {{ comment.user_info.nickname }}, 
                           MBTI: {{ comment.user_info.mbti}}, 
                           gender: {{ comment.user_info.gender}}
@@ -31,6 +30,7 @@
                 {% endif %}
             </div>
             <div class='{{ comment.id }}'></div>
+            {% endif %}
             {% endfor %}
         {% endif %}
         <input type="hidden" id="comment_writer" value={{request.user}}>
@@ -53,7 +53,6 @@
                     'csrfmiddlewaretoken': '{{csrf_token}}',
                 },
                 success: function (response) {
-
                     $('#comment_list').append(
                         '<div><div id='+response.mbti+'><strong>'+response.nickname+'&nbsp;<span style="color:gray";>'+response.self_comment+'</span></strong>'+
                         '<span style="float:right; color:#d14040f2;">'+response.created_at+'</span>'+
