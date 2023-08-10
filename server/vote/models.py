@@ -1,11 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from django.conf import settings
 from account.models import User
 
-# Create your models here.
-class Poll(models.Model): #이미지, 제목, 좋아요 추가
+#투표 게시글 DB
+class Poll(models.Model): 
     owner = models.ForeignKey(User, on_delete=models.CASCADE,)
     title = models.TextField()
     content = models.TextField()
@@ -23,16 +22,20 @@ class Poll(models.Model): #이미지, 제목, 좋아요 추가
     def __str__(self):
         return self.title
 
-class Choice(models.Model): #이미지 추가
+#투표 선택지 DB
+class Choice(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=255)
     image = models.ImageField()
-class UserVote(models.Model): #회원투표
+
+#회원투표 DB
+class UserVote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
 
-class NonUserVote(models.Model): #비회원투표
+#비회원투표
+class NonUserVote(models.Model):
     MBTI = models.TextField(null= True)
     GENDERS = (
         ('M', '남성'),
@@ -41,8 +44,9 @@ class NonUserVote(models.Model): #비회원투표
     gender = models.CharField(verbose_name='성별', max_length=1, choices=GENDERS, null= True)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-    
-class Comment(models.Model): #댓글
+
+#댓글 DB
+class Comment(models.Model): 
     user_info = models.ForeignKey(User, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     # choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
