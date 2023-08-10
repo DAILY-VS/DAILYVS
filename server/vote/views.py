@@ -13,7 +13,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 def main(request):
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
-
+    promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
     if sort == "popular":
         polls = polls.order_by("-views_count")  # 인기순
     elif sort == "latest":
