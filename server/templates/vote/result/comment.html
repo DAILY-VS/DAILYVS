@@ -1,3 +1,5 @@
+{% load static %} {% block content %}
+
 
 {% csrf_token %}
 <div>
@@ -126,4 +128,6 @@ function replyDelete(value) {
     }
 }
 }
+
 </script>
+{% endblock %}
