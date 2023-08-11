@@ -1,0 +1,116 @@
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 10px;
+}
+
+.comment-category-title {
+  font-family: "GongGothicMedium";
+  color: var(--darkblue-primary-color);
+  font-size: 26px;
+  margin: 20px 30px;
+}
+
+.comment-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 28rem;
+  height: 10rem;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: white;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+  border: var(--turquois-secondary-color) solid 1px;
+}
+
+.coment-user-info {
+  display: flex;
+  flex-direction: row;
+  margin-left: 10px;
+}
+
+.user-sub-info {
+  display: flex;
+  justify-content: center;
+  padding: 7px 4px;
+  font-size: 12px;
+  color: gray;
+}
+
+.comment-user-name {
+  font-family: "GongGothicMedium";
+  font-size: 18px;
+}
+
+.comment-container textarea {
+  width: 100%;
+  padding: 10px;
+  border: none;
+}
+
+.comment-input-container button {
+  margin-top: 5px;
+  height: 3rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: var(--turquois-secondary-color);
+}
+
+.comment-input-container button:hover {
+  color: var(--turquois-secondary-color);
+  background-color: white;
+  border: var(--turquois-secondary-color) 1px solid;
+}
+
+.replyTody {
+  display: flex;
+  flex-direction: column;
+}
+
+.stored-comment-container {
+  border-bottom: #bdbdbd 1px solid;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.comment-top-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.comment-nickname {
+  font-family: "GongGothicMedium";
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.comment-sub-info {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+}
+
+.stored-comment-content {
+  color: #4f4f4f;
+}
+
+.comment-created-time {
+  font-size: 12px;
+  color: gray;
+}
+
+.comment-content-delete {
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+}
+
+.comment-content-delete img {
+  margin-left: auto;
+  border: none;
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+}
