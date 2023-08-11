@@ -219,6 +219,7 @@ def classifyuser(request, poll_id):
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
+    user_votes = UserVote.objects.filter(user=request.user)
     
     mbtis = [
         "ISTJ",
@@ -626,6 +627,7 @@ def calcstat(request, poll_id):
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
         'comments': comments,
+        'user_votes': user_votes,
     }
     return render(request, template_name="vote/result.html", context=ctx)
 

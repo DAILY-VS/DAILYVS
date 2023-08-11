@@ -24,7 +24,11 @@
         <td>{{ comment.user_info.gender}}</td>
         <td>{{ comment.content }}</td>
         <td>
-            {{ comment.user_vote_choice_text }}
+            {% for user_vote in user_votes %}
+                {% if user_vote.poll == comment.poll %}
+                    {{ user_vote.choice.choice_text }}
+                {% endif %}
+            {% endfor %}
         </td>
         <td>{{ comment.created_at }}</td>
         <td>
