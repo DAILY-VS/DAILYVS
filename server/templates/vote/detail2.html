@@ -1,6 +1,6 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 
-<div class="vote-detail-container">
+<div class="vote-gender-detail-container">
   <div class="detail-top">
     <a href="{% url 'vote:main' %}" role="button" class="back-button"
       ><img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
@@ -14,33 +14,33 @@
       <span> views</span>
     </div>
   </div>
-  <div class="vote-introduction">
-    {% include 'vote/detail/detail-introduction-card.html' %}
-  </div>
+  <div class="detail2-title">당신의 성별은 ?</div>
   <div class="option-container">
     <div>
-      <form action="{% url 'vote:nonusermbti' poll.id nonuservote_id %}" method="POST">
+      <form
+        action="{% url 'vote:nonusermbti' poll.id nonuservote_id %}"
+        method="POST"
+      >
         {% csrf_token %} {% for choice in gender %}
         <div
-          class="detail-option"
-          style="background-image: url(../../{{choice.image}});"
+          class="gender-detail-option"
+          style="background-image: url(../../{{ choice.image }});"
         >
           <input
             type="radio"
             name="choice"
             id="choice{{ forloop.counter }}"
             value="{{ choice }}"
-            class="choice-input"
+            class="gender-choice-input"
           />
-          <label for="choice{{ forloop.counter }}"
-            >{{ choice }}</label
-          >
+          <label for="choice{{ forloop.counter }}">
+            {% if choice == 'M' %} 남성 {% elif choice == 'W' %} 여성 {% endif%}
+          </label>
         </div>
-        <strong class="vs-font"><span>V</span><span>S</span></strong>
         {% endfor %}
         <input
           type="submit"
-          value="투표하기"
+          value="등록하기"
           class="vote-submit-btn"
           disabled
         />
@@ -48,6 +48,7 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="{% static 'js/detail.js' %}"></script>
+  <script src="{% static 'js/detail2.js' %}"></script>
+
   {% endblock %}
 </div>
