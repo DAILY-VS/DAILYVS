@@ -137,13 +137,23 @@ def comment_write_view(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
     user_info = request.user  # 현재 로그인한 사용자
     content = request.POST.get('content')
-
+    parent_comment_id = request.POST.get('parent_comment_id')  # 대댓글인 경우 부모 댓글의 ID를 받음
+    
     if content:
-        comment = Comment.objects.create(
-                    poll=poll, 
-                    content=content, 
-                    user_info=request.user,
-                    )
+        if parent_comment_id:  # 대댓글인 경우
+            parent_comment = get_object_or_404(Comment, pk=parent_comment_id)
+            comment = Comment.objects.create(
+                poll=poll,
+                content=content,
+                user_info=user_info,
+                parent_comment=parent_comment
+            )
+        else:  # 일반 댓글인 경우
+            comment = Comment.objects.create(
+                poll=poll,
+                content=content,
+                user_info=user_info,
+            )
         poll.save()
         
         try:

@@ -42,10 +42,24 @@
                 <input type="button" value="삭제" onclick="replyDelete({{ comment.id }})">
             {% endif %}
         </td>
+        <td><input type="button" value="대댓글 작성" onclick="toggleReplyForm({{ comment.id }})"></td>
+    </tr>
+    <tr class="replyForm" id="replyForm{{ comment.id }}" style="display: none;">
+        <td colspan="6">
+            <textarea class="replyContent" id="content_id{{ comment.id }}" placeholder="대댓글을 입력해주세요."></textarea>
+            <button class="btnReply" onclick="submitReply({{ comment.id }})">작성</button>
+        </td>
     </tr>
     {% endfor %}
 </tbody>
 </table>
+
+<!-- 대댓글 작성 폼 -->
+<div id="replyForm" style="display: none;">
+    <textarea class="replyContent" id="reply_content_id" placeholder="대댓글을 입력해주세요."></textarea>
+    <button id="reply_write" class="btnReply">대댓글달기</button>
+</div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -54,7 +68,6 @@
 $(document).ready(function () {
     $('#comment_write').click(function () {
         var content = $(".replyContent").val();  
-        
         // 로그인 여부 확인
         var isAuthenticated = "{{ user.is_authenticated }}"; 
 
@@ -68,7 +81,6 @@ $(document).ready(function () {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
             },
             success: function (response) {
-                // 새로운 댓글 생성
                 var newComment = '<tr class="replyTr' + response.comment_id + '">' +
                     '<td>' + response.nickname + '</td>' +
                     '<td>' + response.mbti + '</td>' +
@@ -77,6 +89,7 @@ $(document).ready(function () {
                     '<td>' + response.user_vote_choice_text + '</td>' +
                     '<td>' + response.created_at + '</td>' +
                     '<td><input type="button" value="삭제" onclick="replyDelete(' + response.comment_id + ')"></td>' +
+                    '<td><input type="button" value="대댓글 작성" onclick="showReplyForm(' + response.comment_id + ')"></td>' +
                     '</tr>';
                 $('.replyTody').append(newComment);
                 $('.replyContent').val("");  // 입력창 비우기
@@ -135,5 +148,52 @@ function replyDelete(value) {
 }
 }
 
+// 대댓글 작성 폼 보이기/숨기기
+function toggleReplyForm(comment_id) {
+    var replyForm = $("#replyForm" + comment_id);
+    replyForm.toggle();
+}
+
+// 대댓글 작성
+function submitReply(comment_id) {
+    var content = $("#content_id" + comment_id).val();
+    var isAuthenticated = "{{ user.is_authenticated }}";
+
+    if (isAuthenticated === "True") {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'vote:comment_write' poll.id %}",
+            dataType: "json",
+            data: {
+                'content': content,
+                'parent_comment_id': comment_id,  // 대댓글인 경우 부모 댓글 ID 전달
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success: function (response) {
+                // 대댓글 작성 성공 시 처리
+                toggleReplyForm(comment_id);  // 대댓글 작성 폼 숨기기
+
+                // 새로운 대댓글 추가
+                var newReply = '<tr class="replyTr' + response.comment_id + '">' +
+                    '<td>' + response.nickname + '</td>' +
+                    '<td>' + response.mbti + '</td>' +
+                    '<td>' + response.gender + '</td>' +
+                    '<td>' + response.content + '</td>' +
+                    '<td>' + response.user_vote_choice_text + '</td>' +
+                    '<td>' + response.created_at + '</td>' +
+                    '<td><input type="button" value="삭제" onclick="replyDelete(' + response.comment_id + ')"></td>' +
+                    '<td><input type="button" value="대댓글 작성" onclick="toggleReplyForm(' + response.comment_id + ')"></td>' +
+                    '</tr>';
+                $('.replyTody').append(newReply);
+                $('.replyContent').val("");  // 입력창 비우기
+            },
+            error: function () {
+                alert('오류가 발생했습니다.');
+            },
+        });
+    } else {
+        alert("로그인 후 댓글을 작성할 수 있습니다.");
+    }
+}
 </script>
 {% endblock %}
