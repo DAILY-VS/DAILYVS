@@ -10,12 +10,13 @@
 nav {
   position: sticky;
   width: 500px;
+  height: 10vh;
   background-color: var(--purple-bg-color);
 }
 
 .nav-list {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 160px 160px 160px;
   justify-content: center;
   align-items: center;
   padding-left: 5px;
@@ -62,6 +63,10 @@ nav {
 
 .nav-ham-btn img {
   margin-right: 20px;
+  transition: transform 0.5s ease;
+}
+.nav-ham-btn img:hover {
+  transform: rotate(90deg);
 }
 
 .base-block-container {
@@ -69,12 +74,21 @@ nav {
   flex-direction: column;
 }
 
+#logo img {
+  width: 130px;
+  transition: transform 0.3s ease;
+}
+
+#logo img:hover {
+  cursor: pointer;
+}
+
 #sidebar {
   font-family: "GongGothicMedium";
   position: fixed;
   top: 0;
   right: -350px;
-  width: 360px;
+  width: 380px;
   height: 100%;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   transition: right 0.5s ease-in-out;
@@ -93,12 +107,13 @@ nav {
 
 #hide-sidebar-icon img:hover {
   cursor: pointer;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  transform: rotate(90deg);
 }
 
 #hide-sidebar-icon img {
   margin-top: 20px;
   margin-left: 20px;
+  transition: transform 0.5s ease;
 }
 
 .ham-user-info {
@@ -136,7 +151,6 @@ nav {
   text-align: left;
   font-family: "GongGothicMedium";
   font-size: 18px;
-  font-weight: light;
   color: var(--darkblue-primary-color);
   position: relative;
   overflow: hidden;
@@ -160,7 +174,7 @@ nav {
   left: 0;
   width: 0;
   height: 1px;
-  background-color: var(--darkblue-primary-color);
+  background-color: #17355a76;
   transition: width 0.3s ease-in-out;
 }
 
@@ -168,9 +182,6 @@ nav {
   margin-top: 3px;
   width: 250px;
 }
-/* .ham-navigator li span {
-  font-family: "TheJamsil5Bold";
-} */
 
 .ham-footer {
   border-top: solid #bdbdbd 1px;
