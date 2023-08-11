@@ -1,7 +1,6 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <style>
   .panel {
-    /* min height incase content is higher than window height */
     min-height: 5vh;
   }
 </style>
@@ -50,7 +49,7 @@
       </div>
     </div>
   </div>
-  <div class="detail-like-container">{% include 'vote/result/like.html' %}</div> 
+  <div class="detail-like-container">{% include 'vote/result/like.html' %}</div>
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
 </section>
 <script src="{% static 'js/result.js' %}"></script>

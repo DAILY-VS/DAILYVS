@@ -664,14 +664,23 @@ def calcstat(request, poll_id):
 def poll_nonusermbti(request, poll_id, nonuservote_id):
     if request.method == "POST":
         choice_id = request.POST.get("choice")
+        selected_mbti = request.POST.get("selected_mbti")
+        mbti_combination = selected_mbti
+        print("mbti_combination:", mbti_combination)
+
+        nonuser_vote = NonUserVote.objects.get(pk=nonuservote_id)
+        nonuser_vote.MBTI = mbti_combination
+        nonuser_vote.save()
+
         if choice_id == "M":
             NonUserVote.objects.filter(pk=nonuservote_id).update(gender="M")
         if choice_id == "W":
             NonUserVote.objects.filter(pk=nonuservote_id).update(gender="W")
+
         poll = get_object_or_404(Poll, id=poll_id)
         context = {
             "poll": poll,
-            "mbti": ["INTP", "ESFJ"],
+            "mbti": [],  # 여기에 MBTI 리스트 추가
             "nonuservote_id": nonuservote_id,
             "loop_time": range(0, 2),
         }
@@ -680,7 +689,9 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
 
 # 비회원 투표시 투표 정보 전송
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
+    selected_mbti = request.POST.get("selected_mbti")
     choice_id = request.POST.get("choice")
+    print("selected_mbti:", selected_mbti)
     NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))
     calcstat_url = reverse("vote:calcstat", args=[poll_id])
     return redirect(calcstat_url)
