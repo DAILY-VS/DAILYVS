@@ -3,18 +3,15 @@ const likeButton = document.getElementById("like-button");
 const pollId = likeButton.getAttribute("data-poll-id");
 let userLikesPoll = likeButton.getAttribute("data-user-likes") === "True";
 
+
+
+
 likeButton.addEventListener("click", () => {
   // if (!userLikesPoll) {
   //   // 사용자가 로그인하지 않은 경우
   //   alert("로그인이 필요합니다.");
   //   return;
   // }
-
- // 초기 좋아요 상태 설정
- if (userLikesPoll) {
-  const heartImage = likeButton.querySelector("img");
-  heartImage.src = "../../static/img/icon/blank_heart.png";
-}
 
   axios
     .post(
