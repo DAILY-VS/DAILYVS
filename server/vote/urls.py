@@ -16,7 +16,7 @@ urlpatterns = [
     path('mypage/update/', views.mypage_update, name='update'),
     path('<int:poll_id>/comment/write/', views.comment_write_view, name='comment_write'),
     path('<int:pk>/comment/delete/', views.comment_delete_view, name='comment_delete'),
-
+    # path('get_replies/<int:comment_id>/', views.get_replies_view, name='get_replies'),
     #논유저
     #path('<int:poll_id>/<int:nonuservote_id>', views.poll_nonusergender, name='nonusergender'),
     path('<int:poll_id>/<int:nonuservote_id>/1', views.poll_nonusermbti, name='nonusermbti'),

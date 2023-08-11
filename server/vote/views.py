@@ -198,6 +198,33 @@ def comment_delete_view(request, pk):
         }
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
+# # 대댓글 정보를 가져오는 view 함수
+# @login_required
+# def get_replies_view(request, comment_id):
+#    # 클라이언트에서 요청한 댓글의 대댓글들을 가져옴
+#     parent_comment = get_object_or_404(Comment, id=comment_id)
+#     replies = parent_comment.replies.all()
+
+#     # 대댓글 정보를 JSON 형식으로 변환하여 반환
+#     reply_data = []
+#     for reply in replies:
+#         reply_info = {
+#             'id': reply.id,
+#             'nickname': reply.user_info.nickname,
+#             'mbti': reply.user_info.mbti,
+#             'gender': reply.user_info.gender,
+#             'content': reply.content,
+#             'created_at': reply.created_at.strftime("%Y년 %m월 %d일"),
+#         }
+#         reply_data.append(reply_info)
+    
+#     # JSON 형식으로 변환
+#     json_data = json.dumps(reply_data, ensure_ascii=False)
+    
+#     # HttpResponse로 반환
+#     return HttpResponse(json_data, content_type="application/json")
+
+
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
 def classifyuser(request, poll_id):
     if request.method == "POST":
