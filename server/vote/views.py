@@ -155,6 +155,8 @@ def comment_write_view(request, poll_id):
                 content=content,
                 user_info=user_info,
             )
+            
+        poll.update_comments_count()  # 댓글 수 업데이트
         poll.save()
 
         try:

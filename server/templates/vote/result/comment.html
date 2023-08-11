@@ -2,6 +2,9 @@
 
 
 {% csrf_token %}
+
+<div id="commentCount">{{ poll.comments }}</div>
+
 <div>
     <textarea class="replyContent" id="content_id" placeholder="댓글을 입력해주세요."></textarea>
     <button id="comment_write" class="btnReply">댓글달기</button>
@@ -119,6 +122,9 @@ $(document).ready(function () {
                     '</tr>';
                 $('.replyTody').append(newComment);
                 $('.replyContent').val("");  // 입력창 비우기
+
+                var commentCount = parseInt($('#commentCount').text()) + 1;
+                $('#commentCount').text(commentCount);
             },
             error: function () {
                 if ($('.replyContent').val() == "") {
@@ -129,8 +135,13 @@ $(document).ready(function () {
             },
         });
     } else {
-        alert("로그인 후 댓글을 작성할 수 있습니다.");
+        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+            var loginUrl = "/account/login/";
+            window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
+        }
     }
+
+
     });
 });
 
@@ -159,6 +170,9 @@ function replyDelete(value) {
                         console.log(replyTr);
                         replyTr.remove();
                     }
+                    // 댓글 수 감소
+                    var commentCount = parseInt($('#commentCount').text()) - 1;
+                    $('#commentCount').text(commentCount);
                 } 
                 else { 
                     alert(response.error);

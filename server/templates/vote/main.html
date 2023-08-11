@@ -1,5 +1,8 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section class="main-container">
+  {% if user.is_authenticated %}
+  안녕하세요, {{user.nickname}} 님!
+  {% endif %}
   <div class="carousel-container">
     {% include 'vote/main/main-carousel.html' %}
   </div>
@@ -9,14 +12,6 @@
   <div class="vote-list-container">{% include 'vote/main/main-grid.html'%}</div>
 </section>
 
-{% if user.is_authenticated %}
-안녕하세요, {{user.nickname}} 님!
-  <a href={% url 'vote:mypage' %}>mypage</a>
-  <div class="login__forgot-pw"><a href="{% url 'account:logout' %}">로그아웃</a></div> 
-{% else %}
-  아직 로그인이 되지 않았어요. 회원가입 또는 로그인 해주세요.
-  <a href={% url 'account:login' %}>login</a>
-  <a href={% url 'account:signup' %}>회원가입</a>
-{% endif %}
+
 
 {% endblock %}

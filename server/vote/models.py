@@ -11,17 +11,21 @@ class Poll(models.Model):
     pub_date = models.DateTimeField(default=timezone.now)
     active = models.BooleanField(default=True)
     poll_like = models.ManyToManyField('account.User', blank=True, related_name='likes')
-    views_count = models.PositiveIntegerField(default=0)  # 조회 숫자 필드
+    views_count = models.PositiveIntegerField(default=0)  # 조회 수
     thumbnail = models.ImageField()
-    # created_at = models.DateTimeField(auto_now_add=True)    
+    comments = models.PositiveIntegerField(verbose_name='댓글수', default=0)  # 댓글 수    
 
-    def increase_views(self):
+    def increase_views(self): # 조회수
         self.views_count=self.views_count+1
         self.save()
 
+    def update_comments_count(self): # 댓글수
+        self.comments = Comment.objects.filter(poll=self).count()
+        self.save()
+        
     def __str__(self):
         return self.title
-
+    
 #투표 선택지 DB
 class Choice(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
@@ -53,6 +57,18 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+   
+   
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None  # 새로운 댓글인지 확인
+        super().save(*args, **kwargs)
+        
+        if is_new:  # 새로운 댓글인 경우 댓글 수 업데이트
+            self.poll.update_comments_count()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        self.poll.update_comments_count()
    
     def __str__(self):
         return self.content
