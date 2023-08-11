@@ -27,7 +27,6 @@
         </div>
     </div>
     <span>나의 VOTE LIST</span>
-    <ul>
       {% for voted_poll in user.voted_polls.all %}
           {% for uservote in uservotes %}
               {% if voted_poll.id == uservote.poll.id %}
@@ -36,9 +35,13 @@
               {% endif %}
           {% endfor %}
       {% endfor %}
-  </ul>
+    <br>
+    </br>   
+    <span>나의 VOTE Like LIST</span>
+    {% for poll_like in polls_like %}
+        <a href="{% url 'vote:calcstat' poll_like.id%}">{{ poll_like }}</a>
+    {% endfor %}
 
-    </ul>
     <div class="pagination-box">
         <div class="pagination">
             <a class="page-btn gray">
