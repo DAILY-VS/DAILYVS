@@ -373,24 +373,7 @@ def calcstat(request, poll_id):
             user_mbtis_choice2_count[i] + nonuser_mbtis_choice2_count[i]
         )
 
-    mbtis = [
-        "ISTJ",
-        "ISFJ",
-        "INFJ",
-        "INTJ",
-        "ISTP",
-        "ISFP",
-        "INFP",
-        "INTP",
-        "ESTP",
-        "ESFP",
-        "ENFP",
-        "ENTP",
-        "ESTJ",
-        "ESFJ",
-        "ENFJ",
-        "ENTJ",
-    ]
+
     choice1_percentage = int(total_choice1_count / total_count * 100)
     choice2_percentage = int(total_choice2_count / total_count * 100)
     choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
