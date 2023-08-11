@@ -19,9 +19,8 @@
         <a href="{% url 'account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
         {% endif %}
           <a href="/" id="logo"
-            ><img src="{% static 'img/Row.png' %}" style="width: 130px"
-          /></a>
-          <span class="nav-ham-btn"><img src="{% static 'img/icon/hamburger.png'%}" style="width:25px" id="hamburger-icon"/></span>
+            ><img src="{% static 'img/Row.png' %}"/></a>
+          <span class="nav-ham-btn"><img src="{% static 'img/icon/hamburger.png'%}" style="width:25px" id="hamburger-icon"  onclick="toggleHamRotation(event)"/></span>
         </ul>
       </nav>
       <div class="base-block-container">{% block content %} {% endblock %}</div>
@@ -33,12 +32,11 @@
         <div class="ham-user-name">
           <span class="ham-logged-user-name">
             {% if user.is_authenticated %}
-              {{ user.username }}
+              {{ user.username }} <span class="ham-user-nim">님</span>
             {% else %}
-              로그인 해주세요
+              로그인을 해주세요
             {% endif %}
           </span>
-          <span class="ham-user-nim">님</span>
         </div>
       </div>
       <ul class="ham-navigator">

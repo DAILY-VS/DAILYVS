@@ -14,12 +14,13 @@
       <span> views</span>
     </div>
   </div>
-  <div class="vote-introduction">
-    {% include 'vote/detail/detail-introduction-card.html' %}
-  </div>
+  <div class="detail2-title">당신의 MBTI는 ?</div>
   <div class="option-container">
     <div>
-      <form action="{% url 'vote:nonuserfinal' poll.id nonuservote_id %}" method="POST">
+      <form
+        action="{% url 'vote:nonuserfinal' poll.id nonuservote_id %}"
+        method="POST"
+      >
         {% csrf_token %} {% for choice in mbti %}
         <div
           class="detail-option"
@@ -32,15 +33,12 @@
             value="{{ choice}}"
             class="choice-input"
           />
-          <label for="choice{{ forloop.counter }}"
-            >{{ choice }}</label
-          >
+          <label for="choice{{ forloop.counter }}">{{ choice }}</label>
         </div>
-        <strong class="vs-font"><span>V</span><span>S</span></strong>
         {% endfor %}
         <input
           type="submit"
-          value="투표하기"
+          value="등록하기"
           class="vote-submit-btn"
           disabled
         />
