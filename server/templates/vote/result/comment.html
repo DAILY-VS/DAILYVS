@@ -26,15 +26,21 @@
         <td>{{ comment.user_info.gender}}</td>
         <td>{{ comment.content }}</td>
         <td>
-            {% for user_vote in user_votes %}
-                {% if user_vote.poll == comment.poll %}
-                    {{ user_vote.choice.choice_text }}
-                {% endif %}
-            {% endfor %}
+            {% if user_votes %}
+                {% for user_vote in user_votes %}
+                    {% if user_vote.poll == comment.poll %}
+                        {{ user_vote.choice.choice_text }}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                로그인 후 확인 가능합니다.
+            {% endif %}
         </td>
         <td>{{ comment.created_at }}</td>
         <td>
-            <input type="button" value="삭제" onclick="replyDelete({{ comment.id }})">
+            {% if comment.user_info == user %}
+                <input type="button" value="삭제" onclick="replyDelete({{ comment.id }})">
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

@@ -98,6 +98,7 @@ def mypage(request):
 
     paginator = Paginator(polls, 4)
     uservotes = UserVote.objects.filter(user=request.user)
+    polls_like= Poll.objects.filter(poll_like=request.user)
 
     try:
         page_obj = paginator.page(page)
@@ -110,6 +111,7 @@ def mypage(request):
     context = {
         "polls": polls,
         "uservotes":uservotes,
+        "polls_like":polls_like,
         "page_obj": page_obj,
         "paginator": paginator,
     }
