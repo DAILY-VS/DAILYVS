@@ -99,6 +99,7 @@ def mypage(request):
 
     paginator = Paginator(polls, 4)
     uservotes = UserVote.objects.filter(user=request.user)
+    polls_like = Poll.objects.filter(poll_like=request.user)
 
     try:
         page_obj = paginator.page(page)
@@ -111,6 +112,7 @@ def mypage(request):
     context = {
         "polls": polls,
         "uservotes": uservotes,
+        "polls_like": polls_like,
         "page_obj": page_obj,
         "paginator": paginator,
     }
@@ -143,6 +145,16 @@ def comment_write_view(request, poll_id):
             poll=poll, content=content, user_info=request.user
         )
         poll.save()
+
+        try:
+            user_vote = UserVote.objects.get(
+                user=request.user, poll=poll
+            )  # uservote에서 선택지 불러옴
+            choice_text = user_vote.choice.choice_text
+        except UserVote.DoesNotExist:
+            user_vote = None
+            choice_text = ""  # 또는 다른 기본값 설정
+
         comment_id = Comment.objects.last().pk
 
         data = {
