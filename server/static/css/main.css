@@ -12,7 +12,7 @@
 .carousel-container {
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 300px;
   max-width: 500px;
   margin: 0 auto;
 }
@@ -82,7 +82,7 @@
 
 .editor-card {
   width: 13rem;
-  height: 60vh;
+  height: 450px; /* 이 부분 필요하면 더 줄이기 */
   border-radius: 10px;
   background-color: white;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -131,7 +131,7 @@
   margin: 20px 30px auto auto;
   padding-left: 15px;
   border: none;
-  font-size: 20px;
+  font-size: 15px;
   color: white;
   background-color: var(--darkblue-primary-color);
 }

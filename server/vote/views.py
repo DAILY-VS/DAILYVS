@@ -97,6 +97,7 @@ def mypage(request):
     page = request.GET.get("page")
 
     paginator = Paginator(polls, 4)
+    uservotes = UserVote.objects.filter(user=request.user)
 
     try:
         page_obj = paginator.page(page)
@@ -108,10 +109,10 @@ def mypage(request):
         page_obj = paginator.page(page)
     context = {
         "polls": polls,
+        "uservotes":uservotes,
         "page_obj": page_obj,
         "paginator": paginator,
     }
-    
     return render(request, "vote/mypage.html", context)
 
 
@@ -148,7 +149,6 @@ def comment_write_view(request, poll_id):
             'created_at': comment.created_at.strftime("%Y년 %m월 %d일"),
             'comment_id': comment_id
         }
-        print(comment_id)
         return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
 #댓글 삭제
@@ -170,7 +170,6 @@ def comment_delete_view(request, pk):
             'success': False,
             'error': '본인 댓글이 아닙니다.'
         }
-    print(comment_id)
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
 
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
@@ -273,9 +272,7 @@ def calcstat(request, poll_id):
     nonuser_poll = NonUserVote.objects.filter(
         choice__poll__pk=poll_id, MBTI__isnull=False, gender__isnull=False
     )
-    print(nonuser_poll)
-    for vote in nonuser_poll:
-        print(vote)
+
     nonuser_total_count = nonuser_poll.count()
 
     nonuser_choice1 = nonuser_poll.filter(choice_id=2 * poll_id - 1)
