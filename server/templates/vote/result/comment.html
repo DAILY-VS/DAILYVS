@@ -51,7 +51,7 @@
         </td>
     </tr>
      <!-- 대댓글 내용 -->
-     {% for reply in comment.replies.all %}
+     {% comment %} {% for reply in comment.replies.all %}
      <tr class="replyTr{{ reply.id }}">
          <td>{{ reply.user_info.nickname }}</td>
          <td>{{ reply.user_info.mbti }}</td>
@@ -75,7 +75,7 @@
              {% endif %}
          </td>
      </tr>
-     {% endfor %}
+     {% endfor %} {% endcomment %}
     {% endfor %}
 </tbody>
 </table>
@@ -115,7 +115,7 @@ $(document).ready(function () {
                     '<td>' + response.user_vote_choice_text + '</td>' +
                     '<td>' + response.created_at + '</td>' +
                     '<td><input type="button" value="삭제" onclick="replyDelete(' + response.comment_id + ')"></td>' +
-                    '<td><input type="button" value="대댓글 작성" onclick="showReplyForm(' + response.comment_id + ')"></td>' +
+                    '<td><input type="button" value="대댓글 작성" onclick="toggleReplyForm(' + response.comment_id + ')"></td>' +
                     '</tr>';
                 $('.replyTody').append(newComment);
                 $('.replyContent').val("");  // 입력창 비우기
@@ -208,7 +208,6 @@ function submitReply(comment_id) {
                     '<td>' + response.user_vote_choice_text + '</td>' +
                     '<td>' + response.created_at + '</td>' +
                     '<td><input type="button" value="삭제" onclick="replyDelete(' + response.comment_id + ')"></td>' +
-                    '<td><input type="button" value="대댓글 작성" onclick="toggleReplyForm(' + response.comment_id + ')"></td>' +
                     '</tr>';
                 var parentCommentTr = $(".replyTr" + comment_id);  // 부모 댓글 행을 선택
                 parentCommentTr.after(newReply);  // 부모 댓글 바로 아래에 추가
