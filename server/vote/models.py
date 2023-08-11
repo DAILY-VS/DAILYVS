@@ -30,7 +30,7 @@ class Choice(models.Model):
 
 #회원투표 DB
 class UserVote(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_votes')
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
 
@@ -49,7 +49,6 @@ class NonUserVote(models.Model):
 class Comment(models.Model): 
     user_info = models.ForeignKey(User, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-    # choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     content = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

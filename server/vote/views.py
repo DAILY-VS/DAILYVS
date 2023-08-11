@@ -135,10 +135,22 @@ def comment_write_view(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
     user_info = request.user  # 현재 로그인한 사용자
     content = request.POST.get('content')
-    
+
     if content:
-        comment = Comment.objects.create(poll=poll, content=content, user_info=request.user)
+        comment = Comment.objects.create(
+                    poll=poll, 
+                    content=content, 
+                    user_info=request.user,
+                    )
         poll.save()
+        
+        try:
+            user_vote = UserVote.objects.get(user=request.user, poll=poll) #uservote에서 선택지 불러옴
+            choice_text = user_vote.choice.choice_text
+        except UserVote.DoesNotExist:
+            user_vote = None
+            choice_text = ""  # 또는 다른 기본값 설정
+    
         comment_id = Comment.objects.last().pk
     
         data = {
@@ -147,10 +159,12 @@ def comment_write_view(request, poll_id):
             'gender': user_info.gender,
             'content': content,
             'created_at': comment.created_at.strftime("%Y년 %m월 %d일"),
-            'comment_id': comment_id
+            'comment_id': comment_id,
+            'user_vote_choice_text': choice_text,
         }
         return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
-
+    else:
+        return HttpResponse(status=400)  # Bad Request
 #댓글 삭제
 @login_required
 def comment_delete_view(request, pk):
@@ -205,7 +219,11 @@ def classifyuser(request, poll_id):
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
-    
+    if request.user.is_authenticated:
+        user_votes = UserVote.objects.filter(user=request.user)
+    else:
+        user_votes = None  # 또는 user_votes = UserVote.objects.none()
+       
     mbtis = [
         "ISTJ",
         "ISFJ",
@@ -612,6 +630,7 @@ def calcstat(request, poll_id):
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
         'comments': comments,
+        'user_votes': user_votes,
     }
     return render(request, template_name="vote/result.html", context=ctx)
 
