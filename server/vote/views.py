@@ -167,6 +167,7 @@ def comment_write_view(request, poll_id):
         return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
     else:
         return HttpResponse(status=400)  # Bad Request
+    
 #댓글 삭제
 @login_required
 def comment_delete_view(request, pk):
@@ -215,6 +216,8 @@ def classifyuser(request, poll_id):
                     "loop_time": range(0, 2),
                 }
                 return render(request, "vote/detail2.html", context)
+    else :
+        return redirect('/')
 
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
@@ -653,11 +656,16 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
             "loop_time": range(0, 2),
         }
         return render(request, "vote/detail3.html", context)
+    else :
+        return redirect('/')
 
 
 # 비회원 투표시 투표 정보 전송
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
-    choice_id = request.POST.get("choice")
-    NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))
-    calcstat_url = reverse("vote:calcstat", args=[poll_id])
-    return redirect(calcstat_url)
+    if request.method == "POST":
+        choice_id = request.POST.get("choice")
+        NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))
+        calcstat_url = reverse("vote:calcstat", args=[poll_id])
+        return redirect(calcstat_url)
+    else :
+        return redirect('/')
