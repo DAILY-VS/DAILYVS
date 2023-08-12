@@ -157,17 +157,30 @@ def mypage_update(request):
     return render(request, "vote/update.html", context)
 
 
-# 댓글 추가
+# 댓글 쓰기
 @login_required
 def comment_write_view(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
     user_info = request.user  # 현재 로그인한 사용자
-    content = request.POST.get("content")
-
+    content = request.POST.get('content')
+    parent_comment_id = request.POST.get('parent_comment_id')
     if content:
-        comment = Comment.objects.create(
-            poll=poll, content=content, user_info=request.user
-        )
+        if parent_comment_id:  # 대댓글인 경우
+            parent_comment = get_object_or_404(Comment, pk=parent_comment_id)
+            comment = Comment.objects.create(
+                poll=poll,
+                content=content,
+                user_info=user_info,
+                parent_comment=parent_comment
+            )
+        else:  # 일반 댓글인 경우
+            comment = Comment.objects.create(
+                poll=poll,
+                content=content,
+                user_info=user_info,
+            )
+            
+        poll.update_comments_count()  # 댓글 수 업데이트
         poll.save()
 
         try:
@@ -188,6 +201,7 @@ def comment_write_view(request, poll_id):
             "content": content,
             "created_at": comment.created_at.strftime("%Y년 %m월 %d일"),
             "comment_id": comment_id,
+            "choice": choice_text,
         }
         return HttpResponse(
             json.dumps(data, cls=DjangoJSONEncoder), content_type="application/json"
@@ -210,6 +224,33 @@ def comment_delete_view(request, pk):
     return HttpResponse(
         json.dumps(data, cls=DjangoJSONEncoder), content_type="application/json"
     )
+
+
+# # 대댓글 정보를 가져오는 view 함수
+# @login_required
+# def get_replies_view(request, comment_id):
+#    # 클라이언트에서 요청한 댓글의 대댓글들을 가져옴
+#     parent_comment = get_object_or_404(Comment, id=comment_id)
+#     replies = parent_comment.replies.all()
+
+#     # 대댓글 정보를 JSON 형식으로 변환하여 반환
+#     reply_data = []
+#     for reply in replies:
+#         reply_info = {
+#             'id': reply.id,
+#             'nickname': reply.user_info.nickname,
+#             'mbti': reply.user_info.mbti,
+#             'gender': reply.user_info.gender,
+#             'content': reply.content,
+#             'created_at': reply.created_at.strftime("%Y년 %m월 %d일"),
+#         }
+#         reply_data.append(reply_info)
+    
+#     # JSON 형식으로 변환
+#     json_data = json.dumps(reply_data, ensure_ascii=False)
+    
+#     # HttpResponse로 반환
+#     return HttpResponse(json_data, content_type="application/json")
 
 
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
@@ -247,7 +288,13 @@ def classifyuser(request, poll_id):
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
-
+    if request.user.is_authenticated:
+        user_votes = UserVote.objects.filter(user=request.user)
+    else:
+        user_votes = None  # 또는 user_votes = UserVote.objects.none()
+    
+    
+    
     mbtis = [
         "ISTJ",
         "ISFJ",
@@ -385,30 +432,23 @@ def calcstat(request, poll_id):
             user_mbtis_choice2_count[i] + nonuser_mbtis_choice2_count[i]
         )
 
-    mbtis = [
-        "ISTJ",
-        "ISFJ",
-        "INFJ",
-        "INTJ",
-        "ISTP",
-        "ISFP",
-        "INFP",
-        "INTP",
-        "ESTP",
-        "ESFP",
-        "ENFP",
-        "ENTP",
-        "ESTJ",
-        "ESFJ",
-        "ENFJ",
-        "ENTJ",
-    ]
+
     choice1_percentage = int(total_choice1_count / total_count * 100)
     choice2_percentage = int(total_choice2_count / total_count * 100)
-    choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
-    choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
-    choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
-    choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+
+    if total_man_count != 0:
+        choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
+        choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
+    else : 
+       choice1_man_percentage = 0 
+       choice2_man_percentage = 0 
+
+    if total_woman_count != 0:
+        choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
+        choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+    else : 
+       choice1_woman_percentage = 0 
+       choice2_woman_percentage = 0 
 
     mbtis_dict = dict(zip(mbtis, total_mbtis_count))
     mbtis_choice1_dict = dict(zip(mbtis, total_mbtis_choice1_count))
@@ -440,6 +480,9 @@ def calcstat(request, poll_id):
     if e_total_count != 0:
         e_choice1_percentage = int(e_choice1_count / e_total_count * 100)
         e_choice2_percentage = 100 - e_choice1_percentage
+    else : 
+        e_choice1_percentage = 0 
+        e_choice2_percentage = 0 
 
     i_total_count = (
         mbtis_dict["ISTJ"]
@@ -465,6 +508,9 @@ def calcstat(request, poll_id):
     if i_total_count != 0:
         i_choice1_percentage = int(i_choice1_count / i_total_count * 100)
         i_choice2_percentage = 100 - i_choice1_percentage
+    else : 
+        i_choice1_percentage = 0 
+        i_choice2_percentage = 0 
 
     n_total_count = (
         mbtis_dict["INTJ"]
@@ -490,6 +536,9 @@ def calcstat(request, poll_id):
     if n_total_count != 0:
         n_choice1_percentage = int(n_choice1_count / n_total_count * 100)
         n_choice2_percentage = 100 - n_choice1_percentage
+    else : 
+        n_choice1_percentage = 0 
+        n_choice2_percentage = 0 
 
     s_total_count = (
         mbtis_dict["ISTJ"]
@@ -515,6 +564,10 @@ def calcstat(request, poll_id):
     if s_total_count != 0:
         s_choice1_percentage = int(s_choice1_count / s_total_count * 100)
         s_choice2_percentage = 100 - s_choice1_percentage
+    else : 
+        s_choice1_percentage = 0 
+        s_choice2_percentage = 0 
+
 
     t_total_count = (
         mbtis_dict["INTJ"]
@@ -540,6 +593,9 @@ def calcstat(request, poll_id):
     if t_total_count != 0:
         t_choice1_percentage = int(t_choice1_count / t_total_count * 100)
         t_choice2_percentage = 100 - t_choice1_percentage
+    else : 
+        t_choice1_percentage = 0 
+        t_choice2_percentage = 0 
 
     f_total_count = (
         mbtis_dict["INFJ"]
@@ -565,6 +621,9 @@ def calcstat(request, poll_id):
     if f_total_count != 0:
         f_choice1_percentage = int(f_choice1_count / f_total_count * 100)
         f_choice2_percentage = 100 - f_choice1_percentage
+    else : 
+        f_choice1_percentage = 0 
+        f_choice2_percentage = 0 
 
     j_total_count = (
         mbtis_dict["INTJ"]
@@ -590,6 +649,9 @@ def calcstat(request, poll_id):
     if j_total_count != 0:
         j_choice1_percentage = int(j_choice1_count / j_total_count * 100)
         j_choice2_percentage = 100 - j_choice1_percentage
+    else : 
+        j_choice1_percentage = 0 
+        j_choice2_percentage = 0 
 
     p_total_count = (
         mbtis_dict["INTP"]
@@ -615,6 +677,9 @@ def calcstat(request, poll_id):
     if p_total_count != 0:
         p_choice1_percentage = int(p_choice1_count / p_total_count * 100)
         p_choice2_percentage = 100 - p_choice1_percentage
+    else : 
+        p_choice1_percentage = 0 
+        p_choice2_percentage = 0 
 
     ctx = {
         "total_count": total_count,
@@ -654,6 +719,7 @@ def calcstat(request, poll_id):
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
         "comments": comments,
+        'user_votes': user_votes,
     }
     return render(request, template_name="vote/result.html", context=ctx)
 

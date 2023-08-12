@@ -17,7 +17,7 @@
   </div>
   <div class="detail2-title">당신의 MBTI는 ?</div>
   <div class="option-container">
-    <form action="{% url 'vote:nonuserfinal' poll.id nonuservote_id %}" method="POST">
+    <form id="loginmodal" action="{% url 'vote:nonuserfinal' poll.id nonuservote_id %}" method="POST">
       {% csrf_token %}
       <div>
         <label><input type="radio" name="choice_EI" value="E" /> E</label>
@@ -36,13 +36,35 @@
         <label><input type="radio" name="choice_JP" value="P" /> P</label>
       </div>
       <input type="hidden" id="selected-mbti-input" name="selected_mbti" value="" />
-      <input type="submit" value="등록하기" class="vote-submit-btn" disabled />
+      <input type="button" data-bs-toggle="modal" href="#exampleModal" value="등록하기" class="vote-submit-btn" disabled />
     </form>
   </div>
     <div> 내가 선택한 mbti 조합 : <span id="selected-mbti"></span></div>
 </div>
+
+<div class="modal fade" id="exampleModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p> 로그인을 하시면 더 많은 기능을 사용하실 수 있어요!</p>
+        <div class="modal-footer">
+          <a href="{% url 'account:login' %}"> 로그인하러가기 </a>
+          <button type="button" class="btn btn-primary" id="submitForm">그냥 투표하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   
-  <script>
+<script>
+  // 진행 버튼 클릭 시 폼 제출
+  document.getElementById("submitForm").addEventListener("click", function () {
+      console.log('33')
+      document.getElementById("loginmodal").submit();
+  });
+</script>
+
+<script>
     document.addEventListener("DOMContentLoaded", function () {
       const radioGroups = document.querySelectorAll(".option-container div");
       const selectedMBTISpan = document.getElementById("selected-mbti");
