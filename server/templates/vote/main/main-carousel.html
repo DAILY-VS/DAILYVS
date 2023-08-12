@@ -42,11 +42,11 @@
             alt="..."
           />
         </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="carousel-poll-title">{{ poll.title }}</h5>
+          <p class="carousel-poll-content">{{ poll.content }}</p>
+        </div>
       </a>
-      <div class="carousel-caption d-none d-md-block">
-        <h5 class="carousel-poll-title">{{ poll.title }}</h5>
-        <p class="carousel-poll-content">{{ poll.content }}</p>
-      </div>
     </div>
     {% endfor %}
   </div>

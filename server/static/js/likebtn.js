@@ -1,68 +1,73 @@
-
-const likeButton = document.getElementById("like-button");
-const pollId = likeButton.getAttribute("data-poll-id");
-let userLikesPoll = likeButton.getAttribute("data-user-likes") === "True";
-
-
-
-
-likeButton.addEventListener("click", () => {
-  // if (!userLikesPoll) {
-  //   // 사용자가 로그인하지 않은 경우
-  //   alert("로그인이 필요합니다.");
-  //   return;
-  // }
+document.addEventListener("DOMContentLoaded", () => {
+  const likeButton = document.getElementById("like-button");
+  const pollId = likeButton.getAttribute("data-poll-id");
+  const heartImage = likeButton.querySelector("img");
 
   axios
-    .post(
-      "/like/",
-      { poll_id: pollId },
-      {
-        headers: {
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-      }
-    )
+    .get(`/get-like-status/${pollId}/`)
     .then((response) => {
-      const message = response.data.message;
-      const likeCount = response.data.like_count;
+      const userLikesPoll = response.data.user_likes_poll;
 
-      const heartImage = likeButton.querySelector("img");
-      if (message === "좋아요 취소") {
-        heartImage.src = "../../static/img/icon/blank_heart.png";
-        userLikesPoll = false;
-        localStorage.setItem("userLikesPoll", "false");
-      } else {
+      if (userLikesPoll) {
         heartImage.src = "../../static/img/icon/pink_heart.png";
-        userLikesPoll = true;
-        localStorage.setItem("userLikesPoll", "true");
+      } else {
+        heartImage.src = "../../static/img/icon/blank_heart.png";
       }
-
-      document.querySelector("#like-count").textContent = likeCount;
-      likeButton.setAttribute("data-user-likes", userLikesPoll);
-
     })
     .catch((error) => {
-      if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-        var loginUrl = "/account/login/";
-        window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
-      }
       console.error("Error:", error);
     });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-  const heartImage = likeButton.querySelector("img");
+  likeButton.addEventListener("click", () => {
+    console.log("클릭!");
+
+    axios
+      .post(
+        "/like/",
+        { poll_id: pollId },
+        {
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+        }
+      )
+      .then((response) => {
+        const message = response.data.message;
+        const likeCount = response.data.like_count;
+        let userLikesPoll = response.data.user_likes_poll;
+
+        if (message === "좋아요 취소") {
+          heartImage.src = "../../static/img/icon/blank_heart.png";
+          userLikesPoll = false;
+          localStorage.setItem("userLikesPoll", false);
+        } else {
+          heartImage.src = "../../static/img/icon/pink_heart.png";
+          userLikesPoll = true;
+          localStorage.setItem("userLikesPoll", true);
+        }
+
+        document.querySelector("#like-count").textContent = likeCount;
+        likeButton.setAttribute("data-user-likes", userLikesPoll);
+      })
+      .catch((error) => {
+        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+          var loginUrl = "/account/login/";
+          window.location.href = loginUrl;
+        }
+        console.error("Error:", error);
+      });
+  });
+
   const userLikesPoll = localStorage.getItem("userLikesPoll");
   if (userLikesPoll === "true") {
     heartImage.src = "../../static/img/icon/pink_heart.png";
   } else {
     heartImage.src = "../../static/img/icon/blank_heart.png";
   }
-});
 
-function getCookie(name) {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
-  if (parts.length === 2) return parts.pop().split(";").shift();
-}
+  function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+});
