@@ -19,43 +19,62 @@
   <div class="option-container">
     <form id="loginmodal" action="{% url 'vote:nonuserfinal' poll.id nonuservote_id %}" method="POST">
       {% csrf_token %}
-      <div>
-        <label><input type="radio" name="choice_EI" value="E" /> E</label>
-        <label><input type="radio" name="choice_EI" value="I" /> I</label>
+      <div class="mbti-every-options">
+        <div class="mbti-two-options">
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_EI" value="E" class="mbti-choice-input"/> E</label>
+          </div>
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_EI" value="I" class="mbti-choice-input"/> I</label>
+          </div>
+        </div>
+        <div class="mbti-two-options">
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_SN" value="S" class="mbti-choice-input"/> S</label>
+          </div>
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_SN" value="N" class="mbti-choice-input"/> N</label>
+          </div>
+        </div>
+        <div class="mbti-two-options">
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_FT" value="F" class="mbti-choice-input"/> F</label>
+          </div>
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_FT" value="T" class="mbti-choice-input"/> T</label>
+          </div>
+        </div>
+        <div class="mbti-two-options">
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_JP" value="J" class="mbti-choice-input"/> J</label>
+          </div>
+          <div class="mbti-detail-option">
+            <label><input type="radio" name="choice_JP" value="P" class="mbti-choice-input"/> P</label>
+          </div>
+        </div>
       </div>
-      <div>
-        <label><input type="radio" name="choice_SN" value="S" /> S</label>
-        <label><input type="radio" name="choice_SN" value="N" /> N</label>
-      </div>
-      <div>
-        <label><input type="radio" name="choice_FT" value="F" /> F</label>
-        <label><input type="radio" name="choice_FT" value="T" /> T</label>
-      </div>
-      <div>
-        <label><input type="radio" name="choice_JP" value="J" /> J</label>
-        <label><input type="radio" name="choice_JP" value="P" /> P</label>
-      </div>
+      <div class="what-is-my-mbti"> 내가 선택한 mbti : <span id="selected-mbti"></span></div>
       <input type="hidden" id="selected-mbti-input" name="selected_mbti" value="" />
       <input type="button" data-bs-toggle="modal" href="#exampleModal" value="등록하기" class="vote-submit-btn" disabled />
     </form>
   </div>
-    <div> 내가 선택한 mbti 조합 : <span id="selected-mbti"></span></div>
 </div>
 
 <div class="modal fade" id="exampleModal">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <p> 로그인을 하시면 더 많은 기능을 사용하실 수 있어요!</p>
-        <div class="modal-footer">
-          <a href="{% url 'account:login' %}"> 로그인하러가기 </a>
-          <button type="button" class="btn btn-primary" id="submitForm">그냥 투표하기</button>
-        </div>
+      <div class="modal-header" style="justify-content:center; font-size: 18px; padding-top: 25px;">
+        <p> 로그인을 하시면 <span class="modal-logo">Daily VS</span>에서 </br> 더 많은 기능을 사용하실 수 있어요!</p>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content: space-around;">
+        <a type="button" class="btn" href="{% url 'account:login' %}" style="background-color:#ff495a; text-decoration:none; color:white;"> 로그인하러가기 </a>
+        <button type="button" class="btn" style="background-color: #457c9e; color:white" id="submitForm">그냥 투표하기</button>
       </div>
     </div>
   </div>
 </div>
-  
+
+<script src="{% static 'js/detail3.js' %}"></script>
 <script>
   // 진행 버튼 클릭 시 폼 제출
   document.getElementById("submitForm").addEventListener("click", function () {
@@ -63,57 +82,4 @@
       document.getElementById("loginmodal").submit();
   });
 </script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const radioGroups = document.querySelectorAll(".option-container div");
-      const selectedMBTISpan = document.getElementById("selected-mbti");
-      const selectedMBTIInput = document.getElementById("selected-mbti-input");
-  
-      radioGroups.forEach((group) => {
-        const radios = group.querySelectorAll("input[type='radio']");
-  
-        radios.forEach((radio) => {
-          radio.addEventListener("change", () => {
-            checkSubmitButton(radioGroups);
-            updateSelectedMBTI(radioGroups, selectedMBTISpan, selectedMBTIInput);
-          });
-        });
-      });
-    });
-
-    function checkSubmitButton(radioGroups) {
-    const submitButton = document.querySelector(".vote-submit-btn");
-    let allSelected = true;
-
-    radioGroups.forEach((group) => {
-      const selected = group.querySelector("input[type='radio']:checked");
-      if (!selected) {
-        allSelected = false;
-      }
-    });
-
-    submitButton.disabled = !allSelected;
-  }
-
-  function updateSelectedMBTI(radioGroups, selectedMBTISpan, selectedMBTIInput) {
-    let selectedMBTI = "";
-
-    radioGroups.forEach((group) => {
-        const selected = group.querySelector("input[type='radio']:checked");
-        if (selected) {
-            selectedMBTI += selected.value;
-        }
-    });
-
-    selectedMBTISpan.textContent = selectedMBTI;
-    selectedMBTIInput.value = selectedMBTI; 
-    console.log("Selected MBTI:", selectedMBTI);
-
-    const submitButton = document.querySelector(".vote-submit-btn");
-    submitButton.disabled = false;
-  }
-  </script>
-    {% endblock %}
-  </div>
-</div>
+{% endblock %}

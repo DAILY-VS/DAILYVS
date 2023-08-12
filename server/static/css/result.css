@@ -163,3 +163,22 @@ text {
   font-size: 16px;
   font-family: "NEXON Lv1 Gothic OTF";
 }
+
+.modal-logo {
+  font-family: "GongGothicMedium";
+  color: var(--darkblue-primary-color);
+}
+
+.modal-header {
+  text-align: center;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+}
