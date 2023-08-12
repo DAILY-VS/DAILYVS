@@ -381,10 +381,20 @@ def calcstat(request, poll_id):
     ]
     choice1_percentage = int(total_choice1_count / total_count * 100)
     choice2_percentage = int(total_choice2_count / total_count * 100)
-    choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
-    choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
-    choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
-    choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+
+    if total_man_count != 0:
+        choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
+        choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
+    else : 
+       choice1_man_percentage = 0 
+       choice2_man_percentage = 0 
+
+    if total_woman_count != 0:
+        choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
+        choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+    else : 
+       choice1_woman_percentage = 0 
+       choice2_woman_percentage = 0 
 
     mbtis_dict = dict(zip(mbtis, total_mbtis_count))
     mbtis_choice1_dict = dict(zip(mbtis, total_mbtis_choice1_count))
@@ -416,6 +426,9 @@ def calcstat(request, poll_id):
     if e_total_count != 0:
         e_choice1_percentage = int(e_choice1_count / e_total_count * 100)
         e_choice2_percentage = 100 - e_choice1_percentage
+    else : 
+        e_choice1_percentage = 0 
+        e_choice2_percentage = 0 
 
     i_total_count = (
         mbtis_dict["ISTJ"]
@@ -441,6 +454,9 @@ def calcstat(request, poll_id):
     if i_total_count != 0:
         i_choice1_percentage = int(i_choice1_count / i_total_count * 100)
         i_choice2_percentage = 100 - i_choice1_percentage
+    else : 
+        i_choice1_percentage = 0 
+        i_choice2_percentage = 0 
 
     n_total_count = (
         mbtis_dict["INTJ"]
@@ -466,6 +482,9 @@ def calcstat(request, poll_id):
     if n_total_count != 0:
         n_choice1_percentage = int(n_choice1_count / n_total_count * 100)
         n_choice2_percentage = 100 - n_choice1_percentage
+    else : 
+        n_choice1_percentage = 0 
+        n_choice2_percentage = 0 
 
     s_total_count = (
         mbtis_dict["ISTJ"]
@@ -491,6 +510,10 @@ def calcstat(request, poll_id):
     if s_total_count != 0:
         s_choice1_percentage = int(s_choice1_count / s_total_count * 100)
         s_choice2_percentage = 100 - s_choice1_percentage
+    else : 
+        s_choice1_percentage = 0 
+        s_choice2_percentage = 0 
+
 
     t_total_count = (
         mbtis_dict["INTJ"]
@@ -516,6 +539,9 @@ def calcstat(request, poll_id):
     if t_total_count != 0:
         t_choice1_percentage = int(t_choice1_count / t_total_count * 100)
         t_choice2_percentage = 100 - t_choice1_percentage
+    else : 
+        t_choice1_percentage = 0 
+        t_choice2_percentage = 0 
 
     f_total_count = (
         mbtis_dict["INFJ"]
@@ -541,6 +567,9 @@ def calcstat(request, poll_id):
     if f_total_count != 0:
         f_choice1_percentage = int(f_choice1_count / f_total_count * 100)
         f_choice2_percentage = 100 - f_choice1_percentage
+    else : 
+        f_choice1_percentage = 0 
+        f_choice2_percentage = 0 
 
     j_total_count = (
         mbtis_dict["INTJ"]
@@ -566,6 +595,9 @@ def calcstat(request, poll_id):
     if j_total_count != 0:
         j_choice1_percentage = int(j_choice1_count / j_total_count * 100)
         j_choice2_percentage = 100 - j_choice1_percentage
+    else : 
+        j_choice1_percentage = 0 
+        j_choice2_percentage = 0 
 
     p_total_count = (
         mbtis_dict["INTP"]
@@ -591,6 +623,9 @@ def calcstat(request, poll_id):
     if p_total_count != 0:
         p_choice1_percentage = int(p_choice1_count / p_total_count * 100)
         p_choice2_percentage = 100 - p_choice1_percentage
+    else : 
+        p_choice1_percentage = 0 
+        p_choice2_percentage = 0 
 
     ctx = {
         "total_count": total_count,
