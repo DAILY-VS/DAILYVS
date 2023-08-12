@@ -75,26 +75,28 @@
             <div class="nested-replyTody">
               {% for child_comment in comments reversed %}
                 {% if child_comment.parent_comment_id == comment.id %}
-                  <div class="nested-replyTr{{ child_comment.id }}">
-                    <div><img src="{% static 'img/icon/reply.png' %}" style="width:25px;" /></div>
-                    <div class="comment-nickname">{{ child_comment.user_info.nickname }}</div>
-                    <div class="comment-sub-info">
-                      <div class="user-sub-info">{{ child_comment.user_info.mbti}}</div>
-                      <div class="user-sub-info">{{ child_comment.user_info.gender}}</div>
-                      <div class="user-sub-info">                        
-                        {% if user.is_authenticated %}
-                          {% if user_votes %}
-                            {% for user_vote in user_votes %}
-                              {% if user_vote.poll == child_comment.poll %}
-                                {{ user_vote.choice.choice_text }}
-                              {% endif %}
-                            {% endfor %}
+                  <div class="nested-replyTr{{ child_comment.id }} ">
+                    <div class="nested-row">
+                      <div><img src="{% static 'img/icon/reply.png' %}" style="width:25px;" /></div>
+                      <div class="comment-nickname">{{ child_comment.user_info.nickname }}</div>
+                      <div class="comment-sub-info">
+                        <div class="user-sub-info">{{ child_comment.user_info.mbti}}</div>
+                        <div class="user-sub-info">{{ child_comment.user_info.gender}}</div>
+                        <div class="user-sub-info">                        
+                          {% if user.is_authenticated %}
+                            {% if user_votes %}
+                              {% for user_vote in user_votes %}
+                                {% if user_vote.poll == child_comment.poll %}
+                                  {{ user_vote.choice.choice_text }}
+                                {% endif %}
+                              {% endfor %}
+                            {% else %}
+                              로그인 후 확인 가능합니다.
+                            {% endif %}
                           {% else %}
                             로그인 후 확인 가능합니다.
                           {% endif %}
-                        {% else %}
-                          로그인 후 확인 가능합니다.
-                        {% endif %}
+                        </div>
                       </div>
                     </div>
                     <div class="comment-content-delete">

@@ -115,7 +115,13 @@
   background-color: transparent;
 }
 
+/* 대댓글 css */
 .replyTable {
   display: flex;
   flex-direction: column;
+}
+
+.nested-row {
+  display: flex;
+  flex-direction: row;
 }
