@@ -6,7 +6,6 @@
       <div class="comment-user-name">{{ user.username }}</div>
       <div class="user-sub-info">{{ user.mbti }}</div>
       <div class="user-sub-info">{{ user.gender }}</div>
-      <!-- <div class="comment-user-choice">choice</div> -->
     </div>
     <textarea
       class="replyContent"
@@ -15,12 +14,11 @@
     ></textarea>
     <button id="comment_write" class="btnReply">댓글달기</button>
   </div>
-
   <hr />
-
   <div class="replyTable">
     <div class="replyTody">
       {% for comment in comments reversed%}
+      {% if comment.parent_comment is null %}
       <div class="replyTr{{ comment.id }}">
         <div class="stored-comment-container">
             <div class="comment-top-section">
@@ -60,7 +58,6 @@
             </div>
             <div class="comment-created-time">{{ comment.created_at|timesince }} 전</div>
         </div>
-
         <!-- 대댓글 작성 영역 -->
         {% if not comment.parent_comment %}
         <div class="nested-reply-input-container">
@@ -70,54 +67,63 @@
             placeholder="대댓글을 입력해주세요."
           ></textarea>
           <button class="btnNestedReply" data-comment-id="{{ comment.id }}">대댓글 작성</button>
-            대댓글 달기
-          </button>
-        </div>
+          대댓글 달기 
+        </div>        
         {% endif %}
       </div>
-      {% endfor %}
-      </div>
-    </div>
-
         <!-- 대댓글 표시 영역 -->
-        <div class="nested-replyTody">
-          {% for nested_comment in comment.children.all %}
-          <div class="nested-replyTr{{ nested_comment.id }}">
-            <div class="comment-nickname">{{ comment.user_info.nickname }}</div>
-                <div class="comment-sub-info">
-                    <div class="user-sub-info">{{ comment.user_info.mbti}}</div>
-                    <div class="user-sub-info">{{ comment.user_info.gender}}</div>
-                    <div class="user-sub-info">
-                      
-                      {% if user.is_authenticated %}
-                            {% if user_votes %}
-                                {% for user_vote in user_votes %}
-                                    {% if user_vote.poll == comment.poll %}
-                                        {{ user_vote.choice.choice_text }}
-                                    {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                로그인 후 확인 가능합니다.
-                            {% endif %}
-                        {% else %}
+            <div class="nested-replyTody">
+              {% for child_comment in comments reversed %}
+                {% if child_comment.parent_comment_id == comment.id %}
+                  <div class="nested-replyTr{{ child_comment.id }}">
+                    <div><img src="{% static 'img/icon/reply.png' %}" style="width:25px;" /></div>
+                    <div class="comment-nickname">{{ child_comment.user_info.nickname }}</div>
+                    <div class="comment-sub-info">
+                      <div class="user-sub-info">{{ child_comment.user_info.mbti}}</div>
+                      <div class="user-sub-info">{{ child_comment.user_info.gender}}</div>
+                      <div class="user-sub-info">                        
+                        {% if user.is_authenticated %}
+                          {% if user_votes %}
+                            {% for user_vote in user_votes %}
+                              {% if user_vote.poll == child_comment.poll %}
+                                {{ user_vote.choice.choice_text }}
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
                             로그인 후 확인 가능합니다.
+                          {% endif %}
+                        {% else %}
+                          로그인 후 확인 가능합니다.
                         {% endif %}
-
-                      </div>
-                        <div class="comment-content-delete">
-                          <div class="stored-comment-content">{{ nested_comment.content }}</div>
-                        </div>
-                        <div class="comment-created-time">{{ nested_comment.created_at|timesince }} 전</div>
                       </div>
                     </div>
+                    <div class="comment-content-delete">
+                      <div class="stored-comment-content">{{ child_comment.content }}</div>
+                      {% if user.is_authenticated and user.nickname == child_comment.user_info.nickname %}
+                        <img
+                          src="{% static 'img/icon/x.png' %}"
+                          type="button"
+                          value="x"
+                          onclick="nestedReplyDelete({{ child_comment.id }})"
+                        />
+                      {% endif %}
+                    </div>
+                    <div class="comment-created-time">{{ child_comment.created_at|timesince }} 전</div>
+                  </div>
+                {% endif %}
+              {% endfor %}
             </div>
-          {% endfor %}
-        </div>
+          </div>
+        {% endif %}
+        {% endfor %}
       </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function () {
+$(document).ready(function () {
     //댓글 달기
   $("#comment_write").click(function () {
     var content = $(".replyContent").val();
@@ -191,9 +197,8 @@
   });
 
 
+
   // 대댓글 달기
-$(document).ready(function () {
-  // 대댓글 작성 버튼 클릭 시 호출되는 함수
   $(".btnNestedReply").click(function () {
     var comment_id = $(this).data("comment-id");
     var nestedContent = $("#nested_content_id_" + comment_id).val();
@@ -212,9 +217,8 @@ $(document).ready(function () {
         success: function (response) {
           // 새로운 대댓글 생성
           var newNestedComment =
-            '<div class="nested-replyTr' + 
-            response.comment_id +
-            '">' +
+            '<div class="nested-replyTr' + response.comment_id + '">' +
+            '<img src="{% static 'img/icon/reply.png' %}" style="width:25px;" />' +
             '<div class="nested-stored-comment-container">' +
             '<div class="nested-comment-top-section">' +
             '<div class="comment-nickname">' + response.nickname + '</div>' +
@@ -226,14 +230,15 @@ $(document).ready(function () {
             '</div>' +
             '<div class="comment-content-delete">' +
             '<div class="stored-comment-content">' + response.content + '</div>' +
+            '<img src="{% static 'img/icon/x.png' %}" type="button" value="x" onclick="nestedReplyDelete(' + response.comment_id + ')" />' + // 대댓글 삭제 버튼 추가
             '</div>' +
             '<div class="comment-created-time">' + response.created_at + '</div>' +
             '</div>' +
             '</div>';
 
-            
-          $(".nested-replyTody").prepend(newNestedComment);
-          $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
+          // 선택한 부모 댓글 바로 하단에 추가
+          $(".replyTr" + comment_id).append(newNestedComment);
+        $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
         },
         error: function () {
           if ($("#nested_content_id_" + comment_id).val() == "") {
@@ -244,12 +249,11 @@ $(document).ready(function () {
         },
       });
     } else {
-        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-          var loginUrl = "/account/login/";
-          window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
-        }
+      if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        var loginUrl = "/account/login/";
+        window.location.href = loginUrl; // 로그인 페이지 URL로 이동
       }
-    });
+    }
   });
 });
 
@@ -290,9 +294,46 @@ $(document).ready(function () {
         });
       } else {
         alert("로그인을 해주세요");
+      }}}
+
+    function nestedReplyDelete(value) {
+    var comment_id = value;
+    var delete_warning = confirm("대댓글을 삭제하시겠습니까?");
+
+    if (delete_warning == true) {
+      var isAuthenticated = "{{ user.is_authenticated }}";
+      if (isAuthenticated === "True") {
+        $.ajax({
+          type: "POST",
+          url: "{% url 'vote:comment_delete' poll.id %}",
+          dataType: "json",
+          data: {
+            comment_id: comment_id,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          },
+          success: function (response) {
+            if (response.success) {
+              $("#" + response.comment_id).remove();
+              var nestedReplyTr = document.querySelector(
+                `.nested-replyTr${response.comment_id}`
+              );
+              if (nestedReplyTr) {
+                console.log(nestedReplyTr);
+                nestedReplyTr.remove();
+              }
+            } else {
+              alert(response.error);
+            }
+          },
+          error: function () {
+            alert("오류가 발생했습니다.");
+          },
+        });
+      } else {
+        alert("로그인을 해주세요");
       }
     }
-  } 
+  };
 
 </script>
 

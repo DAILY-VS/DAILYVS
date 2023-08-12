@@ -114,3 +114,8 @@
   height: 10px;
   background-color: transparent;
 }
+
+.replyTable {
+  display: flex;
+  flex-direction: column;
+}
