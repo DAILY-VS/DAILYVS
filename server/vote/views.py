@@ -669,7 +669,7 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         selected_mbti = request.POST.get("selected_mbti")
         choice_id = request.POST.get("choice")
         print("selected_mbti:", selected_mbti)
-        NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))
+        NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=selected_mbti)
         calcstat_url = reverse("vote:calcstat", args=[poll_id])
         return redirect(calcstat_url)
     else :
