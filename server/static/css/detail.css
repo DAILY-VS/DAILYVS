@@ -188,12 +188,18 @@
 }
 
 .vote-submit-btn {
+  display: flex;
+  justify-content: center;
   border: none;
   border-radius: 5px;
   margin: 10px auto;
   height: 50px;
   width: 300px;
   font-size: 20px;
+}
+.vote-submit-btn.active {
+  color: white;
+  background-color: var(--darkblue-primary-color);
 }
 
 .vote-submit-btn.disabled {
@@ -247,4 +253,58 @@
 
 .gender-choice-input {
   display: none;
+}
+
+/* detail3 css */
+.mbti-every-options {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
+.mbti-two-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.mbti-detail-option {
+  font-family: "GongGothicMedium";
+  font-size: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  position: relative;
+  margin: 10px;
+  width: 5rem;
+  height: 5rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mbti-detail-option:hover,
+.mbti-detail-option.selected {
+  background-color: var(--redpink-primary-color);
+  color: white;
+}
+
+.mbti-choice-input {
+  display: none;
+}
+
+.what-is-my-mbti {
+  margin: 50px auto;
+  display: grid;
+  grid-template-columns: 200px 200px;
+}
+
+.what-is-my-mbti {
+  font-family: "GongGothicMedium";
+  font-size: 24px;
+  color: var(--darkblue-primary-color);
+}
+
+#selected-mbti {
+  font-family: "GongGothicMedium";
+  color: var(--redpink-primary-color);
+  font-size: 24px;
 }
