@@ -256,6 +256,8 @@ def classifyuser(request, poll_id):
                     "loop_time": range(0, 2),
                 }
                 return render(request, "vote/detail2.html", context)
+    else :
+        return redirect('/')
 
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
@@ -409,10 +411,20 @@ def calcstat(request, poll_id):
 
     choice1_percentage = int(total_choice1_count / total_count * 100)
     choice2_percentage = int(total_choice2_count / total_count * 100)
-    choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
-    choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
-    choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
-    choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+
+    if total_man_count != 0:
+        choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
+        choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
+    else : 
+       choice1_man_percentage = 0 
+       choice2_man_percentage = 0 
+
+    if total_woman_count != 0:
+        choice1_woman_percentage = int(total_woman_choice1_count / total_woman_count * 100)
+        choice2_woman_percentage = int(total_woman_choice2_count / total_woman_count * 100)
+    else : 
+       choice1_woman_percentage = 0 
+       choice2_woman_percentage = 0 
 
     mbtis_dict = dict(zip(mbtis, total_mbtis_count))
     mbtis_choice1_dict = dict(zip(mbtis, total_mbtis_choice1_count))
@@ -444,6 +456,9 @@ def calcstat(request, poll_id):
     if e_total_count != 0:
         e_choice1_percentage = int(e_choice1_count / e_total_count * 100)
         e_choice2_percentage = 100 - e_choice1_percentage
+    else : 
+        e_choice1_percentage = 0 
+        e_choice2_percentage = 0 
 
     i_total_count = (
         mbtis_dict["ISTJ"]
@@ -469,6 +484,9 @@ def calcstat(request, poll_id):
     if i_total_count != 0:
         i_choice1_percentage = int(i_choice1_count / i_total_count * 100)
         i_choice2_percentage = 100 - i_choice1_percentage
+    else : 
+        i_choice1_percentage = 0 
+        i_choice2_percentage = 0 
 
     n_total_count = (
         mbtis_dict["INTJ"]
@@ -494,6 +512,9 @@ def calcstat(request, poll_id):
     if n_total_count != 0:
         n_choice1_percentage = int(n_choice1_count / n_total_count * 100)
         n_choice2_percentage = 100 - n_choice1_percentage
+    else : 
+        n_choice1_percentage = 0 
+        n_choice2_percentage = 0 
 
     s_total_count = (
         mbtis_dict["ISTJ"]
@@ -519,6 +540,10 @@ def calcstat(request, poll_id):
     if s_total_count != 0:
         s_choice1_percentage = int(s_choice1_count / s_total_count * 100)
         s_choice2_percentage = 100 - s_choice1_percentage
+    else : 
+        s_choice1_percentage = 0 
+        s_choice2_percentage = 0 
+
 
     t_total_count = (
         mbtis_dict["INTJ"]
@@ -544,6 +569,9 @@ def calcstat(request, poll_id):
     if t_total_count != 0:
         t_choice1_percentage = int(t_choice1_count / t_total_count * 100)
         t_choice2_percentage = 100 - t_choice1_percentage
+    else : 
+        t_choice1_percentage = 0 
+        t_choice2_percentage = 0 
 
     f_total_count = (
         mbtis_dict["INFJ"]
@@ -569,6 +597,9 @@ def calcstat(request, poll_id):
     if f_total_count != 0:
         f_choice1_percentage = int(f_choice1_count / f_total_count * 100)
         f_choice2_percentage = 100 - f_choice1_percentage
+    else : 
+        f_choice1_percentage = 0 
+        f_choice2_percentage = 0 
 
     j_total_count = (
         mbtis_dict["INTJ"]
@@ -594,6 +625,9 @@ def calcstat(request, poll_id):
     if j_total_count != 0:
         j_choice1_percentage = int(j_choice1_count / j_total_count * 100)
         j_choice2_percentage = 100 - j_choice1_percentage
+    else : 
+        j_choice1_percentage = 0 
+        j_choice2_percentage = 0 
 
     p_total_count = (
         mbtis_dict["INTP"]
@@ -619,6 +653,9 @@ def calcstat(request, poll_id):
     if p_total_count != 0:
         p_choice1_percentage = int(p_choice1_count / p_total_count * 100)
         p_choice2_percentage = 100 - p_choice1_percentage
+    else : 
+        p_choice1_percentage = 0 
+        p_choice2_percentage = 0 
 
     ctx = {
         "total_count": total_count,
@@ -688,13 +725,19 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
             "loop_time": range(0, 2),
         }
         return render(request, "vote/detail3.html", context)
+    else :
+        return redirect('/')
 
 
 # 비회원 투표시 투표 정보 전송
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
-    selected_mbti = request.POST.get("selected_mbti")
-    choice_id = request.POST.get("choice")
-    print("selected_mbti:", selected_mbti)
-    NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=str(choice_id))
-    calcstat_url = reverse("vote:calcstat", args=[poll_id])
-    return redirect(calcstat_url)
+    if request.method == "POST":
+        selected_mbti = request.POST.get("selected_mbti")
+        choice_id = request.POST.get("choice")
+        print("selected_mbti:", selected_mbti)
+        NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=selected_mbti)
+        calcstat_url = reverse("vote:calcstat", args=[poll_id])
+        return redirect(calcstat_url)
+    else :
+        return redirect('/')
+
