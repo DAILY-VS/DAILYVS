@@ -45,7 +45,10 @@ likeButton.addEventListener("click", () => {
 
     })
     .catch((error) => {
-      alert("로그인이 필요합니다.");
+      if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        var loginUrl = "/account/login/";
+        window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
+      }
       console.error("Error:", error);
     });
 });

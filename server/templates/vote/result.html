@@ -1,7 +1,6 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <style>
   .panel {
-    /* min height incase content is higher than window height */
     min-height: 5vh;
   }
 </style>
@@ -14,7 +13,7 @@
   <div class="graph-container" data-color="skyblue">
     {% include 'vote/result/result-chart.html' %}
   </div>
-  <button class="result-share-btn">
+  <button class="result-share-btn" id="copy-url-btn">
     공유하기<span
       ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
     /></span>
@@ -50,7 +49,7 @@
       </div>
     </div>
   </div>
-  <div class="detail-like-container">{% include 'vote/result/like.html' %}</div> 
+  <div class="detail-like-container">{% include 'vote/result/like.html' %}</div>
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
@@ -69,6 +68,7 @@
   }
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const mbtiToggle = document.getElementById("mbtiToggle");
@@ -78,6 +78,33 @@
       mbtiChart.style.display =
         mbtiChart.style.display === "none" ? "block" : "none";
     });
+  });
+
+  //공유하기 버튼
+  // 버튼 요소 가져오기
+  const copyUrlBtn = document.getElementById("copy-url-btn");
+  // 버튼을 클릭했을 때 이벤트 리스너 등록
+  copyUrlBtn.addEventListener("click", () => {
+      // 현재 페이지의 URL 가져오기
+      const currentUrl = window.location.href;
+      // 클립보드 복사 객체 생성
+      const clipboard = new ClipboardJS(copyUrlBtn, {
+          text: function() {
+              return currentUrl; // 복사할 텍스트 설정
+          }
+      });
+      // 클립보드 복사 성공 시 처리
+      clipboard.on("success", () => {
+          alert("URL이 복사되었습니다.");
+          clipboard.destroy(); // 클립보드 객체 해제
+      });
+      // 클립보드 복사 실패 시 처리
+      clipboard.on("error", () => {
+          alert("URL 복사에 실패하였습니다.");
+          clipboard.destroy(); // 클립보드 객체 해제
+      });
+      // 클릭 이벤트 트리거로 클립보드 복사 실행
+      clipboard.onClick();
   });
 </script>
 
