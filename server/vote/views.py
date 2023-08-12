@@ -133,7 +133,7 @@ def mypage_update(request):
     return render(request, "vote/update.html", context)
 
 
-# 댓글 추가
+# 댓글 쓰기
 @login_required
 def comment_write_view(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
@@ -177,6 +177,7 @@ def comment_write_view(request, poll_id):
             "content": content,
             "created_at": comment.created_at.strftime("%Y년 %m월 %d일"),
             "comment_id": comment_id,
+            "choice": choice_text,
         }
         return HttpResponse(
             json.dumps(data, cls=DjangoJSONEncoder), content_type="application/json"
@@ -261,11 +262,13 @@ def classifyuser(request, poll_id):
 def calcstat(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
-    comments = Comment.objects.filter(poll_id=poll_id)
     if request.user.is_authenticated:
         user_votes = UserVote.objects.filter(user=request.user)
     else:
         user_votes = None  # 또는 user_votes = UserVote.objects.none()
+    
+    
+    
     mbtis = [
         "ISTJ",
         "ISFJ",

@@ -28,6 +28,23 @@
                 <div class="comment-sub-info">
                     <div class="user-sub-info">{{ comment.user_info.mbti}}</div>
                     <div class="user-sub-info">{{ comment.user_info.gender}}</div>
+                    <div class="user-sub-info">
+                      
+                      {% if user.is_authenticated %}
+                            {% if user_votes %}
+                                {% for user_vote in user_votes %}
+                                    {% if user_vote.poll == comment.poll %}
+                                        {{ user_vote.choice.choice_text }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                로그인 후 확인 가능합니다.
+                            {% endif %}
+                        {% else %}
+                            로그인 후 확인 가능합니다.
+                        {% endif %}
+                    
+                    </div>
                 </div>
             </div>
             <div class="comment-content-delete">
@@ -43,15 +60,65 @@
             </div>
             <div class="comment-created-time">{{ comment.created_at|timesince }} 전</div>
         </div>
+
+        <!-- 대댓글 작성 영역 -->
+        {% if not comment.parent_comment %}
+        <div class="nested-reply-input-container">
+          <textarea
+            class="nested-replyContent"
+            id="nested_content_id_{{ comment.id }}"
+            placeholder="대댓글을 입력해주세요."
+          ></textarea>
+          <button class="btnNestedReply" data-comment-id="{{ comment.id }}">대댓글 작성</button>
+            대댓글 달기
+          </button>
+        </div>
+        {% endif %}
       </div>
       {% endfor %}
+      </div>
     </div>
-  </ㅇ>
-</div>
+
+        <!-- 대댓글 표시 영역 -->
+        <div class="nested-replyTody">
+          {% for nested_comment in comment.children.all %}
+          <div class="nested-replyTr{{ nested_comment.id }}">
+            <div class="comment-nickname">{{ comment.user_info.nickname }}</div>
+                <div class="comment-sub-info">
+                    <div class="user-sub-info">{{ comment.user_info.mbti}}</div>
+                    <div class="user-sub-info">{{ comment.user_info.gender}}</div>
+                    <div class="user-sub-info">
+                      
+                      {% if user.is_authenticated %}
+                            {% if user_votes %}
+                                {% for user_vote in user_votes %}
+                                    {% if user_vote.poll == comment.poll %}
+                                        {{ user_vote.choice.choice_text }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                로그인 후 확인 가능합니다.
+                            {% endif %}
+                        {% else %}
+                            로그인 후 확인 가능합니다.
+                        {% endif %}
+
+                      </div>
+                        <div class="comment-content-delete">
+                          <div class="stored-comment-content">{{ nested_comment.content }}</div>
+                        </div>
+                        <div class="comment-created-time">{{ nested_comment.created_at|timesince }} 전</div>
+                      </div>
+                    </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  //댓글 달기
   $(document).ready(function () {
+    //댓글 달기
   $("#comment_write").click(function () {
     var content = $(".replyContent").val();
 
@@ -79,6 +146,7 @@
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
+            '<div class="user-sub-info">' + response.choice + '</div>' +
             '</div>' +
             '</div>' +
             '<div class="comment-content-delete">' +
@@ -95,6 +163,10 @@
           newComment +=
             '</div>' +
             '<div class="comment-created-time">' + response.created_at + '</div>' +
+            '<div class="nested-reply-input-container">' +
+            '<textarea class="nested-replyContent" id="nested_content_id_' + response.comment_id + '" placeholder="대댓글을 입력해주세요."></textarea>' +
+            '<button class="btnNestedReply" data-comment-id="' + response.comment_id + '">대댓글 작성</button>' +
+            '대댓글 달기' + 
             '</div>' +
             '</div>' +
             '</div>';
@@ -117,10 +189,73 @@
     }
     }
   });
+
+
+  // 대댓글 달기
+$(document).ready(function () {
+  // 대댓글 작성 버튼 클릭 시 호출되는 함수
+  $(".btnNestedReply").click(function () {
+    var comment_id = $(this).data("comment-id");
+    var nestedContent = $("#nested_content_id_" + comment_id).val();
+    var isAuthenticated = "{{ user.is_authenticated }}";
+
+    if (isAuthenticated === "True") {
+      $.ajax({
+        type: "POST",
+        url: "{% url 'vote:comment_write' poll.id %}",
+        dataType: "json",
+        data: {
+          content: nestedContent,
+          parent_comment_id: comment_id, // 대댓글의 부모 댓글 ID 전달
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          // 새로운 대댓글 생성
+          var newNestedComment =
+            '<div class="nested-replyTr' + 
+            response.comment_id +
+            '">' +
+            '<div class="nested-stored-comment-container">' +
+            '<div class="nested-comment-top-section">' +
+            '<div class="comment-nickname">' + response.nickname + '</div>' +
+            '<div class="comment-sub-info">' +
+            '<div class="user-sub-info">' + response.mbti + '</div>' +
+            '<div class="user-sub-info">' + response.gender + '</div>' +
+            '<div class="user-sub-info">' + response.choice + '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="comment-content-delete">' +
+            '<div class="stored-comment-content">' + response.content + '</div>' +
+            '</div>' +
+            '<div class="comment-created-time">' + response.created_at + '</div>' +
+            '</div>' +
+            '</div>';
+
+            
+          $(".nested-replyTody").prepend(newNestedComment);
+          $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
+        },
+        error: function () {
+          if ($("#nested_content_id_" + comment_id).val() == "") {
+            alert("대댓글을 입력해주세요.");
+          } else {
+            alert("오류가 발생했습니다.");
+          }
+        },
+      });
+    } else {
+      if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        var loginUrl = "/account/login/";
+        window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
+    }
+    }
+  });
+});
 });
 
-  // 댓글 삭제
-  function replyDelete(value) {
+
+   // 댓글 삭제
+   function replyDelete(value) {
     var comment_id = value;
     var delete_warning = confirm("댓글을 삭제하시겠습니까?");
 
@@ -158,6 +293,13 @@
         alert("로그인을 해주세요");
       }
     }
-  }
+  } 
+
+</script>
+
+<script>
+
+
+
 </script>
 {% endblock %}
