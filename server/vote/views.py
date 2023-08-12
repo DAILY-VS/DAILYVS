@@ -75,9 +75,9 @@ def poll_like(request):
             poll = Poll.objects.get(id=poll_id)
         except Poll.DoesNotExist:
             return JsonResponse({"error": "해당 투표가 존재하지 않습니다."}, status=404)
-        if request.user.is_authenticated:
-            user = request.user
 
+        user = request.user
+        if request.user.is_authenticated:
             if poll.poll_like.filter(id=user.id).exists():
                 poll.poll_like.remove(user)
                 message = "좋아요 취소"
@@ -215,8 +215,8 @@ def classifyuser(request, poll_id):
                     "loop_time": range(0, 2),
                 }
                 return render(request, "vote/detail2.html", context)
-    else :
-        return redirect('/')
+    else:
+        return redirect("/")
 
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
@@ -659,8 +659,8 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
             "loop_time": range(0, 2),
         }
         return render(request, "vote/detail3.html", context)
-    else :
-        return redirect('/')
+    else:
+        return redirect("/")
 
 
 # 비회원 투표시 투표 정보 전송
@@ -672,6 +672,5 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=selected_mbti)
         calcstat_url = reverse("vote:calcstat", args=[poll_id])
         return redirect(calcstat_url)
-    else :
-        return redirect('/')
-
+    else:
+        return redirect("/")
