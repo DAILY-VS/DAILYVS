@@ -138,7 +138,6 @@ $(document).ready(function () {
 
     // 로그인 여부 확인
     var isAuthenticated = "{{ user.is_authenticated }}";
-
     if (isAuthenticated === "True") {
       $.ajax({
         type: "POST",
@@ -206,7 +205,7 @@ $(document).ready(function () {
 
 
   // 대댓글 달기
-  $(".btnNestedReply").click(function () {
+  $(document).on("click", ".btnNestedReply", function () {
     var comment_id = $(this).data("comment-id");
     var nestedContent = $("#nested_content_id_" + comment_id).val();
     var isAuthenticated = "{{ user.is_authenticated }}";
@@ -216,6 +215,7 @@ $(document).ready(function () {
         type: "POST",
         url: "{% url 'vote:comment_write' poll.id %}",
         dataType: "json",
+        cache: false,
         data: {
           content: nestedContent,
           parent_comment_id: comment_id, // 대댓글의 부모 댓글 ID 전달
