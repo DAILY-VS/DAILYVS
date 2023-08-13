@@ -4,7 +4,7 @@
     min-height: 5vh;
   }
 </style>
-<section class="result-container" data-color="pink">
+<section id="capture" class="result-container" data-color="pink">
   <div class="result-title">{{poll.title}}</div>
   <div class="result-graph-content">{{poll.content}}</div>
   <div class="graph-information-container">
@@ -51,6 +51,7 @@
   </div>
   <div class="detail-like-container">{% include 'vote/result/like.html' %}</div>
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
+  <button id="capBtn">캡처하기</button>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
 <script>
@@ -69,6 +70,9 @@
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="../../static/js/html2canvas.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const mbtiToggle = document.getElementById("mbtiToggle");
