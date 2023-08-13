@@ -24,7 +24,7 @@
           <img src="{% static 'img/Only_Text.png' %}" style="width: 250px" />
         </div>
         <form
-          action="{% url 'account:signup' %}"
+          action="{% url 'vs_account:signup' %}"
           method="POST"
           class="signup-container"
         >
@@ -38,7 +38,7 @@
         </form>
         <p class="lets-login">
           바로 로그인하러 가기
-          <a href="{% url 'account:login' %}">로그인</a>
+          <a href="{% url 'vs_account:login' %}">로그인</a>
         </p>
       </div>
     </div>

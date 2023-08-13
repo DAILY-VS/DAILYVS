@@ -1,7 +1,7 @@
 import json
 from .models import *
-from account.forms import *
-from account.models import *
+from vs_account.forms import *
+from vs_account.models import *
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import AnonymousUser

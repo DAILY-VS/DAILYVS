@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from account.models import User
+from vs_account.models import User
 
 #투표 게시글 DB
 class Poll(models.Model): 
@@ -10,7 +10,7 @@ class Poll(models.Model):
     content = models.TextField()
     pub_date = models.DateTimeField(default=timezone.now)
     active = models.BooleanField(default=True)
-    poll_like = models.ManyToManyField('account.User', blank=True, related_name='likes')
+    poll_like = models.ManyToManyField('vs_account.User', blank=True, related_name='likes')
     views_count = models.PositiveIntegerField(default=0)  # 조회 수
     thumbnail = models.ImageField()
     comments = models.PositiveIntegerField(verbose_name='댓글수', default=0)  # 댓글 수    
