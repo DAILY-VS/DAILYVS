@@ -239,6 +239,12 @@ def comment_delete_view(request, pk):
     )
 
 
+# 대댓글 수 파악
+def calculate_nested_count(request, comment_id):
+    nested_count = Comment.objects.filter(parent_comment_id=comment_id).count()
+    return JsonResponse({"nested_count": nested_count})
+
+
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
 def classifyuser(request, poll_id):
     if request.method == "POST":
