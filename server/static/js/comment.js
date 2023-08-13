@@ -98,3 +98,43 @@ function updateNestedCount(comment_id) {
     },
   });
 }
+
+// 현재 시간과 댓글 작성 시간의 차이 계산
+function calculateRelativeTime(createdAt) {
+  const now = new Date();
+  const created = new Date(createdAt);
+  const diff = now - created;
+
+  if (diff < 1000) {
+    return "방금 전";
+  } else if (diff < 60000) {
+    return Math.floor(diff / 1000) + "초 전";
+  } else if (diff < 3600000) {
+    return Math.floor(diff / 60000) + "분 전";
+  } else if (diff < 86400000) {
+    return Math.floor(diff / 3600000) + "시간 전";
+  } else {
+    return Math.floor(diff / 86400000) + "일 전";
+  }
+}
+
+var createdTime = new Date(response.created_at); // 서버로부터 전달받은 시간을 JavaScript Date 객체로 변환
+
+// 현재 시간과의 시간 간격 계산
+var timeDifference = Date.now() - createdTime;
+var seconds = Math.floor(timeDifference / 1000);
+var minutes = Math.floor(seconds / 60);
+var hours = Math.floor(minutes / 60);
+var days = Math.floor(hours / 24);
+
+var timeAgo = "";
+
+if (days > 0) {
+  timeAgo = days + "일 전";
+} else if (hours > 0) {
+  timeAgo = hours + "시간 전";
+} else if (minutes > 0) {
+  timeAgo = minutes + "분 전";
+} else {
+  timeAgo = "방금 전";
+}

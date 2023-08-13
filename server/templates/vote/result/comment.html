@@ -26,7 +26,7 @@
                 <div class="comment-sub-info">
                     <div class="user-sub-info">{{ comment.user_info.mbti}}</div>
                     <div class="user-sub-info">{{ comment.user_info.gender}}</div>
-                    <div class="user-sub-info">
+                    <div class="user-sub-info choice-color">
                       
                       {% if user.is_authenticated %}
                             {% if user_votes %}
@@ -43,7 +43,7 @@
                         {% endif %}
                     
                     </div>
-                    <div class="user-sub-info">{{ comment.created_at|timesince }} 전</div>
+                    <div class="user-sub-info time-line">{{ comment.created_at|timesince }} 전</div>
                 </div>
             </div>
             <div class="comment-content-delete">
@@ -61,18 +61,7 @@
             </div>
         </div>
         <div class="every-reply-container">
-          <!-- 대댓글 작성 영역 -->
-          {% if not comment.parent_comment %}
-              <div class="nested-reply-input-container{{comment.id}}" data-comment-id="{{ comment.id }}" style="display:none;">
-                <textarea
-                  class="nested-replyContent"
-                  id="nested_content_id_{{ comment.id }}"
-                  placeholder="대댓글을 입력해주세요."
-                ></textarea>
-                <button class="btnNestedReply" data-comment-id="{{ comment.id }}">등록</button>
-              </div>        
               <div class="nested-reply-container" data-parent-id="{{ comment.id }}" style="display:none">
-                  {% endif %}
                   <!-- 대댓글 표시 영역 -->
                   <div class="nested-replyTody">
                     {% for child_comment in comments reversed %}
@@ -84,7 +73,7 @@
                             <div class="comment-sub-info">
                               <div class="user-sub-info">{{ child_comment.user_info.mbti}}</div>
                               <div class="user-sub-info">{{ child_comment.user_info.gender}}</div>
-                              <div class="user-sub-info">                        
+                              <div class="user-sub-info choice-color">                        
                                 {% if user.is_authenticated %}
                                   {% if user_votes %}
                                     {% for user_vote in user_votes %}
@@ -100,7 +89,7 @@
                                 {% endif %}
                               </div>
                             </div>
-                            <div class="user-sub-info">{{ child_comment.created_at|timesince }} 전</div>
+                            <div class="user-sub-info time-line">{{ child_comment.created_at|timesince }} 전</div>
                           </div>
                           
                           <div class="comment-content-delete">
@@ -119,6 +108,17 @@
                       {% endif %}
                     {% endfor %}
                   </div>
+                  <!-- 대댓글 작성 영역 -->
+                  {% if not comment.parent_comment %}
+                  <div class="nested-reply-input-container">
+                    <textarea
+                      class="nested-replyContent"
+                      id="nested_content_id_{{ comment.id }}"
+                      placeholder="대댓글을 입력해주세요."
+                    ></textarea>
+                    <button class="btnNestedReply" data-comment-id="{{ comment.id }}">등록</button>
+                  </div>        
+                  {% endif %}
                 </div>
               {% endif %}
               {% endfor %}
@@ -130,6 +130,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/comment.js' %}"></script>
 <script>
+
 $(document).ready(function () {
     //댓글 달기
   $("#comment_write").click(function () {
@@ -159,7 +160,8 @@ $(document).ready(function () {
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
-            '<div class="user-sub-info">' + response.choice + '</div>' +
+            '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
+            '<div class="user-sub-info time-line">' +  response.created_at +'</div>' +
             '</div>' +
             '</div>' +
             '<div class="comment-content-delete">' +
@@ -175,9 +177,8 @@ $(document).ready(function () {
           
           newComment +=
             '</div>' +
-            '<div class="comment-created-time">' + response.created_at + '</div>' +
-            '<div class="nested-reply-input-container{{comment.id}}" data-comment-id="{{ comment.id }}">' +
-            '<textarea class="nested-replyContent" id="nested_content_id_{{ comment.id }}' + response.comment_id + '" placeholder="대댓글을 입력해주세요."></textarea>' +
+            '<div class="nested-reply-input-container">' +
+            '<textarea class="nested-replyContent" id="nested_content_id_' + response.comment_id + '" placeholder="대댓글을 입력해주세요."></textarea>' +
             '<button class="btnNestedReply" data-comment-id="' + response.comment_id + '">등록</button>' +
             '</div>' +
             '</div>' +
@@ -185,8 +186,6 @@ $(document).ready(function () {
           
           $(".replyTody").prepend(newComment);
           $(".replyContent").val(""); // 입력창 비우기
-
-          
         },
         error: function () {
           if ($(".replyContent").val() == "") {
@@ -227,21 +226,21 @@ $(document).ready(function () {
           var newNestedComment =
             '<div class="nested-replyTr' + response.comment_id + '">' +
             '<div class="nested-row">' +
-            '<img src="{% static 'img/icon/reply.png' %}" style="width:25px; height: 25px;" />' +
+            '<img src="{% static "img/icon/reply.png" %}" style="width:25px; height: 25px;" />' +
             '<div class="nested-stored-comment-container">' +
             '<div class="nested-comment-top-section">' +
             '<div class="comment-nickname">' + response.nickname + '</div>' +
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
-            '<div class="user-sub-info">' + response.choice + '</div>' +
+            '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
+            '<div class="user-sub-info time-line">'+ '방금 전' + '</div>'  +
             '</div>' +
             '</div>' +
             '<div class="comment-content-delete">' +
             '<div class="stored-comment-content">' + response.content + '</div>' +
-            '<img src="{% static 'img/icon/x.png' %}" type="button" value="x" onclick="nestedReplyDelete(' + response.comment_id + ')" />' + // 대댓글 삭제 버튼 추가
+            '<img src="{% static "img/icon/x.png" %}" type="button" value="x" onclick="nestedReplyDelete(' + response.comment_id + ')" />' +
             '</div>' +
-            '<div class="comment-created-time">' + response.created_at + '</div>' +
             '</div>' +
             '</div>' +
             '</div>';
