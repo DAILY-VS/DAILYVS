@@ -1,51 +1,91 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-#회원가입
-from .forms import SignupForm 
-from django.urls import reverse
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib import auth
-from django.shortcuts import render, redirect
+from .forms import SignupForm
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import *
 from vote.models import *
-# 비밀번호 변경
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-# 회원 탈퇴
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import User
-from .forms import UserChangeForm, UserDeleteForm
+
+import random
+import string
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+import smtplib
 
 User = get_user_model()
 
-def main(request):
-    return render(request, "base.html") 
 
+def generate_verification_code():
+    return ''.join(random.choices(string.digits, k=6))
 
+@login_required
+def email_verification(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    code = generate_verification_code()
+    print(code)
+    try:
+            smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
+            smtp_server.starttls()
 
-def change_password(request):
+            EMAIL_HOST_USER = 'songvv2014@gmail.com'
+            EMAIL_HOST_PASSWORD = 'usrczzcpaxrcorqv'
+
+            smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+
+            subject = 'Daily-VS 이메일 인증코드'
+            message = f'Daily-VS 이메일 인증코드는 다음과 같습니다. {code}'
+            sender_email = EMAIL_HOST_USER
+            recipient_email = user.email
+            msg = f'Subject: {subject}\n\n{message}'
+            smtp_server.sendmail(sender_email, recipient_email, msg.encode('utf-8'))
+
+    except smtplib.SMTPException as e:
+            print("An error occurred:", str(e))
+    finally:
+            smtp_server.quit()
+    return render(request, "account/email_verification.html", {"user": user, "code": code})
+
+def call(request):
+    code = request.POST.get('code')  # Get the code from the form submission
+    token = request.POST.get('token')
+    if token == code:
+            request.user.is_active = True
+            request.user.save()
+            return redirect("account:login")  # Redirect to login page after successful verification
+    else:
+            return render(request, "account/verification_error.html")
+
+    
+
+#회원가입
+def signup(request):
     if request.method == "POST":
-        form = PasswordChangeForm(request.user, request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  # 변경 후 로그인 상태 유지
-            return redirect("vote:mypage")  # 변경 후 이동할 페이지
+            auth.login(request, user)
+            pk=str(user.pk)
+            return redirect(f'/account/email_verification/{user.pk}/')
+        else:
+            ctx = {
+                "form": form,
+            }
+            return render(request, "account/signup.html", context=ctx)
     else:
-        form = PasswordChangeForm(request.user)
-    context = {"form": form}
-    return render(request, "account/change_password.html", context)
+        form = SignupForm()
+        ctx = {
+            "form": form,
+        }
+        return render(request, template_name="account/signup.html", context=ctx)
 
-
-
-def login(request): #로그인
-    if request.user.is_authenticated:
-        return redirect('/')  # 이미 로그인한 사용자는 메인 페이지로 리다이렉트
-    
-    if request.method == 'POST':
+#로그인
+def login(request):  
+    if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -65,35 +105,25 @@ def login(request): #로그인
         }
         return render(request, "account/login.html", context=context)
 
-
-def logout(request):  # 로그아웃
+#로그아웃
+def logout(request):  
     auth.logout(request)
     return redirect("/")
 
-
-def signup(request):
-    if request.user.is_authenticated:
-        return redirect('/')  # 이미 로그인한 사용자는 메인 페이지로 리다이렉트
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
+#비밀번호 변경
+def change_password(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            auth.login(request, user)
-
-            return redirect("/")
-        else:
-            ctx = {
-                "form": form,
-            }
-            return render(request, "account/signup.html", context=ctx)
+            update_session_auth_hash(request, user)  # 변경 후 로그인 상태 유지
+            return redirect("vote:mypage")  # 변경 후 이동할 페이지
     else:
-        form = SignupForm()
-        ctx = {
-            "form": form,
-        }
-        return render(request, template_name="account/signup.html", context=ctx)
+        form = PasswordChangeForm(request.user)
+    context = {"form": form}
+    return render(request, "account/change_password.html", context)
 
-
+#회원탈퇴
 class UserDeleteView(DeleteView):
     model = User
     template_name = "account/delete.html"

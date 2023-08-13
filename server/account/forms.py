@@ -5,7 +5,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 
+
 class SignupForm(UserCreationForm):
+    email = forms.EmailField(
+        label="이메일",
+        max_length=254,
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}),
+    )
     username = forms.CharField(
         label="아이디",
         max_length=100,
@@ -66,10 +72,10 @@ class SignupForm(UserCreationForm):
         if User.objects.filter(nickname=nickname).exists():
             raise forms.ValidationError("이미 사용 중인 닉네임입니다.")
         return nickname
-
+    
     class Meta:
         model = User
-        fields = ["username", "password1", "password2", "mbti", "nickname", "gender"]
+        fields = ["email", "username", "password1", "password2", "mbti", "nickname", "gender"]
         widgets = {
             "mbti": forms.Select(
                 attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
