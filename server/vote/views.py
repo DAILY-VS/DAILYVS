@@ -173,12 +173,22 @@ def comment_write_view(request, poll_id):
                 user_info=user_info,
                 parent_comment=parent_comment,
             )
+
+            parent_comment_data = {
+                "nickname": parent_comment.user_info.nickname,
+                "mbti": parent_comment.user_info.mbti,
+                "gender": parent_comment.user_info.gender,
+                "content": parent_comment.content,
+                "created_at": parent_comment.created_at.strftime("%Y년 %m월 %d일"),
+                "comment_id": parent_comment.pk,
+            }
         else:  # 일반 댓글인 경우
             comment = Comment.objects.create(
                 poll=poll,
                 content=content,
                 user_info=user_info,
             )
+            parent_comment_data = None
 
         poll.update_comments_count()  # 댓글 수 업데이트
         poll.save()
@@ -192,7 +202,7 @@ def comment_write_view(request, poll_id):
             user_vote = None
             choice_text = ""  # 또는 다른 기본값 설정
 
-        comment_id = Comment.objects.last().pk
+        comment_id = comment.pk
 
         data = {
             "nickname": user_info.nickname,
@@ -203,6 +213,9 @@ def comment_write_view(request, poll_id):
             "comment_id": comment_id,
             "choice": choice_text,
         }
+        if parent_comment_data:
+            data["parent_comment"] = parent_comment_data
+
         return HttpResponse(
             json.dumps(data, cls=DjangoJSONEncoder), content_type="application/json"
         )
@@ -226,31 +239,10 @@ def comment_delete_view(request, pk):
     )
 
 
-# # 대댓글 정보를 가져오는 view 함수
-# @login_required
-# def get_replies_view(request, comment_id):
-#    # 클라이언트에서 요청한 댓글의 대댓글들을 가져옴
-#     parent_comment = get_object_or_404(Comment, id=comment_id)
-#     replies = parent_comment.replies.all()
-
-#     # 대댓글 정보를 JSON 형식으로 변환하여 반환
-#     reply_data = []
-#     for reply in replies:
-#         reply_info = {
-#             'id': reply.id,
-#             'nickname': reply.user_info.nickname,
-#             'mbti': reply.user_info.mbti,
-#             'gender': reply.user_info.gender,
-#             'content': reply.content,
-#             'created_at': reply.created_at.strftime("%Y년 %m월 %d일"),
-#         }
-#         reply_data.append(reply_info)
-
-#     # JSON 형식으로 변환
-#     json_data = json.dumps(reply_data, ensure_ascii=False)
-
-#     # HttpResponse로 반환
-#     return HttpResponse(json_data, content_type="application/json")
+# 대댓글 수 파악
+def calculate_nested_count(request, comment_id):
+    nested_count = Comment.objects.filter(parent_comment_id=comment_id).count()
+    return JsonResponse({"nested_count": nested_count})
 
 
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
