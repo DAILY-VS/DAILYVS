@@ -1,4 +1,5 @@
 import json
+import numpy as np 
 from .models import *
 from account.forms import *
 from account.models import *
@@ -257,8 +258,42 @@ def classifyuser(request, poll_id):
                 vote = UserVote(user=request.user, poll=poll, choice=choice)
                 vote.save()
                 user.voted_polls.add(poll_id)
+                poll_result, created = Poll_Result.objects.get_or_create(poll_id=poll_id)
+                poll_result.total += 1
+                if user.gender == 'M':
+                    poll_result.choice1_man += 1 if int(choice_id) == 1 else 0
+                    poll_result.choice2_man += 1 if int(choice_id) == 2 else 0
+                    print(str(poll_result.choice1_man))
+                elif user.gender == 'W':
+                    poll_result.choice1_woman += 1 if int(choice_id) == 1 else 0
+                    poll_result.choice2_woman += 1 if int(choice_id) == 2 else 0
+                for letter in user.mbti:
+                    if letter == 'E':
+                        poll_result.choice1_E += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_E += 1 if int(choice_id) == 2 else 0
+                    elif letter == 'I':
+                        poll_result.choice1_I += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_I += 1 if int(choice_id) == 2 else 0
+                    elif letter == 'S':
+                        poll_result.choice1_S += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_S += 1 if int(choice_id) == 2 else 0
+                    elif letter == 'N':
+                        poll_result.choice1_N += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_N += 1 if int(choice_id) == 2 else 0
+                    elif letter == 'T':
+                        poll_result.choice1_T += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_T += 1 if int(choice_id) == 2 else 0
+                    elif letter == 'F':
+                        poll_result.choice1_F += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_F += 1 if int(choice_id) == 2 else 0
+                    elif letter == 'J':
+                        poll_result.choice1_J += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_J += 1 if int(choice_id) == 2 else 0
+                    elif letter == 'P':
+                        poll_result.choice1_P += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_P += 1 if int(choice_id) == 2 else 0
+                poll_result.save()
                 calcstat_url = reverse("vote:calcstat", args=[poll_id])
-                voted_polls = user.voted_polls.all()
                 return redirect(calcstat_url)
             except ValueError:
                 vote = NonUserVote(poll=poll, choice=choice)
@@ -285,61 +320,40 @@ def calcstat(request, poll_id):
     else:
         user_votes = None  # 또는 user_votes = UserVote.objects.none()
 
-    mbtis = [
-        "ISTJ",
-        "ISFJ",
-        "INFJ",
-        "INTJ",
-        "ISTP",
-        "ISFP",
-        "INFP",
-        "INTP",
-        "ESTP",
-        "ESFP",
-        "ENFP",
-        "ENTP",
-        "ESTJ",
-        "ESFJ",
-        "ENFJ",
-        "ENTJ",
-    ]
+    poll_result= Poll_Result.objects.get(poll_id=poll_id)
 
-    user_poll = UserVote.objects.filter(choice__poll__pk=poll_id)
-    user_total_count = user_poll.count()
+    total_count= poll_result.total
 
-    nonuser_poll = NonUserVote.objects.filter(choice__poll__pk=poll_id, MBTI__isnull=False, gender__isnull=False)
+    choice_1 = poll_result.choice1_man + poll_result.choice1_woman
+    choice_2 = poll_result.choice2_man + poll_result.choice2_woman
 
-    nonuser_result_gender = nonuser_poll.values("gender", "choice_id").annotate(total=Count("*"))
-    print(nonuser_result_gender)
-    nonuser_gender_w = [group for group in nonuser_result_gender if group["gender"] == "W"]
-    print(nonuser_gender_w)
+    choice1_percentage= int(np.round(choice_1 / total_count * 100))
+    choice2_percentage= int(np.round(choice_2 / total_count * 100))
 
-    """result_mbti = votes.values("user__mbti", "choice_id").annotate(total=Count("*"))
-    for i in result_mbti:
-    print(i) """
-    total_count=0
-    choice1_percentage=0
-    choice2_percentage=0
-    choice1_man_percentage=0
-    choice2_man_percentage=0
-    choice1_woman_percentage=0
-    choice2_woman_percentage=0
-    e_choice1_percentage=0
-    e_choice2_percentage=0
-    i_choice1_percentage=0
-    i_choice2_percentage=0
-    n_choice1_percentage=0
-    n_choice2_percentage=0
-    s_choice1_percentage=0
-    s_choice2_percentage=0
-    t_choice1_percentage=0
-    t_choice2_percentage=0
-    f_choice1_percentage=0
-    f_choice2_percentage=0
-    p_choice1_percentage=0
-    p_choice2_percentage=0
-    j_choice1_percentage=0
-    j_choice2_percentage=0
+    choice1_man_percentage= (np.round(poll_result.choice1_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1))
+    choice2_man_percentage= (np.round(poll_result.choice2_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1))
+    choice1_woman_percentage= (np.round(poll_result.choice1_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1))
+    choice2_woman_percentage= (np.round(poll_result.choice2_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1))
+
+    e_choice1_percentage= (np.round(poll_result.choice1_E / (poll_result.choice1_E + poll_result.choice2_E) * 100))
+    e_choice2_percentage= (np.round(poll_result.choice2_E / (poll_result.choice1_E + poll_result.choice2_E) * 100))
+    i_choice1_percentage= (np.round(poll_result.choice1_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) 
+    i_choice2_percentage= (np.round(poll_result.choice2_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) 
+
+    n_choice1_percentage= (np.round(poll_result.choice1_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) 
+    n_choice2_percentage= (np.round(poll_result.choice2_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) 
+    s_choice1_percentage= (np.round(poll_result.choice1_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) 
+    s_choice2_percentage= (np.round(poll_result.choice2_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) 
+
+    t_choice1_percentage= (np.round(poll_result.choice1_T / (poll_result.choice1_T + poll_result.choice2_T) * 100))
+    t_choice2_percentage= (np.round(poll_result.choice2_T / (poll_result.choice1_T + poll_result.choice2_T) * 100))
+    f_choice1_percentage= (np.round(poll_result.choice1_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) 
+    f_choice2_percentage= (np.round(poll_result.choice2_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) 
+
+    p_choice1_percentage= (np.round(poll_result.choice1_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) 
+    p_choice2_percentage= (np.round(poll_result.choice2_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) 
+    j_choice1_percentage= (np.round(poll_result.choice1_J / (poll_result.choice1_J + poll_result.choice2_J) * 100))
+    j_choice2_percentage= (np.round(poll_result.choice2_J / (poll_result.choice1_J + poll_result.choice2_J) * 100))
 
     ctx = {
         "total_count": total_count,
@@ -415,9 +429,42 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
     if request.method == "POST":
         selected_mbti = request.POST.get("selected_mbti")
-        choice_id = request.POST.get("choice")
-        print("selected_mbti:", selected_mbti)
         NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=selected_mbti)
+        nonuservote = NonUserVote.objects.get(id=nonuservote_id)
+        poll_result, created = Poll_Result.objects.get_or_create(poll_id=poll_id)
+        poll_result.total += 1
+        if nonuservote.gender == 'M':
+            poll_result.choice1_man += 1 if nonuservote.choice_id == 1 else 0
+            poll_result.choice2_man += 1 if nonuservote.choice_id == 2 else 0
+        elif nonuservote.gender == 'W':
+            poll_result.choice1_woman += 1 if nonuservote.choice_id == 1 else 0
+            poll_result.choice2_woman += 1 if nonuservote.choice_id == 2 else 0
+        for letter in selected_mbti:
+            if letter == 'E':
+                poll_result.choice1_E += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_E += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == 'I':
+                poll_result.choice1_I += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_I += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == 'S':
+                poll_result.choice1_S += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_S += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == 'N':
+                poll_result.choice1_N += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_N += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == 'T':
+                poll_result.choice1_T += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_T += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == 'F':
+                poll_result.choice1_F += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_F += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == 'J':
+                poll_result.choice1_J += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_J += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == 'P':
+                poll_result.choice1_P += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_P += 1 if nonuservote.choice_id == 2 else 0
+        poll_result.save()
         calcstat_url = reverse("vote:calcstat", args=[poll_id])
         return redirect(calcstat_url)
     else:
