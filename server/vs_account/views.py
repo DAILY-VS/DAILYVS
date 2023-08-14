@@ -11,6 +11,7 @@ from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import User
 
+
 User = get_user_model()
 
 #회원가입
@@ -83,3 +84,5 @@ class UserDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+

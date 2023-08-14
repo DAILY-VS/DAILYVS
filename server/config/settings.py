@@ -148,5 +148,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_REDIRECT_URL = '/'   # social login redirect
-ACCOUNT_LOGOUT_REDIRECT_URL = '/' 
-
+ACCOUNT_LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/kakao/login/callback/'
