@@ -1,5 +1,4 @@
 import json
-import numpy as np
 import random
 from .models import *
 from account.forms import *
