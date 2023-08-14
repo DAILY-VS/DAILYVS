@@ -1,5 +1,6 @@
 import json
 import numpy as np 
+import random 
 from .models import *
 from account.forms import *
 from account.models import *
@@ -330,30 +331,30 @@ def calcstat(request, poll_id):
     choice1_percentage= int(np.round(choice_1 / total_count * 100))
     choice2_percentage= int(np.round(choice_2 / total_count * 100))
 
-    choice1_man_percentage= (np.round(poll_result.choice1_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1))
-    choice2_man_percentage= (np.round(poll_result.choice2_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1))
-    choice1_woman_percentage= (np.round(poll_result.choice1_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1))
-    choice2_woman_percentage= (np.round(poll_result.choice2_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1))
+    choice1_man_percentage= (np.round(poll_result.choice1_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1)) if (poll_result.choice1_man + poll_result.choice2_man) !=0 else 0
+    choice2_man_percentage= (np.round(poll_result.choice2_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1)) if (poll_result.choice1_man + poll_result.choice2_man) !=0 else 0
+    choice1_woman_percentage= (np.round(poll_result.choice1_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1)) if (poll_result.choice1_woman + poll_result.choice2_woman) !=0 else 0
+    choice2_woman_percentage= (np.round(poll_result.choice2_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1)) if (poll_result.choice1_woman + poll_result.choice2_woman) !=0 else 0
 
-    e_choice1_percentage= (np.round(poll_result.choice1_E / (poll_result.choice1_E + poll_result.choice2_E) * 100))
-    e_choice2_percentage= (np.round(poll_result.choice2_E / (poll_result.choice1_E + poll_result.choice2_E) * 100))
-    i_choice1_percentage= (np.round(poll_result.choice1_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) 
-    i_choice2_percentage= (np.round(poll_result.choice2_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) 
+    e_choice1_percentage= (np.round(poll_result.choice1_E / (poll_result.choice1_E + poll_result.choice2_E) * 100)) if (poll_result.choice1_E + poll_result.choice2_E) !=0 else 0
+    e_choice2_percentage= (np.round(poll_result.choice2_E / (poll_result.choice1_E + poll_result.choice2_E) * 100)) if (poll_result.choice1_E + poll_result.choice2_E) !=0 else 0
+    i_choice1_percentage= (np.round(poll_result.choice1_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) if (poll_result.choice1_I + poll_result.choice2_I) !=0 else 0
+    i_choice2_percentage= (np.round(poll_result.choice2_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) if (poll_result.choice1_I +Npoll_result.choice2_I) !=0 else 0 
 
-    n_choice1_percentage= (np.round(poll_result.choice1_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) 
-    n_choice2_percentage= (np.round(poll_result.choice2_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) 
-    s_choice1_percentage= (np.round(poll_result.choice1_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) 
-    s_choice2_percentage= (np.round(poll_result.choice2_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) 
+    n_choice1_percentage= (np.round(poll_result.choice1_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) if (poll_result.choice1_N + poll_result.choice2_N) !=0 else 0  
+    n_choice2_percentage= (np.round(poll_result.choice2_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) if (poll_result.choice1_N + poll_result.choice2_N) !=0 else 0 
+    s_choice1_percentage= (np.round(poll_result.choice1_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) if (poll_result.choice1_S + poll_result.choice2_S) !=0 else 0 
+    s_choice2_percentage= (np.round(poll_result.choice2_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) if (poll_result.choice1_IS+ poll_result.choice2_S) !=0 else 0 
 
-    t_choice1_percentage= (np.round(poll_result.choice1_T / (poll_result.choice1_T + poll_result.choice2_T) * 100))
-    t_choice2_percentage= (np.round(poll_result.choice2_T / (poll_result.choice1_T + poll_result.choice2_T) * 100))
-    f_choice1_percentage= (np.round(poll_result.choice1_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) 
-    f_choice2_percentage= (np.round(poll_result.choice2_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) 
+    t_choice1_percentage= (np.round(poll_result.choice1_T / (poll_result.choice1_T + poll_result.choice2_T) * 100)) if (poll_result.choice1_T + poll_result.cPoice2_T) !=0 else 0 
+    t_choice2_percentage= (np.round(poll_result.choice2_T / (poll_result.choice1_T + poll_result.choice2_T) * 100)) if (poll_result.choice1_T + poll_result.choice2_T) !=0 else 0 
+    f_choice1_percentage= (np.round(poll_result.choice1_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) if (poll_result.choice1_F + poll_result.choice2_F) !=0 else 0  
+    f_choice2_percentage= (np.round(poll_result.choice2_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) if (poll_result.choice1_F + poll_result.choice2_F) !=0 else 0 
 
-    p_choice1_percentage= (np.round(poll_result.choice1_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) 
-    p_choice2_percentage= (np.round(poll_result.choice2_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) 
-    j_choice1_percentage= (np.round(poll_result.choice1_J / (poll_result.choice1_J + poll_result.choice2_J) * 100))
-    j_choice2_percentage= (np.round(poll_result.choice2_J / (poll_result.choice1_J + poll_result.choice2_J) * 100))
+    p_choice1_percentage= (np.round(poll_result.choice1_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) if (poll_result.choice1_P + poll_result.choice2_P) !=0 else 0 
+    p_choice2_percentage= (np.round(poll_result.choice2_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) if (poll_result.choice1_P + poll_result.choice2_P) !=0 else 0 
+    j_choice1_percentage= (np.round(poll_result.choice1_J / (poll_result.choice1_J + poll_result.choice2_J) * 100)) if (poll_result.choice1_J + poll_result.choice2_J) !=0 else 0 
+    j_choice2_percentage= (np.round(poll_result.choice2_J / (poll_result.choice1_J + poll_result.choice2_J) * 100)) if (poll_result.choice1_J + poll_result.choice2_J) !=0 else 0 
 
     ctx = {
         "total_count": total_count,
