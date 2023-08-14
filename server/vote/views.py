@@ -1,6 +1,6 @@
 import json
-import numpy as np 
-import random 
+import numpy as np
+import random
 from .models import *
 from account.forms import *
 from account.models import *
@@ -12,6 +12,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count
+
 
 # 메인페이지
 def main(request):
@@ -259,38 +260,40 @@ def classifyuser(request, poll_id):
                 vote = UserVote(user=request.user, poll=poll, choice=choice)
                 vote.save()
                 user.voted_polls.add(poll_id)
-                poll_result, created = Poll_Result.objects.get_or_create(poll_id=poll_id)
+                poll_result, created = Poll_Result.objects.get_or_create(
+                    poll_id=poll_id
+                )
                 poll_result.total += 1
-                if user.gender == 'M':
+                if user.gender == "M":
                     poll_result.choice1_man += 1 if int(choice_id) == 1 else 0
                     poll_result.choice2_man += 1 if int(choice_id) == 2 else 0
                     print(str(poll_result.choice1_man))
-                elif user.gender == 'W':
+                elif user.gender == "W":
                     poll_result.choice1_woman += 1 if int(choice_id) == 1 else 0
                     poll_result.choice2_woman += 1 if int(choice_id) == 2 else 0
                 for letter in user.mbti:
-                    if letter == 'E':
+                    if letter == "E":
                         poll_result.choice1_E += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_E += 1 if int(choice_id) == 2 else 0
-                    elif letter == 'I':
+                    elif letter == "I":
                         poll_result.choice1_I += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_I += 1 if int(choice_id) == 2 else 0
-                    elif letter == 'S':
+                    elif letter == "S":
                         poll_result.choice1_S += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_S += 1 if int(choice_id) == 2 else 0
-                    elif letter == 'N':
+                    elif letter == "N":
                         poll_result.choice1_N += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_N += 1 if int(choice_id) == 2 else 0
-                    elif letter == 'T':
+                    elif letter == "T":
                         poll_result.choice1_T += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_T += 1 if int(choice_id) == 2 else 0
-                    elif letter == 'F':
+                    elif letter == "F":
                         poll_result.choice1_F += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_F += 1 if int(choice_id) == 2 else 0
-                    elif letter == 'J':
+                    elif letter == "J":
                         poll_result.choice1_J += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_J += 1 if int(choice_id) == 2 else 0
-                    elif letter == 'P':
+                    elif letter == "P":
                         poll_result.choice1_P += 1 if int(choice_id) == 1 else 0
                         poll_result.choice2_P += 1 if int(choice_id) == 2 else 0
                 poll_result.save()
@@ -321,60 +324,264 @@ def calcstat(request, poll_id):
     else:
         user_votes = None  # 또는 user_votes = UserVote.objects.none()
 
-    poll_result= Poll_Result.objects.get(poll_id=poll_id)
+    poll_result = Poll_Result.objects.get(poll_id=poll_id)
 
-    total_count= poll_result.total
+    total_count = poll_result.total
 
     choice_1 = poll_result.choice1_man + poll_result.choice1_woman
     choice_2 = poll_result.choice2_man + poll_result.choice2_woman
 
-    choice1_percentage= int(np.round(choice_1 / total_count * 100))
-    choice2_percentage= int(np.round(choice_2 / total_count * 100))
+    choice1_percentage = int(np.round(choice_1 / total_count * 100))
+    choice2_percentage = int(np.round(choice_2 / total_count * 100))
 
-    choice1_man_percentage= (np.round(poll_result.choice1_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1)) if (poll_result.choice1_man + poll_result.choice2_man) !=0 else 0
-    choice2_man_percentage= (np.round(poll_result.choice2_man / (poll_result.choice1_man + poll_result.choice2_man) * 100,1)) if (poll_result.choice1_man + poll_result.choice2_man) !=0 else 0
-    choice1_woman_percentage= (np.round(poll_result.choice1_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1)) if (poll_result.choice1_woman + poll_result.choice2_woman) !=0 else 0
-    choice2_woman_percentage= (np.round(poll_result.choice2_woman / (poll_result.choice1_woman + poll_result.choice2_woman) * 100,1)) if (poll_result.choice1_woman + poll_result.choice2_woman) !=0 else 0
+    choice1_man_percentage = (
+        (
+            np.round(
+                poll_result.choice1_man
+                / (poll_result.choice1_man + poll_result.choice2_man)
+                * 100,
+                1,
+            )
+        )
+        if (poll_result.choice1_man + poll_result.choice2_man) != 0
+        else 0
+    )
+    choice2_man_percentage = (
+        (
+            np.round(
+                poll_result.choice2_man
+                / (poll_result.choice1_man + poll_result.choice2_man)
+                * 100,
+                1,
+            )
+        )
+        if (poll_result.choice1_man + poll_result.choice2_man) != 0
+        else 0
+    )
+    choice1_woman_percentage = (
+        (
+            np.round(
+                poll_result.choice1_woman
+                / (poll_result.choice1_woman + poll_result.choice2_woman)
+                * 100,
+                1,
+            )
+        )
+        if (poll_result.choice1_woman + poll_result.choice2_woman) != 0
+        else 0
+    )
+    choice2_woman_percentage = (
+        (
+            np.round(
+                poll_result.choice2_woman
+                / (poll_result.choice1_woman + poll_result.choice2_woman)
+                * 100,
+                1,
+            )
+        )
+        if (poll_result.choice1_woman + poll_result.choice2_woman) != 0
+        else 0
+    )
 
-    e_choice1_percentage= (np.round(poll_result.choice1_E / (poll_result.choice1_E + poll_result.choice2_E) * 100)) if (poll_result.choice1_E + poll_result.choice2_E) !=0 else 0
-    e_choice2_percentage= (np.round(poll_result.choice2_E / (poll_result.choice1_E + poll_result.choice2_E) * 100)) if (poll_result.choice1_E + poll_result.choice2_E) !=0 else 0
-    i_choice1_percentage= (np.round(poll_result.choice1_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) if (poll_result.choice1_I + poll_result.choice2_I) !=0 else 0
-    i_choice2_percentage= (np.round(poll_result.choice2_I / (poll_result.choice1_I + poll_result.choice2_I) * 100)) if (poll_result.choice1_I +Npoll_result.choice2_I) !=0 else 0 
+    e_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_E
+                / (poll_result.choice1_E + poll_result.choice2_E)
+                * 100
+            )
+        )
+        if (poll_result.choice1_E + poll_result.choice2_E) != 0
+        else 0
+    )
+    e_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_E
+                / (poll_result.choice1_E + poll_result.choice2_E)
+                * 100
+            )
+        )
+        if (poll_result.choice1_E + poll_result.choice2_E) != 0
+        else 0
+    )
+    i_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_I
+                / (poll_result.choice1_I + poll_result.choice2_I)
+                * 100
+            )
+        )
+        if (poll_result.choice1_I + poll_result.choice2_I) != 0
+        else 0
+    )
+    i_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_I
+                / (poll_result.choice1_I + poll_result.choice2_I)
+                * 100
+            )
+        )
+        if (poll_result.choice1_I + poll_result.choice2_I) != 0
+        else 0
+    )
 
-    n_choice1_percentage= (np.round(poll_result.choice1_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) if (poll_result.choice1_N + poll_result.choice2_N) !=0 else 0  
-    n_choice2_percentage= (np.round(poll_result.choice2_N / (poll_result.choice1_N + poll_result.choice2_N) * 100)) if (poll_result.choice1_N + poll_result.choice2_N) !=0 else 0 
-    s_choice1_percentage= (np.round(poll_result.choice1_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) if (poll_result.choice1_S + poll_result.choice2_S) !=0 else 0 
-    s_choice2_percentage= (np.round(poll_result.choice2_S / (poll_result.choice1_S + poll_result.choice2_S) * 100)) if (poll_result.choice1_IS+ poll_result.choice2_S) !=0 else 0 
+    n_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_N
+                / (poll_result.choice1_N + poll_result.choice2_N)
+                * 100
+            )
+        )
+        if (poll_result.choice1_N + poll_result.choice2_N) != 0
+        else 0
+    )
+    n_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_N
+                / (poll_result.choice1_N + poll_result.choice2_N)
+                * 100
+            )
+        )
+        if (poll_result.choice1_N + poll_result.choice2_N) != 0
+        else 0
+    )
+    s_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_S
+                / (poll_result.choice1_S + poll_result.choice2_S)
+                * 100
+            )
+        )
+        if (poll_result.choice1_S + poll_result.choice2_S) != 0
+        else 0
+    )
+    s_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_S
+                / (poll_result.choice1_S + poll_result.choice2_S)
+                * 100
+            )
+        )
+        if (poll_result.choice1_S + poll_result.choice2_S) != 0
+        else 0
+    )
 
-    t_choice1_percentage= (np.round(poll_result.choice1_T / (poll_result.choice1_T + poll_result.choice2_T) * 100)) if (poll_result.choice1_T + poll_result.cPoice2_T) !=0 else 0 
-    t_choice2_percentage= (np.round(poll_result.choice2_T / (poll_result.choice1_T + poll_result.choice2_T) * 100)) if (poll_result.choice1_T + poll_result.choice2_T) !=0 else 0 
-    f_choice1_percentage= (np.round(poll_result.choice1_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) if (poll_result.choice1_F + poll_result.choice2_F) !=0 else 0  
-    f_choice2_percentage= (np.round(poll_result.choice2_F / (poll_result.choice1_F + poll_result.choice2_F) * 100)) if (poll_result.choice1_F + poll_result.choice2_F) !=0 else 0 
+    t_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_T
+                / (poll_result.choice1_T + poll_result.choice2_T)
+                * 100
+            )
+        )
+        if (poll_result.choice1_T + poll_result.choice2_T) != 0
+        else 0
+    )
+    t_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_T
+                / (poll_result.choice1_T + poll_result.choice2_T)
+                * 100
+            )
+        )
+        if (poll_result.choice1_T + poll_result.choice2_T) != 0
+        else 0
+    )
+    f_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_F
+                / (poll_result.choice1_F + poll_result.choice2_F)
+                * 100
+            )
+        )
+        if (poll_result.choice1_F + poll_result.choice2_F) != 0
+        else 0
+    )
+    f_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_F
+                / (poll_result.choice1_F + poll_result.choice2_F)
+                * 100
+            )
+        )
+        if (poll_result.choice1_F + poll_result.choice2_F) != 0
+        else 0
+    )
 
-    p_choice1_percentage= (np.round(poll_result.choice1_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) if (poll_result.choice1_P + poll_result.choice2_P) !=0 else 0 
-    p_choice2_percentage= (np.round(poll_result.choice2_P / (poll_result.choice1_P + poll_result.choice2_P) * 100)) if (poll_result.choice1_P + poll_result.choice2_P) !=0 else 0 
-    j_choice1_percentage= (np.round(poll_result.choice1_J / (poll_result.choice1_J + poll_result.choice2_J) * 100)) if (poll_result.choice1_J + poll_result.choice2_J) !=0 else 0 
-    j_choice2_percentage= (np.round(poll_result.choice2_J / (poll_result.choice1_J + poll_result.choice2_J) * 100)) if (poll_result.choice1_J + poll_result.choice2_J) !=0 else 0 
+    p_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_P
+                / (poll_result.choice1_P + poll_result.choice2_P)
+                * 100
+            )
+        )
+        if (poll_result.choice1_P + poll_result.choice2_P) != 0
+        else 0
+    )
+    p_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_P
+                / (poll_result.choice1_P + poll_result.choice2_P)
+                * 100
+            )
+        )
+        if (poll_result.choice1_P + poll_result.choice2_P) != 0
+        else 0
+    )
+    j_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_J
+                / (poll_result.choice1_J + poll_result.choice2_J)
+                * 100
+            )
+        )
+        if (poll_result.choice1_J + poll_result.choice2_J) != 0
+        else 0
+    )
+    j_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_J
+                / (poll_result.choice1_J + poll_result.choice2_J)
+                * 100
+            )
+        )
+        if (poll_result.choice1_J + poll_result.choice2_J) != 0
+        else 0
+    )
 
     ctx = {
         "total_count": total_count,
-        #"choice1_count": total_choice1_count,
-        #"choice2_count": total_choice2_count,
+        # "choice1_count": total_choice1_count,
+        # "choice2_count": total_choice2_count,
         "choice1_percentage": choice1_percentage,
         "choice2_percentage": choice2_percentage,
-        #"man_count": total_man_count,
-        #"man_choice1_count": total_man_choice1_count,
-        #"man_choice2_count": total_man_choice2_count,
-        #"woman_count": total_woman_count,
-        #"woman_choice1_count": total_woman_choice1_count,
-        #"woman_choice2_count": total_woman_choice2_count,
+        # "man_count": total_man_count,
+        # "man_choice1_count": total_man_choice1_count,
+        # "man_choice2_count": total_man_choice2_count,
+        # "woman_count": total_woman_count,
+        # "woman_choice1_count": total_woman_choice1_count,
+        # "woman_choice2_count": total_woman_choice2_count,
         "choice1_man_percentage": choice1_man_percentage,
         "choice2_man_percentage": choice2_man_percentage,
         "choice1_woman_percentage": choice1_woman_percentage,
         "choice2_woman_percentage": choice2_woman_percentage,
-        #"mbtis_count": total_mbtis_count,
-        #"mbtis_choice1_count": total_mbtis_choice1_count,
-        #"mbtis_choice2_count": total_mbtis_choice2_count,
+        # "mbtis_count": total_mbtis_count,
+        # "mbtis_choice1_count": total_mbtis_choice1_count,
+        # "mbtis_choice2_count": total_mbtis_choice2_count,
         "e_choice1_percentage": e_choice1_percentage,
         "e_choice2_percentage": e_choice2_percentage,
         "i_choice1_percentage": i_choice1_percentage,
@@ -434,35 +641,35 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         nonuservote = NonUserVote.objects.get(id=nonuservote_id)
         poll_result, created = Poll_Result.objects.get_or_create(poll_id=poll_id)
         poll_result.total += 1
-        if nonuservote.gender == 'M':
+        if nonuservote.gender == "M":
             poll_result.choice1_man += 1 if nonuservote.choice_id == 1 else 0
             poll_result.choice2_man += 1 if nonuservote.choice_id == 2 else 0
-        elif nonuservote.gender == 'W':
+        elif nonuservote.gender == "W":
             poll_result.choice1_woman += 1 if nonuservote.choice_id == 1 else 0
             poll_result.choice2_woman += 1 if nonuservote.choice_id == 2 else 0
         for letter in selected_mbti:
-            if letter == 'E':
+            if letter == "E":
                 poll_result.choice1_E += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_E += 1 if nonuservote.choice_id == 2 else 0
-            elif letter == 'I':
+            elif letter == "I":
                 poll_result.choice1_I += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_I += 1 if nonuservote.choice_id == 2 else 0
-            elif letter == 'S':
+            elif letter == "S":
                 poll_result.choice1_S += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_S += 1 if nonuservote.choice_id == 2 else 0
-            elif letter == 'N':
+            elif letter == "N":
                 poll_result.choice1_N += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_N += 1 if nonuservote.choice_id == 2 else 0
-            elif letter == 'T':
+            elif letter == "T":
                 poll_result.choice1_T += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_T += 1 if nonuservote.choice_id == 2 else 0
-            elif letter == 'F':
+            elif letter == "F":
                 poll_result.choice1_F += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_F += 1 if nonuservote.choice_id == 2 else 0
-            elif letter == 'J':
+            elif letter == "J":
                 poll_result.choice1_J += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_J += 1 if nonuservote.choice_id == 2 else 0
-            elif letter == 'P':
+            elif letter == "P":
                 poll_result.choice1_P += 1 if nonuservote.choice_id == 1 else 0
                 poll_result.choice2_P += 1 if nonuservote.choice_id == 2 else 0
         poll_result.save()
