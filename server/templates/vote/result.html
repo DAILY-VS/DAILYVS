@@ -1,0 +1,111 @@
+{% extends 'vote/base.html' %} {% load static %} {% block content %}
+<section id="capture" class="result-container" data-color="pink">
+  <div class="result-title">{{poll.title}}</div>
+  <div class="result-graph-content">{{poll.content}}</div>
+  <div class="graph-information-container">
+    {% include 'vote/result/graph-information.html' %}
+  </div>
+  <div class="graph-container" data-color="skyblue">
+    {% include 'vote/result/result-chart.html' %}
+  </div>
+  <button class="result-share-btn" id="copy-url-btn">
+    공유하기<span
+      ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
+    /></span>
+  </button>
+  <div class="graph-category-container">
+    <div>{% include 'vote/result/category-gender.html' %}</div>
+    <div class="result-category-box">
+      <div
+        class="result-category-name"
+        id="mbtiToggle"
+        onclick="toggleRotation2()"
+      >
+        <img
+          src="{% static 'img/icon/chevron_up.png'%}"
+          style="width: 30px"
+          class="chevron"
+        />
+        MBTI
+      </div>
+    </div>
+    <div id="mbtiChart">
+      <div class="panel" data-color="pink">
+        {% include 'vote/result/category-EImbti.html' %}
+      </div>
+      <div class="panel" data-color="purple">
+        {% include 'vote/result/category-SNmbti.html' %}
+      </div>
+      <div class="panel" data-color="skyblue">
+        {% include 'vote/result/category-TFmbti.html' %}
+      </div>
+      <div class="panel" data-color="purple">
+        {% include 'vote/result/category-PJmbti.html' %}
+      </div>
+    </div>
+  </div>
+  <div class="detail-like-container">{% include 'vote/result/like.html' %}</div>
+  <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
+  <button id="capBtn">캡처하기</button>
+</section>
+<script src="{% static 'js/result.js' %}"></script>
+<script>
+  let isRotated2 = false;
+
+  function toggleRotation2() {
+    const chevron = document.querySelector(".chevron");
+    if (isRotated2) {
+      chevron.style.transform = "rotate(0deg)";
+    } else {
+      chevron.style.transform = "rotate(180deg)";
+    }
+
+    isRotated2 = !isRotated2;
+  }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="{% static 'js/scroll.js' %}"></script>
+<script src="../../static/js/html2canvas.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const mbtiToggle = document.getElementById("mbtiToggle");
+    const mbtiChart = document.getElementById("mbtiChart");
+
+    mbtiToggle.addEventListener("click", function () {
+      mbtiChart.style.display =
+        mbtiChart.style.display === "none" ? "block" : "none";
+    });
+  });
+
+  //공유하기 버튼
+  // 버튼 요소 가져오기
+  const copyUrlBtn = document.getElementById("copy-url-btn");
+  // 버튼을 클릭했을 때 이벤트 리스너 등록
+  copyUrlBtn.addEventListener("click", () => {
+    // 현재 페이지의 URL 가져오기
+    const currentUrl = window.location.href;
+    // 클립보드 복사 객체 생성
+    const clipboard = new ClipboardJS(copyUrlBtn, {
+      text: function () {
+        return currentUrl; // 복사할 텍스트 설정
+      },
+    });
+    // 클립보드 복사 성공 시 처리
+    clipboard.on("success", () => {
+      alert("URL이 복사되었습니다.");
+      clipboard.destroy(); // 클립보드 객체 해제
+    });
+    // 클립보드 복사 실패 시 처리
+    clipboard.on("error", () => {
+      alert("URL 복사에 실패하였습니다.");
+      clipboard.destroy(); // 클립보드 객체 해제
+    });
+    // 클릭 이벤트 트리거로 클립보드 복사 실행
+    clipboard.onClick();
+  });
+</script>
+
+{% endblock %}

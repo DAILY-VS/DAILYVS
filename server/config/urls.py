@@ -4,9 +4,9 @@ from django.urls import path, include
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("vote.urls")),
-    path("", include("account.urls")),
+    path("admin/", admin.site.urls), 
+    path("", include("vote.urls")), #vote app 
+    path("account/", include("account.urls")), #account app
 ]
 
 if settings.DEBUG:
