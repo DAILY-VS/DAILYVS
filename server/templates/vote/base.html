@@ -18,7 +18,7 @@
         {% else %}
         <a href="{% url 'account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
         {% endif %}
-          <a href="/" id="logo"
+          <a href="/" id="logo" class="fade-in"
             ><img src="{% static 'img/Row.png' %}"/></a>
           <span class="nav-ham-btn"><img src="{% static 'img/icon/hamburger.png'%}" style="width:25px" id="hamburger-icon"  onclick="toggleHamRotation(event)"/></span>
         </ul>

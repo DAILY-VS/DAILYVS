@@ -1,4 +1,5 @@
 import json
+import random
 from .models import *
 from account.forms import *
 from account.models import *
@@ -24,9 +25,8 @@ def main(request):
         polls = polls.order_by("id")  # 등록순
 
     page = request.GET.get("page")
-
+    random_poll = random.choice(polls) if polls else None
     paginator = Paginator(polls, 4)
-
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -40,6 +40,7 @@ def main(request):
         "page_obj": page_obj,
         "paginator": paginator,
         "promotion_polls": promotion_polls,
+        "random_poll": random_poll,
     }
 
     return render(request, "vote/main.html", context)
@@ -675,24 +676,23 @@ def calcstat(request, poll_id):
 
     ctx = {
         "total_count": total_count,
-        "choice1_count": total_choice1_count,
-        "choice2_count": total_choice2_count,
+        # "choice1_count": total_choice1_count,
+        # "choice2_count": total_choice2_count,
         "choice1_percentage": choice1_percentage,
         "choice2_percentage": choice2_percentage,
-        "man_count": total_man_count,
-        "man_choice1_count": total_man_choice1_count,
-        "man_choice2_count": total_man_choice2_count,
-        "woman_count": total_woman_count,
-        "woman_choice1_count": total_woman_choice1_count,
-        "woman_choice2_count": total_woman_choice2_count,
+        # "man_count": total_man_count,
+        # "man_choice1_count": total_man_choice1_count,
+        # "man_choice2_count": total_man_choice2_count,
+        # "woman_count": total_woman_count,
+        # "woman_choice1_count": total_woman_choice1_count,
+        # "woman_choice2_count": total_woman_choice2_count,
         "choice1_man_percentage": choice1_man_percentage,
         "choice2_man_percentage": choice2_man_percentage,
         "choice1_woman_percentage": choice1_woman_percentage,
         "choice2_woman_percentage": choice2_woman_percentage,
-        "mbtis": mbtis,
-        "mbtis_count": total_mbtis_count,
-        "mbtis_choice1_count": total_mbtis_choice1_count,
-        "mbtis_choice2_count": total_mbtis_choice2_count,
+        # "mbtis_count": total_mbtis_count,
+        # "mbtis_choice1_count": total_mbtis_choice1_count,
+        # "mbtis_choice2_count": total_mbtis_choice2_count,
         "e_choice1_percentage": e_choice1_percentage,
         "e_choice2_percentage": e_choice2_percentage,
         "i_choice1_percentage": i_choice1_percentage,
@@ -749,7 +749,6 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
     if request.method == "POST":
         selected_mbti = request.POST.get("selected_mbti")
         choice_id = request.POST.get("choice")
-        print("selected_mbti:", selected_mbti)
         NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=selected_mbti)
         calcstat_url = reverse("vote:calcstat", args=[poll_id])
         return redirect(calcstat_url)
