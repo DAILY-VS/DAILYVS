@@ -72,3 +72,27 @@ class Comment(models.Model):
    
     def __str__(self):
         return self.content
+    
+class Poll_Result(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    total= models.PositiveIntegerField(default=0)
+    choice1_man=models.PositiveIntegerField(default=0)
+    choice2_man=models.PositiveIntegerField(default=0)
+    choice1_woman=models.PositiveIntegerField(default=0)
+    choice2_woman=models.PositiveIntegerField(default=0)
+    choice1_E=models.PositiveIntegerField(default=0)
+    choice2_E=models.PositiveIntegerField(default=0)
+    choice1_I=models.PositiveIntegerField(default=0)
+    choice2_I=models.PositiveIntegerField(default=0)
+    choice1_N=models.PositiveIntegerField(default=0)
+    choice2_N=models.PositiveIntegerField(default=0)
+    choice1_S=models.PositiveIntegerField(default=0)
+    choice2_S=models.PositiveIntegerField(default=0)
+    choice1_T=models.PositiveIntegerField(default=0)
+    choice2_T=models.PositiveIntegerField(default=0)
+    choice1_F=models.PositiveIntegerField(default=0)
+    choice2_F=models.PositiveIntegerField(default=0)
+    choice1_J=models.PositiveIntegerField(default=0)
+    choice2_J=models.PositiveIntegerField(default=0)
+    choice1_P=models.PositiveIntegerField(default=0)
+    choice2_P=models.PositiveIntegerField(default=0)
