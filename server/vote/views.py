@@ -25,9 +25,8 @@ def main(request):
         polls = polls.order_by("id")  # 등록순
 
     page = request.GET.get("page")
-
+    random_poll = random.choice(polls) if polls else None
     paginator = Paginator(polls, 4)
-
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -41,6 +40,7 @@ def main(request):
         "page_obj": page_obj,
         "paginator": paginator,
         "promotion_polls": promotion_polls,
+        "random_poll": random_poll,
     }
 
     return render(request, "vote/main.html", context)
