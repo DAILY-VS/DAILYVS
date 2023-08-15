@@ -69,10 +69,23 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': 'daily-vs-db.cluster-cjlrrga1cato.ap-northeast-2.rds.amazonaws.com',
+        'NAME': 'djangodb',
+        'USER': 'admin',
+        'PASSWORD': 'dbpassword',
+        'PORT': '3306',
+        'OPTIONS': {'charset': 'utf8mb4'},
+    }
+}
+
 
 
 # Password validation
