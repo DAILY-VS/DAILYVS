@@ -131,3 +131,8 @@
     margin-left: 50%;
     transform: translate(-50%, 0);
 }
+
+#mypage-user-delete {
+    text-decoration: none;
+    color: grey;
+}
