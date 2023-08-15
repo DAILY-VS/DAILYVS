@@ -49,7 +49,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "config.urls"
-
+SOCIALACCOUNT_LOGIN_ON_GET = True
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
