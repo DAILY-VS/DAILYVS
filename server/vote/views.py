@@ -265,37 +265,37 @@ def classifyuser(request, poll_id):
                 )
                 poll_result.total += 1
                 if user.gender == "M":
-                    poll_result.choice1_man += 1 if int(choice_id) == 1 else 0
-                    poll_result.choice2_man += 1 if int(choice_id) == 2 else 0
+                    poll_result.choice1_man += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                    poll_result.choice2_man += 1 if int(choice_id) == 2 * (poll_id) else 0
                     print(str(poll_result.choice1_man))
                 elif user.gender == "W":
-                    poll_result.choice1_woman += 1 if int(choice_id) == 1 else 0
-                    poll_result.choice2_woman += 1 if int(choice_id) == 2 else 0
+                    poll_result.choice1_woman += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                    poll_result.choice2_woman += 1 if int(choice_id) == 2 * (poll_id) else 0
                 for letter in user.mbti:
                     if letter == "E":
-                        poll_result.choice1_E += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_E += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_E += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_E += 1 if int(choice_id) == 2 * (poll_id) else 0
                     elif letter == "I":
-                        poll_result.choice1_I += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_I += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_I += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_I += 1 if int(choice_id) == 2 * (poll_id) else 0
                     elif letter == "S":
-                        poll_result.choice1_S += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_S += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_S += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_S += 1 if int(choice_id) == 2 * (poll_id) else 0
                     elif letter == "N":
-                        poll_result.choice1_N += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_N += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_N += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_N += 1 if int(choice_id) == 2 * (poll_id) else 0
                     elif letter == "T":
-                        poll_result.choice1_T += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_T += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_T += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_T += 1 if int(choice_id) == 2 * (poll_id) else 0
                     elif letter == "F":
-                        poll_result.choice1_F += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_F += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_F += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_F += 1 if int(choice_id) == 2 * (poll_id) else 0
                     elif letter == "J":
-                        poll_result.choice1_J += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_J += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_J += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_J += 1 if int(choice_id) == 2 * (poll_id) else 0
                     elif letter == "P":
-                        poll_result.choice1_P += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_P += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_P += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        poll_result.choice2_P += 1 if int(choice_id) == 2 * (poll_id) else 0
                 poll_result.save()
                 calcstat_url = reverse("vote:calcstat", args=[poll_id])
                 return redirect(calcstat_url)
@@ -641,37 +641,38 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         nonuservote = NonUserVote.objects.get(id=nonuservote_id)
         poll_result, created = Poll_Result.objects.get_or_create(poll_id=poll_id)
         poll_result.total += 1
-        if nonuservote.gender == "M":
-            poll_result.choice1_man += 1 if nonuservote.choice_id == 1 else 0
-            poll_result.choice2_man += 1 if nonuservote.choice_id == 2 else 0
-        elif nonuservote.gender == "W":
-            poll_result.choice1_woman += 1 if nonuservote.choice_id == 1 else 0
-            poll_result.choice2_woman += 1 if nonuservote.choice_id == 2 else 0
-        for letter in selected_mbti:
+        if user.gender == "M":
+            poll_result.choice1_man += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+            poll_result.choice2_man += 1 if int(choice_id) == 2 * (poll_id) else 0
+            print(str(poll_result.choice1_man))
+        elif user.gender == "W":
+            poll_result.choice1_woman += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+            poll_result.choice2_woman += 1 if int(choice_id) == 2 * (poll_id) else 0
+        for letter in user.mbti:
             if letter == "E":
-                poll_result.choice1_E += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_E += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_E += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_E += 1 if int(choice_id) == 2 * (poll_id) else 0
             elif letter == "I":
-                poll_result.choice1_I += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_I += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_I += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_I += 1 if int(choice_id) == 2 * (poll_id) else 0
             elif letter == "S":
-                poll_result.choice1_S += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_S += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_S += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_S += 1 if int(choice_id) == 2 * (poll_id) else 0
             elif letter == "N":
-                poll_result.choice1_N += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_N += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_N += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_N += 1 if int(choice_id) == 2 * (poll_id) else 0
             elif letter == "T":
-                poll_result.choice1_T += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_T += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_T += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_T += 1 if int(choice_id) == 2 * (poll_id) else 0
             elif letter == "F":
-                poll_result.choice1_F += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_F += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_F += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_F += 1 if int(choice_id) == 2 * (poll_id) else 0
             elif letter == "J":
-                poll_result.choice1_J += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_J += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_J += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_J += 1 if int(choice_id) == 2 * (poll_id) else 0
             elif letter == "P":
-                poll_result.choice1_P += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_P += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_P += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                poll_result.choice2_P += 1 if int(choice_id) == 2 * (poll_id) else 0
         poll_result.save()
         calcstat_url = reverse("vote:calcstat", args=[poll_id])
         return redirect(calcstat_url)
