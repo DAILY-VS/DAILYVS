@@ -12,6 +12,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 # 메인페이지
@@ -563,60 +565,103 @@ def calcstat(request, poll_id,uservote_id,nonuservote_id):
         else 0
     )
     
-    uservote = UserVote.objects.get(id=uservote_id)
+    dict= {}    
     try :
+        uservote = UserVote.objects.get(id=uservote_id)
         user=uservote.user
-    except : 
-        nonuser_gender=NonUserVote.objects.get(id=nonuservote_id).gender
-        nonuser_mbti=NonUserVote.objects.get(id=nonuservote_id).MBTI
-    print(user)
-    
-    dict= {}
-    if uservote.choice.id == 1:
-        if user.gender == 'M' :
-            dict['남자'] = choice1_man_percentage
-        elif user.gender == 'W' :
-            dict['여자'] = choice1_woman_percentage
-        for letter in user.mbti:
-            if letter == 'E':
-                dict['E'] = e_choice1_percentage
-            elif letter == 'I':
-                dict['I'] = i_choice1_percentage
-            elif letter == 'S':
-                dict['S'] = s_choice1_percentage
-            elif letter == 'N':
-                dict['N'] = n_choice1_percentage
-            elif letter == 'T':
-                dict['T'] = t_choice1_percentage
-            elif letter == 'F':
-                dict['F'] = f_choice1_percentage
-            elif letter == 'P':
-                dict['P'] = p_choice1_percentage
-            elif letter == 'J':
-                dict['J'] = j_choice1_percentage
-    if uservote.choice.id == 2:
-        if user.gender == 'M' :
-            dict['남자'] = choice2_man_percentage
-        elif user.gender == 'W' :
-            dict['여자'] = choice2_woman_percentage
-        for letter in user.mbti:
-            if letter == 'E':
-                dict['E'] = e_choice2_percentage
-            elif letter == 'I':
-                dict['I'] = i_choice2_percentage
-            elif letter == 'S':
-                dict['S'] = s_choice2_percentage
-            elif letter == 'N':
-                n_choice2_percentage = 10
-                dict['N'] = n_choice2_percentage
-            elif letter == 'T':
-                dict['T'] = t_choice2_percentage
-            elif letter == 'F':
-                dict['F'] = f_choice2_percentage
-            elif letter == 'P':
-                dict['P'] = p_choice2_percentage
-            elif letter == 'J':
-                dict['J'] = j_choice2_percentage
+        if uservote.choice.id == 1 :
+            if user.gender == 'M' :
+                dict['남자'] = choice1_man_percentage
+            elif user.gender == 'W' :
+                dict['여자'] = choice1_woman_percentage
+            for letter in user.mbti:
+                if letter == 'E':
+                    dict['E'] = e_choice1_percentage
+                elif letter == 'I':
+                    dict['I'] = i_choice1_percentage
+                elif letter == 'S':
+                    dict['S'] = s_choice1_percentage
+                elif letter == 'N':
+                    dict['N'] = n_choice1_percentage
+                elif letter == 'T':
+                    dict['T'] = t_choice1_percentage
+                elif letter == 'F':
+                    dict['F'] = f_choice1_percentage
+                elif letter == 'P':
+                    dict['P'] = p_choice1_percentage
+                elif letter == 'J':
+                    dict['J'] = j_choice1_percentage
+        if uservote.choice.id == 2:
+            if user.gender == 'M' :
+                dict['남자'] = choice2_man_percentage
+            elif user.gender == 'W' :
+                dict['여자'] = choice2_woman_percentage
+            for letter in user.mbti:
+                if letter == 'E':
+                    dict['E'] = e_choice2_percentage
+                elif letter == 'I':
+                    dict['I'] = i_choice2_percentage
+                elif letter == 'S':
+                    dict['S'] = s_choice2_percentage
+                elif letter == 'N':
+                    n_choice2_percentage = 10
+                    dict['N'] = n_choice2_percentage
+                elif letter == 'T':
+                    dict['T'] = t_choice2_percentage
+                elif letter == 'F':
+                    dict['F'] = f_choice2_percentage
+                elif letter == 'P':
+                    dict['P'] = p_choice2_percentage
+                elif letter == 'J':
+                    dict['J'] = j_choice2_percentage
+    except (ObjectDoesNotExist): 
+        nonuservote = NonUserVote.objects.get(id=nonuservote_id)
+        nonuser_gender=nonuservote.gender
+        nonuser_mbti=nonuservote.MBTI
+        if nonuservote.choice.id == 1 :
+            if nonuser_gender == 'M' :
+                dict['남자'] = choice1_man_percentage
+            elif nonuser_gender == 'W' :
+                dict['여자'] = choice1_woman_percentage
+            for letter in nonuser_mbti:
+                if letter == 'E':
+                    dict['E'] = e_choice1_percentage
+                elif letter == 'I':
+                    dict['I'] = i_choice1_percentage
+                elif letter == 'S':
+                    dict['S'] = s_choice1_percentage
+                elif letter == 'N':
+                    dict['N'] = n_choice1_percentage
+                elif letter == 'T':
+                    dict['T'] = t_choice1_percentage
+                elif letter == 'F':
+                    dict['F'] = f_choice1_percentage
+                elif letter == 'P':
+                    dict['P'] = p_choice1_percentage
+                elif letter == 'J':
+                    dict['J'] = j_choice1_percentage
+        if nonuservote.choice.id == 2:
+            if nonuser_gender == 'M' :
+                dict['남자'] = choice2_man_percentage
+            elif nonuser_gender == 'W' :
+                dict['여자'] = choice2_woman_percentage
+            for letter in nonuser_mbti:
+                if letter == 'E':
+                    dict['E'] = e_choice2_percentage
+                elif letter == 'I':
+                    dict['I'] = i_choice2_percentage
+                elif letter == 'S':
+                    dict['S'] = s_choice2_percentage
+                elif letter == 'N':
+                    dict['N'] = n_choice2_percentage
+                elif letter == 'T':
+                    dict['T'] = t_choice2_percentage
+                elif letter == 'F':
+                    dict['F'] = f_choice2_percentage
+                elif letter == 'P':
+                    dict['P'] = p_choice2_percentage
+                elif letter == 'J':
+                    dict['J'] = j_choice2_percentage
     print(dict)
     minimum_key = min(dict,key=dict.get)
     minimum_value= dict[min(dict,key=dict.get)]
@@ -660,7 +705,7 @@ def calcstat(request, poll_id,uservote_id,nonuservote_id):
         "comments": comments,
         "user_votes": user_votes,
         "minimum_key": minimum_key,
-        "minimum_value":minimum_value,
+        "minimum_value":100 - minimum_value,
     }
     ##################################################################################
     
