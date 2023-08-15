@@ -1,7 +1,9 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section class="main-container">
-  {% if user.is_authenticated %}
-  안녕하세요, {{user.nickname}} 님!
+  <p class="main-greeting">
+    {% if user.is_authenticated %} 안녕하세요,
+    <span class="user-nickname">{{user.nickname}}</span> 님!
+  </p>
   {% endif %}
   <div class="carousel-container">
     {% include 'vote/main/main-carousel.html' %}
@@ -11,5 +13,4 @@
   </div>
   <div class="vote-list-container">{% include 'vote/main/main-grid.html'%}</div>
 </section>
-
 {% endblock %}

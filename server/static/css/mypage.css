@@ -84,22 +84,55 @@
     flex-direction: row;
 }
 
+/* 정보 수정 */
 .mypage-update-container {
     width: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 20px;
 }
 
-/* .mypage-update-form {
-    width: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.mypage-update-container form {
+    width: 80%;
 }
 
-.form-control{
-    display: inline-block;
-    width: 200px;
-} */
+.mypage-update-container label {
+    margin-top: 20px;
+}
+
+.mypage-update-container select {
+    width: 300px;
+    height: 50px;
+    padding-left: 20px;
+    border: 1px rgba(128, 128, 128, 0.2) solid;
+    font-size: 20px;
+}
+
+.mypage-update-container input {
+    width: 300px;
+    height: 50px;
+    padding-left: 20px;
+    border: 1px rgba(128, 128, 128, 0.2) solid;
+    font-size: 20px;
+}
+
+.mypage-update-container input[name="gender"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.mypage-update-container button {
+    margin-left: 50%;
+    transform: translate(-50%, 0);
+}
+
+#mypage-user-delete {
+    text-decoration: none;
+    color: grey;
+}

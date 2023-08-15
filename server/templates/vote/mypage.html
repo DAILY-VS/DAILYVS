@@ -38,7 +38,7 @@
               {% for uservote in uservotes %}
                   {% if voted_poll.id == uservote.poll.id %}
                     <a href="{% url 'vote:calcstat' uservote.poll.id%}">{{ voted_poll }}</a>
-                    {{ uservote.choice.choice_text }}
+                    <p>나의 선택: {{ uservote.choice.choice_text }}</p>
                   {% endif %}
               {% endfor %}
           {% endfor %}
@@ -67,15 +67,11 @@
             </div>
         </div>
         <hr>
-    
-        <span>나의 LIKE LIST</span>
-    
-        <span>나의 stat gallery</span>
-        <hr>
-        <div class="stat-gallery">
-    
-        </div>
     </div>
+    {% if request.user == user %}
+    <a href="{% url 'account:change_password' %}">비밀번호 변경</a> 
+    <a id="mypage-user-delete" href="{% url 'account:delete' %}">회원 탈퇴</a>
+{% endif %}
 </body>
 </html>
 

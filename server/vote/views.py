@@ -1,4 +1,6 @@
 import json
+import numpy as np
+import random
 from .models import *
 from vs_account.forms import *
 from vs_account.models import *
@@ -9,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Count
 
 
 # 메인페이지
@@ -28,9 +31,8 @@ def main(request):
         polls = polls.order_by("id")  # 등록순
 
     page = request.GET.get("page")
-
+    random_poll = random.choice(polls) if polls.exists() else None
     paginator = Paginator(polls, 4)
-
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -44,6 +46,7 @@ def main(request):
         "page_obj": page_obj,
         "paginator": paginator,
         "promotion_polls": promotion_polls,
+        "random_poll": random_poll,
     }
 
     return render(request, "vote/main.html", context)
@@ -177,12 +180,22 @@ def comment_write_view(request, poll_id):
                 user_info=user_info,
                 parent_comment=parent_comment,
             )
+
+            parent_comment_data = {
+                "nickname": parent_comment.user_info.nickname,
+                "mbti": parent_comment.user_info.mbti,
+                "gender": parent_comment.user_info.gender,
+                "content": parent_comment.content,
+                "created_at": parent_comment.created_at.strftime("%Y년 %m월 %d일"),
+                "comment_id": parent_comment.pk,
+            }
         else:  # 일반 댓글인 경우
             comment = Comment.objects.create(
                 poll=poll,
                 content=content,
                 user_info=user_info,
             )
+            parent_comment_data = None
 
         poll.update_comments_count()  # 댓글 수 업데이트
         poll.save()
@@ -196,7 +209,7 @@ def comment_write_view(request, poll_id):
             user_vote = None
             choice_text = ""  # 또는 다른 기본값 설정
 
-        comment_id = Comment.objects.last().pk
+        comment_id = comment.pk
 
         data = {
             "nickname": user_info.nickname,
@@ -207,6 +220,9 @@ def comment_write_view(request, poll_id):
             "comment_id": comment_id,
             "choice": choice_text,
         }
+        if parent_comment_data:
+            data["parent_comment"] = parent_comment_data
+
         return HttpResponse(
             json.dumps(data, cls=DjangoJSONEncoder), content_type="application/json"
         )
@@ -230,31 +246,10 @@ def comment_delete_view(request, pk):
     )
 
 
-# # 대댓글 정보를 가져오는 view 함수
-# @login_required
-# def get_replies_view(request, comment_id):
-#    # 클라이언트에서 요청한 댓글의 대댓글들을 가져옴
-#     parent_comment = get_object_or_404(Comment, id=comment_id)
-#     replies = parent_comment.replies.all()
-
-#     # 대댓글 정보를 JSON 형식으로 변환하여 반환
-#     reply_data = []
-#     for reply in replies:
-#         reply_info = {
-#             'id': reply.id,
-#             'nickname': reply.user_info.nickname,
-#             'mbti': reply.user_info.mbti,
-#             'gender': reply.user_info.gender,
-#             'content': reply.content,
-#             'created_at': reply.created_at.strftime("%Y년 %m월 %d일"),
-#         }
-#         reply_data.append(reply_info)
-
-#     # JSON 형식으로 변환
-#     json_data = json.dumps(reply_data, ensure_ascii=False)
-
-#     # HttpResponse로 반환
-#     return HttpResponse(json_data, content_type="application/json")
+# 대댓글 수 파악
+def calculate_nested_count(request, comment_id):
+    nested_count = Comment.objects.filter(parent_comment_id=comment_id).count()
+    return JsonResponse({"nested_count": nested_count})
 
 
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
@@ -269,8 +264,44 @@ def classifyuser(request, poll_id):
                 vote = UserVote(user=request.user, poll=poll, choice=choice)
                 vote.save()
                 user.voted_polls.add(poll_id)
+                poll_result, created = Poll_Result.objects.get_or_create(
+                    poll_id=poll_id
+                )
+                poll_result.total += 1
+                if user.gender == "M":
+                    poll_result.choice1_man += 1 if int(choice_id) == 1 else 0
+                    poll_result.choice2_man += 1 if int(choice_id) == 2 else 0
+                    print(str(poll_result.choice1_man))
+                elif user.gender == "W":
+                    poll_result.choice1_woman += 1 if int(choice_id) == 1 else 0
+                    poll_result.choice2_woman += 1 if int(choice_id) == 2 else 0
+                for letter in user.mbti:
+                    if letter == "E":
+                        poll_result.choice1_E += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_E += 1 if int(choice_id) == 2 else 0
+                    elif letter == "I":
+                        poll_result.choice1_I += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_I += 1 if int(choice_id) == 2 else 0
+                    elif letter == "S":
+                        poll_result.choice1_S += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_S += 1 if int(choice_id) == 2 else 0
+                    elif letter == "N":
+                        poll_result.choice1_N += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_N += 1 if int(choice_id) == 2 else 0
+                    elif letter == "T":
+                        poll_result.choice1_T += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_T += 1 if int(choice_id) == 2 else 0
+                    elif letter == "F":
+                        poll_result.choice1_F += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_F += 1 if int(choice_id) == 2 else 0
+                    elif letter == "J":
+                        poll_result.choice1_J += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_J += 1 if int(choice_id) == 2 else 0
+                    elif letter == "P":
+                        poll_result.choice1_P += 1 if int(choice_id) == 1 else 0
+                        poll_result.choice2_P += 1 if int(choice_id) == 2 else 0
+                poll_result.save()
                 calcstat_url = reverse("vote:calcstat", args=[poll_id])
-                voted_polls = user.voted_polls.all()
                 return redirect(calcstat_url)
             except ValueError:
                 vote = NonUserVote(poll=poll, choice=choice)
@@ -297,414 +328,264 @@ def calcstat(request, poll_id):
     else:
         user_votes = None  # 또는 user_votes = UserVote.objects.none()
 
-    mbtis = [
-        "ISTJ",
-        "ISFJ",
-        "INFJ",
-        "INTJ",
-        "ISTP",
-        "ISFP",
-        "INFP",
-        "INTP",
-        "ESTP",
-        "ESFP",
-        "ENFP",
-        "ENTP",
-        "ESTJ",
-        "ESFJ",
-        "ENFJ",
-        "ENTJ",
-    ]
+    poll_result = Poll_Result.objects.get(poll_id=poll_id)
 
-    user_poll = UserVote.objects.filter(choice__poll__pk=poll_id)
-    user_total_count = user_poll.count()
+    total_count = poll_result.total
 
-    user_choice1 = user_poll.filter(choice_id=2 * poll_id - 1)
-    user_choice1_count = user_choice1.count()
+    choice_1 = poll_result.choice1_man + poll_result.choice1_woman
+    choice_2 = poll_result.choice2_man + poll_result.choice2_woman
 
-    user_choice2 = user_poll.filter(choice_id=2 * poll_id)
-    user_choice2_count = user_choice2.count()
+    choice1_percentage = int(np.round(choice_1 / total_count * 100))
+    choice2_percentage = int(np.round(choice_2 / total_count * 100))
 
-    user_man = UserVote.objects.filter(choice__poll__pk=poll_id, user__gender="M")
-    user_man_count = user_man.count()
-
-    user_man_choice1 = user_man.filter(choice_id=2 * poll_id - 1)
-    user_man_choice1_count = user_man_choice1.count()
-
-    user_man_choice2 = user_man.filter(choice_id=2 * poll_id)
-    user_man_choice2_count = user_man_choice2.count()
-
-    user_woman = UserVote.objects.filter(choice__poll__pk=poll_id, user__gender="W")
-    user_woman_count = user_woman.count()
-
-    user_woman_choice1 = user_woman.filter(choice_id=2 * poll_id - 1)
-    user_woman_choice1_count = user_woman_choice1.count()
-
-    user_woman_choice2 = user_woman.filter(choice_id=2 * poll_id)
-    user_woman_choice2_count = user_woman_choice2.count()
-
-    user_mbtis_count = []
-    user_mbtis_choice1_count = []
-    user_mbtis_choice2_count = []
-
-    for mbti in mbtis:
-        user_mbti = UserVote.objects.filter(choice__poll__pk=poll_id, user__mbti=mbti)
-        user_mbti_count = user_mbti.count()
-        user_mbtis_count.append(user_mbti_count)
-
-        user_mbti_choice1 = user_mbti.filter(choice_id=2 * poll_id - 1)
-        user_mbti_choice1_count = user_mbti_choice1.count()
-        user_mbtis_choice1_count.append(user_mbti_choice1_count)
-
-        user_mbti_choice2 = user_mbti.filter(choice_id=2 * poll_id)
-        user_mbti_choice2_count = user_mbti_choice2.count()
-        user_mbtis_choice2_count.append(user_mbti_choice2_count)
-
-    nonuser_poll = NonUserVote.objects.filter(
-        choice__poll__pk=poll_id, MBTI__isnull=False, gender__isnull=False
-    )
-
-    nonuser_total_count = nonuser_poll.count()
-
-    nonuser_choice1 = nonuser_poll.filter(choice_id=2 * poll_id - 1)
-    nonuser_choice1_count = nonuser_choice1.count()
-
-    nonuser_choice2 = nonuser_poll.filter(choice_id=2 * poll_id)
-    nonuser_choice2_count = nonuser_choice2.count()
-
-    nonuser_man = NonUserVote.objects.filter(choice__poll__pk=poll_id, gender="M")
-    nonuser_man_count = nonuser_man.count()
-
-    nonuser_man_choice1 = nonuser_man.filter(choice_id=2 * poll_id - 1)
-    nonuser_man_choice1_count = nonuser_man_choice1.count()
-
-    nonuser_man_choice2 = nonuser_man.filter(choice_id=2 * poll_id)
-    nonuser_man_choice2_count = nonuser_man_choice2.count()
-
-    nonuser_woman = NonUserVote.objects.filter(choice__poll__pk=poll_id, gender="W")
-    nonuser_woman_count = nonuser_woman.count()
-
-    nonuser_woman_choice1 = nonuser_woman.filter(choice_id=2 * poll_id - 1)
-    nonuser_woman_choice1_count = nonuser_woman_choice1.count()
-
-    nonuser_woman_choice2 = nonuser_woman.filter(choice_id=2 * poll_id)
-    nonuser_woman_choice2_count = nonuser_woman_choice2.count()
-
-    nonuser_mbtis_count = []
-    nonuser_mbtis_choice1_count = []
-    nonuser_mbtis_choice2_count = []
-
-    for mbti in mbtis:
-        nonuser_mbti = NonUserVote.objects.filter(choice__poll__pk=poll_id, MBTI=mbti)
-        nonuser_mbti_count = nonuser_mbti.count()
-        nonuser_mbtis_count.append(nonuser_mbti_count)
-
-        nonuser_mbti_choice1 = nonuser_mbti.filter(choice_id=2 * poll_id - 1)
-        nonuser_mbti_choice1_count = nonuser_mbti_choice1.count()
-        nonuser_mbtis_choice1_count.append(nonuser_mbti_choice1_count)
-
-        nonuser_mbti_choice2 = nonuser_mbti.filter(choice_id=2 * poll_id)
-        nonuser_mbti_choice2_count = nonuser_mbti_choice2.count()
-        nonuser_mbtis_choice2_count.append(nonuser_mbti_choice2_count)
-
-    total_count = user_total_count + nonuser_total_count
-
-    total_choice1_count = user_choice1_count + nonuser_choice1_count
-
-    total_choice2_count = user_choice2_count + nonuser_choice2_count
-    total_man_count = user_man_count + nonuser_man_count
-
-    total_man_choice1_count = user_man_choice1_count + nonuser_man_choice1_count
-    total_man_choice2_count = user_man_choice2_count + nonuser_man_choice2_count
-
-    total_woman_count = user_woman_count + nonuser_woman_count
-    total_woman_choice1_count = user_woman_choice1_count + nonuser_woman_choice1_count
-    total_woman_choice2_count = user_woman_choice2_count + nonuser_woman_choice2_count
-
-    total_mbtis_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    total_mbtis_choice1_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    total_mbtis_choice2_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-    for i in range(16):
-        total_mbtis_count[i] = user_mbtis_count[i] + nonuser_mbtis_count[i]
-        total_mbtis_choice1_count[i] = (
-            user_mbtis_choice1_count[i] + nonuser_mbtis_choice1_count[i]
+    choice1_man_percentage = (
+        (
+            np.round(
+                poll_result.choice1_man
+                / (poll_result.choice1_man + poll_result.choice2_man)
+                * 100,
+                1,
+            )
         )
-        total_mbtis_choice2_count[i] = (
-            user_mbtis_choice2_count[i] + nonuser_mbtis_choice2_count[i]
+        if (poll_result.choice1_man + poll_result.choice2_man) != 0
+        else 0
+    )
+    choice2_man_percentage = (
+        (
+            np.round(
+                poll_result.choice2_man
+                / (poll_result.choice1_man + poll_result.choice2_man)
+                * 100,
+                1,
+            )
         )
-
-    choice1_percentage = int(total_choice1_count / total_count * 100)
-    choice2_percentage = int(total_choice2_count / total_count * 100)
-
-    if total_man_count != 0:
-        choice1_man_percentage = int(total_man_choice1_count / total_man_count * 100)
-        choice2_man_percentage = int(total_man_choice2_count / total_man_count * 100)
-    else:
-        choice1_man_percentage = 0
-        choice2_man_percentage = 0
-
-    if total_woman_count != 0:
-        choice1_woman_percentage = int(
-            total_woman_choice1_count / total_woman_count * 100
+        if (poll_result.choice1_man + poll_result.choice2_man) != 0
+        else 0
+    )
+    choice1_woman_percentage = (
+        (
+            np.round(
+                poll_result.choice1_woman
+                / (poll_result.choice1_woman + poll_result.choice2_woman)
+                * 100,
+                1,
+            )
         )
-        choice2_woman_percentage = int(
-            total_woman_choice2_count / total_woman_count * 100
+        if (poll_result.choice1_woman + poll_result.choice2_woman) != 0
+        else 0
+    )
+    choice2_woman_percentage = (
+        (
+            np.round(
+                poll_result.choice2_woman
+                / (poll_result.choice1_woman + poll_result.choice2_woman)
+                * 100,
+                1,
+            )
         )
-    else:
-        choice1_woman_percentage = 0
-        choice2_woman_percentage = 0
-
-    mbtis_dict = dict(zip(mbtis, total_mbtis_count))
-    mbtis_choice1_dict = dict(zip(mbtis, total_mbtis_choice1_count))
-    mbtis_choice2_dict = dict(zip(mbtis, total_mbtis_choice2_count))
-
-    e_total_count = (
-        mbtis_dict["ESTJ"]
-        + mbtis_dict["ESTP"]
-        + mbtis_dict["ESFJ"]
-        + mbtis_dict["ESFP"]
-        + mbtis_dict["ENFP"]
-        + mbtis_dict["ENFJ"]
-        + mbtis_dict["ENTJ"]
-        + mbtis_dict["ENTP"]
-    )
-    e_choice1_count = (
-        mbtis_choice1_dict["ESTJ"]
-        + mbtis_choice1_dict["ESTP"]
-        + mbtis_choice1_dict["ESFJ"]
-        + mbtis_choice1_dict["ESFP"]
-        + mbtis_choice1_dict["ENFP"]
-        + mbtis_choice1_dict["ENFJ"]
-        + mbtis_choice1_dict["ENTJ"]
-        + mbtis_choice1_dict["ENTP"]
+        if (poll_result.choice1_woman + poll_result.choice2_woman) != 0
+        else 0
     )
 
-    e_choice1_percentage = 0
-
-    if e_total_count != 0:
-        e_choice1_percentage = int(e_choice1_count / e_total_count * 100)
-        e_choice2_percentage = 100 - e_choice1_percentage
-    else:
-        e_choice1_percentage = 0
-        e_choice2_percentage = 0
-
-    i_total_count = (
-        mbtis_dict["ISTJ"]
-        + mbtis_dict["ISTP"]
-        + mbtis_dict["ISFJ"]
-        + mbtis_dict["ISFP"]
-        + mbtis_dict["INFP"]
-        + mbtis_dict["INFJ"]
-        + mbtis_dict["INTJ"]
-        + mbtis_dict["INTP"]
+    e_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_E
+                / (poll_result.choice1_E + poll_result.choice2_E)
+                * 100
+            )
+        )
+        if (poll_result.choice1_E + poll_result.choice2_E) != 0
+        else 0
     )
-    i_choice1_count = (
-        mbtis_choice1_dict["ISTJ"]
-        + mbtis_choice1_dict["ISTP"]
-        + mbtis_choice1_dict["ISFJ"]
-        + mbtis_choice1_dict["ISFP"]
-        + mbtis_choice1_dict["INFP"]
-        + mbtis_choice1_dict["INFJ"]
-        + mbtis_choice1_dict["INTJ"]
-        + mbtis_choice1_dict["INTP"]
+    e_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_E
+                / (poll_result.choice1_E + poll_result.choice2_E)
+                * 100
+            )
+        )
+        if (poll_result.choice1_E + poll_result.choice2_E) != 0
+        else 0
     )
-
-    if i_total_count != 0:
-        i_choice1_percentage = int(i_choice1_count / i_total_count * 100)
-        i_choice2_percentage = 100 - i_choice1_percentage
-    else:
-        i_choice1_percentage = 0
-        i_choice2_percentage = 0
-
-    n_total_count = (
-        mbtis_dict["INTJ"]
-        + mbtis_dict["INTP"]
-        + mbtis_dict["INFJ"]
-        + mbtis_dict["INFP"]
-        + mbtis_dict["ENFP"]
-        + mbtis_dict["ENFJ"]
-        + mbtis_dict["ENTJ"]
-        + mbtis_dict["ENTP"]
+    i_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_I
+                / (poll_result.choice1_I + poll_result.choice2_I)
+                * 100
+            )
+        )
+        if (poll_result.choice1_I + poll_result.choice2_I) != 0
+        else 0
     )
-    n_choice1_count = (
-        mbtis_choice1_dict["INTJ"]
-        + mbtis_choice1_dict["INTP"]
-        + mbtis_choice1_dict["INFJ"]
-        + mbtis_choice1_dict["INFP"]
-        + mbtis_choice1_dict["ENFP"]
-        + mbtis_choice1_dict["ENFJ"]
-        + mbtis_choice1_dict["ENTJ"]
-        + mbtis_choice1_dict["ENTP"]
+    i_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_I
+                / (poll_result.choice1_I + poll_result.choice2_I)
+                * 100
+            )
+        )
+        if (poll_result.choice1_I + poll_result.choice2_I) != 0
+        else 0
     )
 
-    if n_total_count != 0:
-        n_choice1_percentage = int(n_choice1_count / n_total_count * 100)
-        n_choice2_percentage = 100 - n_choice1_percentage
-    else:
-        n_choice1_percentage = 0
-        n_choice2_percentage = 0
-
-    s_total_count = (
-        mbtis_dict["ISTJ"]
-        + mbtis_dict["ISTP"]
-        + mbtis_dict["ISFJ"]
-        + mbtis_dict["ISFP"]
-        + mbtis_dict["ESFP"]
-        + mbtis_dict["ESFJ"]
-        + mbtis_dict["ESTJ"]
-        + mbtis_dict["ESTP"]
+    n_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_N
+                / (poll_result.choice1_N + poll_result.choice2_N)
+                * 100
+            )
+        )
+        if (poll_result.choice1_N + poll_result.choice2_N) != 0
+        else 0
     )
-    s_choice1_count = (
-        mbtis_choice1_dict["ISTJ"]
-        + mbtis_choice1_dict["ISTP"]
-        + mbtis_choice1_dict["ISFJ"]
-        + mbtis_choice1_dict["ISFP"]
-        + mbtis_choice1_dict["ESFP"]
-        + mbtis_choice1_dict["ESFJ"]
-        + mbtis_choice1_dict["ESTJ"]
-        + mbtis_choice1_dict["ESTP"]
+    n_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_N
+                / (poll_result.choice1_N + poll_result.choice2_N)
+                * 100
+            )
+        )
+        if (poll_result.choice1_N + poll_result.choice2_N) != 0
+        else 0
     )
-
-    if s_total_count != 0:
-        s_choice1_percentage = int(s_choice1_count / s_total_count * 100)
-        s_choice2_percentage = 100 - s_choice1_percentage
-    else:
-        s_choice1_percentage = 0
-        s_choice2_percentage = 0
-
-    t_total_count = (
-        mbtis_dict["INTJ"]
-        + mbtis_dict["INTP"]
-        + mbtis_dict["ISTJ"]
-        + mbtis_dict["ISTP"]
-        + mbtis_dict["ENTP"]
-        + mbtis_dict["ENTJ"]
-        + mbtis_dict["ESTJ"]
-        + mbtis_dict["ESTP"]
+    s_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_S
+                / (poll_result.choice1_S + poll_result.choice2_S)
+                * 100
+            )
+        )
+        if (poll_result.choice1_S + poll_result.choice2_S) != 0
+        else 0
     )
-    t_choice1_count = (
-        mbtis_choice1_dict["INTJ"]
-        + mbtis_choice1_dict["INTP"]
-        + mbtis_choice1_dict["ISTJ"]
-        + mbtis_choice1_dict["ISTP"]
-        + mbtis_choice1_dict["ENTP"]
-        + mbtis_choice1_dict["ENTJ"]
-        + mbtis_choice1_dict["ESTJ"]
-        + mbtis_choice1_dict["ESTP"]
+    s_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_S
+                / (poll_result.choice1_S + poll_result.choice2_S)
+                * 100
+            )
+        )
+        if (poll_result.choice1_S + poll_result.choice2_S) != 0
+        else 0
     )
 
-    if t_total_count != 0:
-        t_choice1_percentage = int(t_choice1_count / t_total_count * 100)
-        t_choice2_percentage = 100 - t_choice1_percentage
-    else:
-        t_choice1_percentage = 0
-        t_choice2_percentage = 0
-
-    f_total_count = (
-        mbtis_dict["INFJ"]
-        + mbtis_dict["INFP"]
-        + mbtis_dict["ISFJ"]
-        + mbtis_dict["ISFP"]
-        + mbtis_dict["ENFP"]
-        + mbtis_dict["ENFJ"]
-        + mbtis_dict["ESFJ"]
-        + mbtis_dict["ESFP"]
+    t_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_T
+                / (poll_result.choice1_T + poll_result.choice2_T)
+                * 100
+            )
+        )
+        if (poll_result.choice1_T + poll_result.choice2_T) != 0
+        else 0
     )
-    f_choice1_count = (
-        mbtis_choice1_dict["INFJ"]
-        + mbtis_choice1_dict["INFP"]
-        + mbtis_choice1_dict["ISFJ"]
-        + mbtis_choice1_dict["ISFP"]
-        + mbtis_choice1_dict["ENFP"]
-        + mbtis_choice1_dict["ENFJ"]
-        + mbtis_choice1_dict["ESFJ"]
-        + mbtis_choice1_dict["ESFP"]
+    t_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_T
+                / (poll_result.choice1_T + poll_result.choice2_T)
+                * 100
+            )
+        )
+        if (poll_result.choice1_T + poll_result.choice2_T) != 0
+        else 0
     )
-
-    if f_total_count != 0:
-        f_choice1_percentage = int(f_choice1_count / f_total_count * 100)
-        f_choice2_percentage = 100 - f_choice1_percentage
-    else:
-        f_choice1_percentage = 0
-        f_choice2_percentage = 0
-
-    j_total_count = (
-        mbtis_dict["INTJ"]
-        + mbtis_dict["ISTJ"]
-        + mbtis_dict["INFJ"]
-        + mbtis_dict["ISFJ"]
-        + mbtis_dict["ENFJ"]
-        + mbtis_dict["ESFJ"]
-        + mbtis_dict["ENTJ"]
-        + mbtis_dict["ESTJ"]
+    f_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_F
+                / (poll_result.choice1_F + poll_result.choice2_F)
+                * 100
+            )
+        )
+        if (poll_result.choice1_F + poll_result.choice2_F) != 0
+        else 0
     )
-    j_choice1_count = (
-        mbtis_choice1_dict["INTJ"]
-        + mbtis_choice1_dict["ISTJ"]
-        + mbtis_choice1_dict["INFJ"]
-        + mbtis_choice1_dict["ISFJ"]
-        + mbtis_choice1_dict["ENFJ"]
-        + mbtis_choice1_dict["ESFJ"]
-        + mbtis_choice1_dict["ENTJ"]
-        + mbtis_choice1_dict["ESTJ"]
+    f_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_F
+                / (poll_result.choice1_F + poll_result.choice2_F)
+                * 100
+            )
+        )
+        if (poll_result.choice1_F + poll_result.choice2_F) != 0
+        else 0
     )
 
-    if j_total_count != 0:
-        j_choice1_percentage = int(j_choice1_count / j_total_count * 100)
-        j_choice2_percentage = 100 - j_choice1_percentage
-    else:
-        j_choice1_percentage = 0
-        j_choice2_percentage = 0
-
-    p_total_count = (
-        mbtis_dict["INTP"]
-        + mbtis_dict["ISTP"]
-        + mbtis_dict["INFP"]
-        + mbtis_dict["ISFP"]
-        + mbtis_dict["ENFP"]
-        + mbtis_dict["ESFP"]
-        + mbtis_dict["ENTP"]
-        + mbtis_dict["ESTP"]
+    p_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_P
+                / (poll_result.choice1_P + poll_result.choice2_P)
+                * 100
+            )
+        )
+        if (poll_result.choice1_P + poll_result.choice2_P) != 0
+        else 0
     )
-    p_choice1_count = (
-        mbtis_choice1_dict["INTP"]
-        + mbtis_choice1_dict["ISTP"]
-        + mbtis_choice1_dict["INFP"]
-        + mbtis_choice1_dict["ISFP"]
-        + mbtis_choice1_dict["ENFP"]
-        + mbtis_choice1_dict["ESFP"]
-        + mbtis_choice1_dict["ENTP"]
-        + mbtis_choice1_dict["ESTP"]
+    p_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_P
+                / (poll_result.choice1_P + poll_result.choice2_P)
+                * 100
+            )
+        )
+        if (poll_result.choice1_P + poll_result.choice2_P) != 0
+        else 0
     )
-
-    if p_total_count != 0:
-        p_choice1_percentage = int(p_choice1_count / p_total_count * 100)
-        p_choice2_percentage = 100 - p_choice1_percentage
-    else:
-        p_choice1_percentage = 0
-        p_choice2_percentage = 0
+    j_choice1_percentage = (
+        (
+            np.round(
+                poll_result.choice1_J
+                / (poll_result.choice1_J + poll_result.choice2_J)
+                * 100
+            )
+        )
+        if (poll_result.choice1_J + poll_result.choice2_J) != 0
+        else 0
+    )
+    j_choice2_percentage = (
+        (
+            np.round(
+                poll_result.choice2_J
+                / (poll_result.choice1_J + poll_result.choice2_J)
+                * 100
+            )
+        )
+        if (poll_result.choice1_J + poll_result.choice2_J) != 0
+        else 0
+    )
 
     ctx = {
         "total_count": total_count,
-        "choice1_count": total_choice1_count,
-        "choice2_count": total_choice2_count,
+        # "choice1_count": total_choice1_count,
+        # "choice2_count": total_choice2_count,
         "choice1_percentage": choice1_percentage,
         "choice2_percentage": choice2_percentage,
-        "man_count": total_man_count,
-        "man_choice1_count": total_man_choice1_count,
-        "man_choice2_count": total_man_choice2_count,
-        "woman_count": total_woman_count,
-        "woman_choice1_count": total_woman_choice1_count,
-        "woman_choice2_count": total_woman_choice2_count,
+        # "man_count": total_man_count,
+        # "man_choice1_count": total_man_choice1_count,
+        # "man_choice2_count": total_man_choice2_count,
+        # "woman_count": total_woman_count,
+        # "woman_choice1_count": total_woman_choice1_count,
+        # "woman_choice2_count": total_woman_choice2_count,
         "choice1_man_percentage": choice1_man_percentage,
         "choice2_man_percentage": choice2_man_percentage,
         "choice1_woman_percentage": choice1_woman_percentage,
         "choice2_woman_percentage": choice2_woman_percentage,
-        "mbtis": mbtis,
-        "mbtis_count": total_mbtis_count,
-        "mbtis_choice1_count": total_mbtis_choice1_count,
-        "mbtis_choice2_count": total_mbtis_choice2_count,
+        # "mbtis_count": total_mbtis_count,
+        # "mbtis_choice1_count": total_mbtis_choice1_count,
+        # "mbtis_choice2_count": total_mbtis_choice2_count,
         "e_choice1_percentage": e_choice1_percentage,
         "e_choice2_percentage": e_choice2_percentage,
         "i_choice1_percentage": i_choice1_percentage,
@@ -760,9 +641,42 @@ def poll_nonusermbti(request, poll_id, nonuservote_id):
 def poll_nonuserfinal(request, poll_id, nonuservote_id):
     if request.method == "POST":
         selected_mbti = request.POST.get("selected_mbti")
-        choice_id = request.POST.get("choice")
-        print("selected_mbti:", selected_mbti)
         NonUserVote.objects.filter(pk=nonuservote_id).update(MBTI=selected_mbti)
+        nonuservote = NonUserVote.objects.get(id=nonuservote_id)
+        poll_result, created = Poll_Result.objects.get_or_create(poll_id=poll_id)
+        poll_result.total += 1
+        if nonuservote.gender == "M":
+            poll_result.choice1_man += 1 if nonuservote.choice_id == 1 else 0
+            poll_result.choice2_man += 1 if nonuservote.choice_id == 2 else 0
+        elif nonuservote.gender == "W":
+            poll_result.choice1_woman += 1 if nonuservote.choice_id == 1 else 0
+            poll_result.choice2_woman += 1 if nonuservote.choice_id == 2 else 0
+        for letter in selected_mbti:
+            if letter == "E":
+                poll_result.choice1_E += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_E += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == "I":
+                poll_result.choice1_I += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_I += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == "S":
+                poll_result.choice1_S += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_S += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == "N":
+                poll_result.choice1_N += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_N += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == "T":
+                poll_result.choice1_T += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_T += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == "F":
+                poll_result.choice1_F += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_F += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == "J":
+                poll_result.choice1_J += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_J += 1 if nonuservote.choice_id == 2 else 0
+            elif letter == "P":
+                poll_result.choice1_P += 1 if nonuservote.choice_id == 1 else 0
+                poll_result.choice2_P += 1 if nonuservote.choice_id == 2 else 0
+        poll_result.save()
         calcstat_url = reverse("vote:calcstat", args=[poll_id])
         return redirect(calcstat_url)
     else:

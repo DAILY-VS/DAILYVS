@@ -1,9 +1,4 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
-<style>
-  .panel {
-    min-height: 5vh;
-  }
-</style>
 <section id="capture" class="result-container" data-color="pink">
   <div class="result-title">{{poll.title}}</div>
   <div class="result-graph-content">{{poll.content}}</div>
@@ -34,7 +29,7 @@
         MBTI
       </div>
     </div>
-    <div id="mbtiChart" style="display: none">
+    <div id="mbtiChart">
       <div class="panel" data-color="pink">
         {% include 'vote/result/category-EImbti.html' %}
       </div>
@@ -51,7 +46,7 @@
   </div>
   <div class="detail-like-container">{% include 'vote/result/like.html' %}</div>
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
-  <button id="capBtn">캡처하기</button>
+  <button id="capBtn" style="border: none">캡처하기</button>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
 <script>
@@ -72,6 +67,7 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="{% static 'js/scroll.js' %}"></script>
 <script src="../../static/js/html2canvas.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -89,26 +85,26 @@
   const copyUrlBtn = document.getElementById("copy-url-btn");
   // 버튼을 클릭했을 때 이벤트 리스너 등록
   copyUrlBtn.addEventListener("click", () => {
-      // 현재 페이지의 URL 가져오기
-      const currentUrl = window.location.href;
-      // 클립보드 복사 객체 생성
-      const clipboard = new ClipboardJS(copyUrlBtn, {
-          text: function() {
-              return currentUrl; // 복사할 텍스트 설정
-          }
-      });
-      // 클립보드 복사 성공 시 처리
-      clipboard.on("success", () => {
-          alert("URL이 복사되었습니다.");
-          clipboard.destroy(); // 클립보드 객체 해제
-      });
-      // 클립보드 복사 실패 시 처리
-      clipboard.on("error", () => {
-          alert("URL 복사에 실패하였습니다.");
-          clipboard.destroy(); // 클립보드 객체 해제
-      });
-      // 클릭 이벤트 트리거로 클립보드 복사 실행
-      clipboard.onClick();
+    // 현재 페이지의 URL 가져오기
+    const currentUrl = window.location.href;
+    // 클립보드 복사 객체 생성
+    const clipboard = new ClipboardJS(copyUrlBtn, {
+      text: function () {
+        return currentUrl; // 복사할 텍스트 설정
+      },
+    });
+    // 클립보드 복사 성공 시 처리
+    clipboard.on("success", () => {
+      alert("URL이 복사되었습니다.");
+      clipboard.destroy(); // 클립보드 객체 해제
+    });
+    // 클립보드 복사 실패 시 처리
+    clipboard.on("error", () => {
+      alert("URL 복사에 실패하였습니다.");
+      clipboard.destroy(); // 클립보드 객체 해제
+    });
+    // 클릭 이벤트 트리거로 클립보드 복사 실행
+    clipboard.onClick();
   });
 </script>
 

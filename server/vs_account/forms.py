@@ -118,7 +118,7 @@ class UserChangeForm(UserChangeForm):
     
     class Meta:
         model = User
-        fields = ["username","mbti", "nickname", "gender"]
+        fields = ["mbti", "nickname", "gender"]
         widgets = {
             "mbti": forms.Select(
                 attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
