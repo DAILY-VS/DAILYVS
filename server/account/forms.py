@@ -6,6 +6,11 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 
 class SignupForm(UserCreationForm):
+    email = forms.EmailField(
+        label="이메일",
+        max_length=254,
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}),
+    )
     username = forms.CharField(
         label="아이디",
         max_length=100,
@@ -66,10 +71,16 @@ class SignupForm(UserCreationForm):
         if User.objects.filter(nickname=nickname).exists():
             raise forms.ValidationError("이미 사용 중인 닉네임입니다.")
         return nickname
-
+    
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("이미 사용 중인 이메일입니다.")
+        return email
+    
     class Meta:
         model = User
-        fields = ["username", "password1", "password2", "mbti", "nickname", "gender"]
+        fields = ["email", "username", "password1", "password2", "mbti", "nickname", "gender"]
         widgets = {
             "mbti": forms.Select(
                 attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
@@ -133,3 +144,7 @@ class UserDeleteForm(forms.ModelForm):
     class Meta:
         model = User
         fields = []
+
+
+class EmailForm(forms.Form):
+    email = forms.EmailField(label="이메일", max_length=254, widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}))

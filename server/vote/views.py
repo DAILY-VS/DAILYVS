@@ -47,7 +47,6 @@ def main(request):
 
     return render(request, "vote/main.html", context)
 
-
 # 투표 디테일 페이지
 def poll_detail(request, poll_id):
     user = request.user
