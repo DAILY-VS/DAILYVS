@@ -78,7 +78,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': 'daily-vs-db.cluster-cjlrrga1cato.ap-northeast-2.rds.amazonaws.com',
-        'NAME': 'djangodb',
+        'NAME': 'daily-vs-db',
         'USER': 'admin',
         'PASSWORD': 'dbpassword',
         'PORT': '3306',
