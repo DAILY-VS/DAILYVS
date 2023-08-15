@@ -13,6 +13,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 # 메인페이지
 def main(request):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "":
+            return redirect("vote:update")
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
     promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]

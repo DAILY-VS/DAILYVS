@@ -44,11 +44,10 @@
     {% if user.is_authenticated %}
         <a href="/accounts/logout" type="button" class="h1">Logout</a>   
     {% else %}                
-        <a href="{% provider_login_url 'kakao' %}"> Kakao Social Login</a>        
+        <a href="{% provider_login_url 'kakao' %}" method='post'> Kakao Social Login</a>        
     {% endif %}
 </div>
 {% comment %} end social {% endcomment %}
-
 
 
         <p class="lets-login">

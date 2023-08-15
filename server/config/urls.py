@@ -8,6 +8,7 @@ urlpatterns = [
     path("", include("vote.urls")), #vote app 
     path("account/", include("vs_account.urls")), #account app
     path('accounts/', include('allauth.urls')),
+
 ]
 
 if settings.DEBUG:
