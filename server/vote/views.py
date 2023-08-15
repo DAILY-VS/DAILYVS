@@ -27,7 +27,7 @@ def main(request):
         polls = polls.order_by("id")  # 등록순
 
     page = request.GET.get("page")
-    random_poll = random.choice(polls) if polls.exists() else None
+    random_poll = random.choice(polls) if polls.exists() else None    
     paginator = Paginator(polls, 4)
     try:
         page_obj = paginator.page(page)
