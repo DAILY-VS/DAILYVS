@@ -249,6 +249,7 @@
 .gender-choice-input:checked {
   background-color: var(--redpink-primary-color);
   color: white;
+  cursor: pointer;
 }
 
 .gender-choice-input {
@@ -285,6 +286,11 @@
 .mbti-detail-option.selected {
   background-color: var(--redpink-primary-color);
   color: white;
+  cursor: pointer;
+}
+
+.mbti-detail-option label:hover {
+  cursor: pointer;
 }
 
 .mbti-choice-input {
