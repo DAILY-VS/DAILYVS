@@ -1,6 +1,6 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section class="main-container">
-  <p>
+  <p class="main-greeting">
     {% if user.is_authenticated %} 안녕하세요,
     <span class="user-nickname">{{user.nickname}}</span> 님!
   </p>
