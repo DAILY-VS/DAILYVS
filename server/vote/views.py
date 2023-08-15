@@ -54,6 +54,10 @@ def main(request):
 
 # 투표 디테일 페이지
 def poll_detail(request, poll_id):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     user = request.user
     poll = get_object_or_404(Poll, id=poll_id)
 
@@ -125,6 +129,10 @@ def poll_like(request):
 # 유저 마이페이지
 @login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     polls = Poll.objects.all()
     page = request.GET.get("page")
 
@@ -266,7 +274,7 @@ def classifyuser(request, poll_id):
                 user.voted_polls.add(poll_id)
                 poll_result, created = Poll_Result.objects.get_or_create(
                     poll_id=poll_id
-                )
+                )   
                 poll_result.total += 1
                 if user.gender == "M":
                     poll_result.choice1_man += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
@@ -321,6 +329,10 @@ def classifyuser(request, poll_id):
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
     if request.user.is_authenticated:
