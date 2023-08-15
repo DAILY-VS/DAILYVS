@@ -2,8 +2,10 @@
 <div id="editor-pick">
   <div class="editor-pick-title">오늘의 볼거리 👀</div>
   <div class="editor-card-section">
+    {% if random_poll.id %}
     <a href="{% url 'vote:detail' random_poll.id %}">
-      <div class="today-topic">📊랜덤 추천 투표</div>
+    {% endif %}      
+    <div class="today-topic">📊랜덤 추천 투표</div>
       <div class="editor-card">
         <div class="card-img">
           <img src="../../../media/{{random_poll.thumbnail}}" />
