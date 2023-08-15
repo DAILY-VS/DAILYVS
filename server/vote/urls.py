@@ -8,7 +8,7 @@ urlpatterns = [
     path("", views.main, name="main"),
     path("<int:poll_id>/", views.poll_detail, name="detail"),
     path("<int:poll_id>/gender", views.classifyuser, name="classifyuser"),
-    path("<int:poll_id>/calcstat", views.calcstat, name="calcstat"),
+    path("<int:poll_id>/calcstat/<int:uservote_id>/<int:nonuservote_id>", views.calcstat, name="calcstat"),
     # 유저
     path("like/", views.poll_like, name="like"),
     path(

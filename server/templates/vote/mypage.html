@@ -37,7 +37,7 @@
           {% for voted_poll in user.voted_polls.all %}
               {% for uservote in uservotes %}
                   {% if voted_poll.id == uservote.poll.id %}
-                    <a href="{% url 'vote:calcstat' uservote.poll.id%}">{{ voted_poll }}</a>
+                    <a href="{% url 'vote:calcstat' uservote.poll.id uservote.id 0%}">{{ voted_poll }}</a>
                     <p>나의 선택: {{ uservote.choice.choice_text }}</p>
                   {% endif %}
               {% endfor %}

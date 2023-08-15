@@ -53,7 +53,8 @@ def poll_detail(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
 
     if user.is_authenticated and user.voted_polls.filter(id=poll_id).exists():
-        calcstat_url = reverse("vote:calcstat", args=[poll_id])
+        uservote=UserVote.objects.filter(poll_id=poll_id).get(user=user)
+        calcstat_url = reverse("vote:calcstat", args=[poll_id,uservote.id,0])
         return redirect(calcstat_url)
     else:
         poll.increase_views()  # 게시글 조회 수 증가
@@ -296,7 +297,7 @@ def classifyuser(request, poll_id):
                         poll_result.choice1_P += 1 if int(choice_id) == 2 * (poll_id) - 1 else 0
                         poll_result.choice2_P += 1 if int(choice_id) == 2 * (poll_id) else 0
                 poll_result.save()
-                calcstat_url = reverse("vote:calcstat", args=[poll_id])
+                calcstat_url = reverse("vote:calcstat", args=[poll_id,vote.id,0])
                 return redirect(calcstat_url)
             except ValueError:
                 vote = NonUserVote(poll=poll, choice=choice)
@@ -315,7 +316,7 @@ def classifyuser(request, poll_id):
 
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
-def calcstat(request, poll_id):
+def calcstat(request, poll_id,uservote_id,nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
     if request.user.is_authenticated:
@@ -561,6 +562,64 @@ def calcstat(request, poll_id):
         if (poll_result.choice1_J + poll_result.choice2_J) != 0
         else 0
     )
+    
+    uservote = UserVote.objects.get(id=uservote_id)
+    try :
+        user=uservote.user
+    except : 
+        nonuser_gender=NonUserVote.objects.get(id=nonuservote_id).gender
+        nonuser_mbti=NonUserVote.objects.get(id=nonuservote_id).MBTI
+    print(user)
+    
+    dict= {}
+    if uservote.choice.id == 1:
+        if user.gender == 'M' :
+            dict['남자'] = choice1_man_percentage
+        elif user.gender == 'W' :
+            dict['여자'] = choice1_woman_percentage
+        for letter in user.mbti:
+            if letter == 'E':
+                dict['E'] = e_choice1_percentage
+            elif letter == 'I':
+                dict['I'] = i_choice1_percentage
+            elif letter == 'S':
+                dict['S'] = s_choice1_percentage
+            elif letter == 'N':
+                dict['N'] = n_choice1_percentage
+            elif letter == 'T':
+                dict['T'] = t_choice1_percentage
+            elif letter == 'F':
+                dict['F'] = f_choice1_percentage
+            elif letter == 'P':
+                dict['P'] = p_choice1_percentage
+            elif letter == 'J':
+                dict['J'] = j_choice1_percentage
+    if uservote.choice.id == 2:
+        if user.gender == 'M' :
+            dict['남자'] = choice2_man_percentage
+        elif user.gender == 'W' :
+            dict['여자'] = choice2_woman_percentage
+        for letter in user.mbti:
+            if letter == 'E':
+                dict['E'] = e_choice2_percentage
+            elif letter == 'I':
+                dict['I'] = i_choice2_percentage
+            elif letter == 'S':
+                dict['S'] = s_choice2_percentage
+            elif letter == 'N':
+                n_choice2_percentage = 10
+                dict['N'] = n_choice2_percentage
+            elif letter == 'T':
+                dict['T'] = t_choice2_percentage
+            elif letter == 'F':
+                dict['F'] = f_choice2_percentage
+            elif letter == 'P':
+                dict['P'] = p_choice2_percentage
+            elif letter == 'J':
+                dict['J'] = j_choice2_percentage
+    print(dict)
+    minimum_key = min(dict,key=dict.get)
+    minimum_value= dict[min(dict,key=dict.get)]
 
     ctx = {
         "total_count": total_count,
@@ -600,7 +659,11 @@ def calcstat(request, poll_id):
         "poll": poll,
         "comments": comments,
         "user_votes": user_votes,
+        "minimum_key": minimum_key,
+        "minimum_value":minimum_value,
     }
+    ##################################################################################
+    
     return render(request, template_name="vote/result.html", context=ctx)
 
 
@@ -672,7 +735,7 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
                 poll_result.choice1_P += 1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
                 poll_result.choice2_P += 1 if nonuservote.choice_id == 2 * (poll_id) else 0
         poll_result.save()
-        calcstat_url = reverse("vote:calcstat", args=[poll_id])
+        calcstat_url = reverse("vote:calcstat", args=[poll_id,0,nonuservote_id])
         return redirect(calcstat_url)
     else:
         return redirect("/")
