@@ -11,5 +11,8 @@ urlpatterns = [
     path("delete/", views.UserDeleteView.as_view(), name="delete"),
     path("email_verification/<int:user_id>/", views.email_verification, name="email_verification"),
     path('call/', views.call, name='call'),
+    path("password_reset_input/", views.password_reset_input, name="password_reset_input"),
+    path("send_password_reset_email/", views.send_password_reset_email, name="send_password_reset_email"),
+    path("password_reset_confirm/<uidb64>/<token>/", views.password_reset_confirm, name="password_reset_confirm"),
     ]
 
