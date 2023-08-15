@@ -37,4 +37,9 @@ urlpatterns = [
         views.poll_nonuserfinal,
         name="nonuserfinal",
     ),
+    path(
+        "fortune",
+        views.fortune,
+        name="fortune",
+    )
 ]

@@ -677,3 +677,6 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         return redirect(calcstat_url)
     else:
         return redirect("/")
+
+def fortune(request):
+    return render(request, "vote/main/main-fortune.html")

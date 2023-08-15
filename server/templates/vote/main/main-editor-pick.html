@@ -5,7 +5,7 @@
     {% if random_poll.id %}
     <a href="{% url 'vote:detail' random_poll.id %}">
     {% endif %}      
-    <div class="today-topic">📊랜덤 추천 투표</div>
+    <div class="today-topic">📊오늘의 투표</div>
       <div class="editor-card">
         <div class="card-img">
           <img src="../../../media/{{random_poll.thumbnail}}" />
@@ -17,17 +17,19 @@
         </div>
       </div>
     </a>
-    <div>
-      <div class="today-taro">🪄포춘 쿠키</div>
+    <div class="fortune-card-section">
+      <a href="{% url 'vote:fortune' %}">
+      <div class="today-fortune">🥠포춘 쿠키</div>
       <div class="editor-card">
         <div class="card-img">
-          <img src="{% static 'img/slide/mintchoco.jpg' %}" />
+          <img src="{% static 'img/slide/fortune.jpg' %}" />
         </div>
         <div class="card-content">
-          <div class="card-content-title">민트초코 호불호 대전</div>
-          <div class="card-content-paragraph">상쾌한 단맛! vs 치약맛!</div>
+          <div class="card-content-title">Daily 포춘 쿠키!</div>
+          <div class="card-content-paragraph">오늘의 운세를 확인해보세요!</div>
         </div>
       </div>
+    </a>
     </div>
   </div>
 </div>
