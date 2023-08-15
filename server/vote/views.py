@@ -15,7 +15,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 def main(request):
     user= request.user
     if user.is_authenticated :
-        if user.gender== "":
+        if user.gender== "" or user.mbti=="":
             return redirect("vote:update")
     polls = Poll.objects.all()
     sort = request.GET.get("sort")

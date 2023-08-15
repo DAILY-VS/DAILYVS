@@ -60,6 +60,18 @@
           </form>
         </div>
       </form>
+
+{% comment %} start social {% endcomment %}
+{% load socialaccount %}
+<div>
+    {% if user.is_authenticated %}
+        <a href="/accounts/logout" type="button" class="h1">Logout</a>   
+    {% else %}                
+        <a href="{% provider_login_url 'kakao' %}" method='post'> <img src="{% static 'img/Kakao.png' %}" alt=""></a>        
+    {% endif %}
+</div>
+{% comment %} end social {% endcomment %}
+
       <div class="login__signup">
         아직 계정이 없으신가요?
         <a href="{% url 'vs_account:signup' %}">회원가입</a>

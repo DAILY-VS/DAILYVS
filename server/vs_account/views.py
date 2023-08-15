@@ -21,7 +21,6 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             auth.login(request, user)
-
             return redirect("/")
         else:
             ctx = {
