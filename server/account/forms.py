@@ -92,6 +92,30 @@ class SignupForm(UserCreationForm):
 
 class UserChangeForm(UserChangeForm):
     password = None
+    gender_choices = [
+        ("M", "남성(Man)"),
+        ("W", "여성(Woman)"),
+    ]
+
+    gender = forms.ChoiceField(
+        label="성별",
+        choices=gender_choices,
+        widget=forms.RadioSelect(attrs={"class": "radio-list"}),
+    )
+
+    MBTI_CHOICES = [
+        ('INFP', 'INFP'), ('ENFP', 'ENFP'), ('INFJ', 'INFJ'), ('ENFJ', 'ENFJ'),
+        ('INTJ', 'INTJ'), ('ENTJ', 'ENTJ'), ('INTP', 'INTP'), ('ENTP', 'ENTP'),
+        ('ISFP', 'ISFP'), ('ESFP', 'ESFP'), ('ISFJ', 'ISFJ'), ('ESFJ', 'ESFJ'),
+        ('ISTP', 'ISTP'), ('ESTP', 'ESTP'), ('ISTJ', 'ISTJ'), ('ESTJ', 'ESTJ'),
+    ]
+
+    mbti = forms.ChoiceField(
+        label="MBTI",
+        choices=MBTI_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+
     def clean_nickname(self):
         nickname = self.cleaned_data.get("nickname")
         user_model = get_user_model()
@@ -102,16 +126,16 @@ class UserChangeForm(UserChangeForm):
         if other_users_with_same_nickname.exists():
             raise forms.ValidationError("이미 사용 중인 닉네임입니다.")
         return nickname
+    
     class Meta:
         model = User
-        fields = []
-        fields = ["nickname", "mbti", "gender"]
+        fields = ["mbti", "nickname", "gender"]
         widgets = {
-            "mbti": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "MBTI를 입력하세요"}
+            "mbti": forms.Select(
+                attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
             ),
-            "gender": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "성별을 입력하세요"}
+            "nickname": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "별명을 입력하세요"}
             ),
         }
 

@@ -2,7 +2,85 @@
 {% load static %}
 {% block content %}
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head >
+<body>
+    <div class="mypage-container">
+        <p class="mypage-greeting">안녕하세요, {{user.nickname}}&nbsp님!</p>
+        <div class="mypage-prof-container">
+            <img src='https://picsum.photos/100/100' alt="">
+            <div class="mypage-info-wrap">
+                <div class="mypage-nickname-wrap">
+                    <span class="mypage-blue">{{user.nickname}}&nbsp</span>
+                    <span id="mypage-gray" class="mypage-blue">님</span>
+                    <a href="{% url 'vote:update' %}" class="mypage-revise-btn">회원 수정</a>
+                </div>
+                <hr class="mypage-hr">
+                <div class="mypage-prof-detail">
+                    <div class="mypage-nickname-wrap">
+                        <span class="mypage-red">MBTI:</span>
+                        <span class="mypage-blue">&nbsp&nbsp{{user.mbti}}</span>
+                    </div>
+                    <div class="mypage-nickname-wrap">
+                        <span class="mypage-red">성별:</span>
+                        <span class="mypage-blue">&nbsp&nbsp{{user.gender}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span>나의 VOTE LIST</span>
+          {% for voted_poll in user.voted_polls.all %}
+              {% for uservote in uservotes %}
+                  {% if voted_poll.id == uservote.poll.id %}
+                    <a href="{% url 'vote:calcstat' uservote.poll.id%}">{{ voted_poll }}</a>
+                    <p>나의 선택: {{ uservote.choice.choice_text }}</p>
+                  {% endif %}
+              {% endfor %}
+          {% endfor %}
+        <br>
+        </br>   
+        <span>나의 VOTE Like LIST</span>
+        {% for poll_like in polls_like %}
+            <a href="{% url 'vote:calcstat' poll_like.id%}">{{ poll_like }}</a>
+        {% endfor %}
+    
+        <div class="pagination-box">
+            <div class="pagination">
+                <a class="page-btn gray">
+                <img src="{% static 'img/icon/left_page.png'%}" style="width: 30px" />
+                </a>
+        
+            <br/>
+            <a class="page-btn">
+                {% comment %} <a class="page-btn gray"> {% endcomment %}
+                {% for page in paginator.page_range %}
+                <a class = "page-btn gray" href="?page={{ page}}">{{page}}</a>
+                {% endfor %}
+                {% comment %} </a> {% endcomment %}
+                <img src="{% static 'img/icon/right_page.png'%}" style="width: 30px" />
+                </a>
+            </div>
+        </div>
+        <hr>
+    </div>
+    {% if request.user == user %}
+    <a href="{% url 'account:change_password' %}">비밀번호 변경</a> 
+    <a id="mypage-user-delete" href="{% url 'account:delete' %}">회원 탈퇴</a>
+{% endif %}
+</body>
+</html>
 
+
+
+<!-- <div class="mypage-prof-detail"></div>
+<input value={{user.username}} disabled>
+<input value={{user.mbti}} disabled>
+<input value={{user.gender}} disabled>
 id: {{user.username}}
 <br>
 nickname: {{user.nickname}}
@@ -25,8 +103,29 @@ MBTI: {{user.mbti}}
    {{ poll.title }}
 </li>
 {% endfor %}
-</ul>
-{% endblock %}
+
+<div class="pagination-box">
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+      <a class="page-btn gray" href="?page={{ page_obj.previous_page_number }}">
+        <img src="{% static 'img/icon/left_page.png' %}" style="width: 30px" />
+      </a>
+      {% endif %} {% for page_number in page_obj.paginator.page_range %}
+      <a
+        class="page-btn {% if page_number == page_obj.number %}red-pink{% endif %}"
+        href="?page={{ page_number }}"
+      >
+        {{ page_number }}
+      </a>
+      {% endfor %} {% if page_obj.has_next %}
+      <a class="page-btn gray" href="?page={{ page_obj.next_page_number }}">
+        <img src="{% static 'img/icon/right_page.png' %}" style="width: 30px" />
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endblock %}
+</div>
 
 
 {% comment %}  {% endcomment %}

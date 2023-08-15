@@ -44,7 +44,7 @@ def signup(request):
             "form": form,
         }
         return render(request, template_name="account/signup.html", context=ctx)
-
+    
 #로그인
 def login(request):  
     if request.method == "POST":

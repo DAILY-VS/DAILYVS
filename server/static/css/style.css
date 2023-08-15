@@ -4,6 +4,9 @@
 @import url("./detail.css");
 @import url("./result.css");
 @import url("./login.css");
+@import url("./mypage.css");
+@import url("./signup.css");
+@import url("./comment.css");
 @font-face {
   font-family: "GongGothicMedium";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff")
@@ -46,6 +49,8 @@ a {
 body {
   width: 100vw;
   display: flex;
+  background-color: white;
+  transition: background-color 1s ease;
 }
 
 :root {
@@ -58,4 +63,16 @@ body {
 
   --mint-secondary-color: #a7dcdd;
   --turquois-secondary-color: #457c9e;
+}
+
+.color-skyblue {
+  background-color: var(--blue-bg-color);
+}
+
+.color-purple {
+  background-color: var(--purple-bg-color);
+}
+
+.pink-bg-color {
+  background-color: var(--pink-bg-color);
 }

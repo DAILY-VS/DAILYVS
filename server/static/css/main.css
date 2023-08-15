@@ -1,6 +1,11 @@
 .main-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+.main-greeting {
+  margin-top: 20px;
 }
 /* carousel */
 .main-carousel-title {
@@ -9,10 +14,30 @@
   font-size: 24px;
 }
 
+/* 기본 스타일 */
+.user-nickname {
+  display: inline-block;
+  margin-left: 5px;
+  font-family: "GongGothicMedium";
+  color: var(--darkblue-primary-color);
+  animation: bounce 1s 3 alternate; /* bounce 애니메이션 적용 */
+}
+
+/* bounce 애니메이션 정의 */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 .carousel-container {
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 300px;
   max-width: 500px;
   margin: 0 auto;
 }
@@ -24,6 +49,39 @@
   height: 900px;
 }
 
+.carousel-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 380px;
+  height: 220px;
+  overflow: hidden;
+}
+
+.carousel-image-container:before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.carousel-image {
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  object-fit: cover;
+}
+
+.carousel-poll-title {
+  color: var(--blue-bg-color);
+  font-family: "GongGothicMedium";
+}
+
+.carousel-poll-content {
+  color: var(--blue-bg-color);
+}
 /*editor-pick*/
 .editor-pick-container {
   height: 500px;
@@ -47,10 +105,16 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.editor-card-section a {
+  text-decoration: none;
+  color: black;
+}
+
 .editor-card {
   width: 13rem;
-  height: 60vh;
+  height: 400px; /* 이 부분 필요하면 더 줄이기 */
   border-radius: 10px;
+  margin-top: 10px;
   background-color: white;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -58,8 +122,10 @@
 
 .card-img img {
   max-width: 100%;
+  height: 300px;
   border-radius: 10px 10px 0 0;
   height: auto;
+  object-fit: cover;
 }
 
 .card-content {
@@ -76,6 +142,7 @@
 .card-content-paragraph {
   margin-top: 5px;
   justify-content: center;
+  font-size: 12px;
 }
 
 /* main-grid */
@@ -92,13 +159,17 @@
   flex-direction: column;
 }
 
+.option_select {
+  margin-left: 20px;
+}
+
 .main-grid-container select {
   width: 100px;
   height: 40px;
-  margin: 20px 30px auto auto;
+  margin: 20px 30px auto 25px;
   padding-left: 15px;
   border: none;
-  font-size: 20px;
+  font-size: 15px;
   color: white;
   background-color: var(--darkblue-primary-color);
 }
@@ -172,4 +243,13 @@
   cursor: pointer;
   background-color: var(--darkblue-primary-color);
   color: white;
+}
+
+.today-topic,
+.today-taro {
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  font-family: "GongGothicMedium";
+  color: var(--darkblue-primary-color);
 }
