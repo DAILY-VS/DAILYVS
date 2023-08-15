@@ -69,8 +69,8 @@
         <hr>
     </div>
     {% if request.user == user %}
-    <a href="{% url 'account:change_password' %}">비밀번호 변경</a> 
-    <a id="mypage-user-delete" href="{% url 'account:delete' %}">회원 탈퇴</a>
+    <a href="{% url 'vs_account:change_password' %}">비밀번호 변경</a> 
+    <a id="mypage-user-delete" href="{% url 'vs_account:delete' %}">회원 탈퇴</a>
 {% endif %}
 </body>
 </html>
