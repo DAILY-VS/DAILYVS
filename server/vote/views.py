@@ -362,6 +362,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     
     uservotes = UserVote.objects.filter(poll_id=poll_id)
     
+
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
 
     total_count = poll_result.total
@@ -740,7 +741,6 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "poll": poll,
         "comments": comments,
         "uservotes": uservotes,
-        #"user_votes": user_votes,
         "minimum_key": minimum_key,
         "minimum_value": 100 - minimum_value,
     }
