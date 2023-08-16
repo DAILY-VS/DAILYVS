@@ -205,7 +205,7 @@ def comment_write_view(request, poll_id):
             user_vote = None
             choice_text = ""  # 또는 다른 기본값 설정
 
-        comment_id = comment.pk
+        comment_id =Comment.objects.last().pk
 
         data = {
             "nickname": user_info.nickname,
@@ -361,7 +361,8 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     comments = Comment.objects.filter(poll_id=poll_id)
     if request.user.is_authenticated:
         user_votes = UserVote.objects.filter(user=request.user)
-    else:
+        print(user_votes)
+    else: 
         user_votes = None  # 또는 user_votes = UserVote.objects.none()
 
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
