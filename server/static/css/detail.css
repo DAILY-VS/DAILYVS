@@ -314,3 +314,13 @@
   color: var(--redpink-primary-color);
   font-size: 24px;
 }
+
+.mypage-like-votelist {
+  display:flex;
+  flex-direction: column;
+}
+
+.mypage-like-column {
+  display:flex;
+  flex-direction: column;
+}
