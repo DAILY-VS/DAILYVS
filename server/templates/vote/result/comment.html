@@ -28,20 +28,12 @@
                     <div class="user-sub-info">{{ comment.user_info.gender}}</div>
                     <div class="user-sub-info choice-color">
                       
-                      {% if user.is_authenticated %}
-                            {% if user_votes %}
-                                {% for user_vote in user_votes %}
-                                    {% if user_vote.poll == comment.poll %}
-                                        {{ user_vote.choice.choice_text }}
-                                    {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                로그인 후 확인 가능합니다.
-                            {% endif %}
-                        {% else %}
-                            로그인 후 확인 가능합니다.
-                        {% endif %}
-                    
+                    {% for uservote in uservotes %}
+                      {%if uservote.user == comment.user_info %}
+                        {{uservote.choice.choice_text}}
+                      {% endif %}
+                    {% endfor %}
+                          
                     </div>
                     <div class="user-sub-info time-line">{{ comment.created_at|timesince }} 전</div>
                 </div>
@@ -148,6 +140,7 @@ $(document).ready(function () {
           csrfmiddlewaretoken: "{{ csrf_token }}",
         },
         success: function (response) {
+          console.log(response.choice)
           // 새로운 댓글 생성
           var newComment =
             '<div class="replyTr' +
@@ -159,7 +152,7 @@ $(document).ready(function () {
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
-            '<div class="user-sub-info choice-color">' + response.chioce + '</div>' +
+            '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
             '<div class="user-sub-info time-line">' +  response.created_at +'</div>' +
             '</div>' +
             '</div>' +
@@ -233,7 +226,7 @@ $(document).ready(function () {
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
-            '<div class="user-sub-info choice-color">' + response.chioce + '</div>' +
+            '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
             '<div class="user-sub-info time-line">'+ '방금 전' + '</div>'  +
             '</div>' +
             '</div>' +
