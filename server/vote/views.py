@@ -608,7 +608,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     try:
         uservote = UserVote.objects.get(id=uservote_id)
         user = uservote.user
-        if uservote.choice.id == 1:
+        if uservote.choice.id == 2*poll_id - 1:
             if user.gender == "M":
                 dict["남자"] = choice1_man_percentage
             elif user.gender == "W":
@@ -630,7 +630,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
                     dict["P"] = p_choice1_percentage
                 elif letter == "J":
                     dict["J"] = j_choice1_percentage
-        if uservote.choice.id == 2:
+        if uservote.choice.id == 2*poll_id :
             if user.gender == "M":
                 dict["남자"] = choice2_man_percentage
             elif user.gender == "W":
@@ -657,7 +657,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         nonuservote = NonUserVote.objects.get(id=nonuservote_id)
         nonuser_gender = nonuservote.gender
         nonuser_mbti = nonuservote.MBTI
-        if nonuservote.choice.id == 1:
+        if nonuservote.choice.id == 2*poll_id - 1:
             if nonuser_gender == "M":
                 dict["남자"] = choice1_man_percentage
             elif nonuser_gender == "W":
@@ -679,7 +679,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
                     dict["P"] = p_choice1_percentage
                 elif letter == "J":
                     dict["J"] = j_choice1_percentage
-        if nonuservote.choice.id == 2:
+        if nonuservote.choice.id == 2*poll_id :
             if nonuser_gender == "M":
                 dict["남자"] = choice2_man_percentage
             elif nonuser_gender == "W":
