@@ -9,6 +9,7 @@ class User(AbstractUser):
     )
     gender = models.CharField(verbose_name="성별", max_length=1, choices=GENDERS)
     nickname = models.CharField(max_length=20)
+    email = models.CharField(max_length=60)
     MBTI_set = (
         ("INFP", "INFP"),
         ("ENFP", "ENFP"),

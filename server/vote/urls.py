@@ -8,7 +8,7 @@ urlpatterns = [
     path("", views.main, name="main"),
     path("<int:poll_id>/", views.poll_detail, name="detail"),
     path("<int:poll_id>/gender", views.classifyuser, name="classifyuser"),
-    path("<int:poll_id>/calcstat", views.calcstat, name="calcstat"),
+    path("<int:poll_id>/calcstat/<int:uservote_id>/<int:nonuservote_id>", views.calcstat, name="calcstat"),
     # 유저
     path("like/", views.poll_like, name="like"),
     path(
@@ -28,7 +28,7 @@ urlpatterns = [
     # path('get_replies/<int:comment_id>/', views.get_replies_view, name='get_replies'),    # 논유저
     # path('<int:poll_id>/<int:nonuservote_id>', views.poll_nonusergender, name='nonusergender'),
     path(
-        "<int:poll_id>/<int:nonuservote_id>/1",
+        "<int:poll_id>/<int:nonuservote_id>/mbti",
         views.poll_nonusermbti,
         name="nonusermbti",
     ),
@@ -37,4 +37,9 @@ urlpatterns = [
         views.poll_nonuserfinal,
         name="nonuserfinal",
     ),
+    path(
+        "fortune",
+        views.fortune,
+        name="fortune",
+    )
 ]

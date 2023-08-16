@@ -32,6 +32,12 @@
           <div class="invalid-feedback">
             {% if error in form.nickname.errors %} {{ error }} {% endif %}
           </div>
+          <div class="invalid-feedback">
+            {% if error in form.email.errors %}
+                {{ error }}
+            {% endif %}
+          </div>
+
           <button type="submit" class="btn btn-primary login-btn">
             회원가입
           </button>

@@ -1,5 +1,6 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section id="capture" class="result-container" data-color="pink">
+  당신은 {{minimum_key}}이지만 {{minimum_value}}%와의 {{minimum_key}}과 다른 선택을 했습니다.
   <div class="result-title">{{poll.title}}</div>
   <div class="result-graph-content">{{poll.content}}</div>
   <div class="graph-information-container">
