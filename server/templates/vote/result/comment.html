@@ -27,20 +27,11 @@
                     <div class="user-sub-info">{{ comment.user_info.mbti}}</div>
                     <div class="user-sub-info">{{ comment.user_info.gender}}</div>
                     <div class="user-sub-info choice-color">
-                      
-                      {% if user.is_authenticated %}
-                            {% if user_votes %}
-                                {% for user_vote in user_votes %}
-                                    {% if user_vote.poll == comment.poll %}
-                                        {{ user_vote.choice.choice_text }}
-                                    {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                로그인 후 확인 가능합니다.
-                            {% endif %}
-                        {% else %}
-                            로그인 후 확인 가능합니다.
-                        {% endif %}
+                    {% for uservote in uservotes %}
+                      {%if uservote.user == comment.user_info %}
+                        {{uservote.choice.choice_text}}
+                      {% endif %}
+                    {% endfor %}                  
                     
                     </div>
                     <div class="user-sub-info time-line">{{ comment.created_at|timesince }} 전</div>
