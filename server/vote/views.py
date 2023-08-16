@@ -359,10 +359,7 @@ def classifyuser(request, poll_id):
 def calcstat(request, poll_id, uservote_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
-    if request.user.is_authenticated:
-        user_votes = UserVote.objects.filter(user=request.user)
-    else:
-        user_votes = None  # 또는 user_votes = UserVote.objects.none()
+    uservotes = UserVote.objects.filter(poll_id=poll_id)
 
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
 
@@ -741,7 +738,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
         "comments": comments,
-        "user_votes": user_votes,
+        "uservotes": uservotes,
         "minimum_key": minimum_key,
         "minimum_value": 100 - minimum_value,
     }
