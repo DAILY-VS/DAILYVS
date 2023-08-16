@@ -168,6 +168,15 @@ def comment_write_view(request, poll_id):
     user_info = request.user  # 현재 로그인한 사용자
     content = request.POST.get("content")
     parent_comment_id = request.POST.get("parent_comment_id")
+    
+    try:
+        user_vote = UserVote.objects.get(user=request.user, poll=poll)  # uservote에서 선택지 불러옴
+        choice_text = user_vote.choice.choice_text
+    
+    except UserVote.DoesNotExist:
+            user_vote = None
+            choice_text = ""  # 또는 다른 기본값 설정
+            
     if content:
         if parent_comment_id:  # 대댓글인 경우
             parent_comment = get_object_or_404(Comment, pk=parent_comment_id)
@@ -195,15 +204,6 @@ def comment_write_view(request, poll_id):
 
         poll.update_comments_count()  # 댓글 수 업데이트
         poll.save()
-
-        try:
-            user_vote = UserVote.objects.get(
-                user=request.user, poll=poll
-            )  # uservote에서 선택지 불러옴
-            choice_text = user_vote.choice.choice_text
-        except UserVote.DoesNotExist:
-            user_vote = None
-            choice_text = ""  # 또는 다른 기본값 설정
 
         comment_id =Comment.objects.last().pk
 
