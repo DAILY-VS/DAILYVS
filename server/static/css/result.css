@@ -238,3 +238,16 @@ text {
   display: flex;
   justify-content: space-between;
 }
+
+.result-loading {
+  margin-top: 15px;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+}
+
+.result-loading div {
+  margin: auto 3px;
+}
