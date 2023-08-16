@@ -4,7 +4,7 @@
   <div class="mypage-container">
     <p class="mypage-greeting">
       안녕하세요,
-      <strong class="mypage-real-username">{{user.nickname}}</strong>&nbsp님!
+      <strong class="mypage-real-username1">{{user.nickname}}</strong>&nbsp님!
     </p>
     <div class="mypage-prof-container">
       <img src="https://picsum.photos/100/100" alt="" />
@@ -13,7 +13,7 @@
           <span class="mypage-blue">{{user.nickname}}&nbsp</span>
           <span id="mypage-gray" class="mypage-blue">님</span>
           <a href="{% url 'vote:update' %}" class="mypage-revise-btn"
-            >회원 수정</a
+            >회원정보 수정</a
           >
         </div>
         <hr class="mypage-hr" />
@@ -29,14 +29,19 @@
         </div>
       </div>
     </div>
-    <span class="mypage-real-username">나의 VOTE LIST</span>
+    <div class="likelist-row"><span class="mypage-heart-img"><img
+    src="{% static 'img/user.png'%}"
+    style="width: 30px"
+  /></span><div class="mypage-real-username">나의 VOTE LIST</div><span></div>
     <div class="mypage-voted-pagination">
         <div>
             {% for voted_poll in page_obj %}
               {% for uservote in uservotes %}
                 {% if voted_poll.id == uservote.poll.id %}
-                  <a href="{% url 'vote:calcstat' uservote.poll.id %}">{{ voted_poll }}</a>
-                  <p>나의 선택: {{ uservote.choice.choice_text }}</p>
+                <div class="mypage-voted-list">
+                  <a href="{% url 'vote:calcstat' uservote.poll.id %}">{{ voted_poll.title }}</a>
+                  <div class="mypage-particular-choice"><span class="mychoice-turq">나의 선택</span> <span class="mychoice-bold">{{ uservote.choice.choice_text }}</span></div>
+                </div>
                 {% endif %}
               {% endfor %}
             {% endfor %}
@@ -69,22 +74,9 @@
         {% endif %}
       </div>
     </div>
-    <div class="mypage-like-votelist">
-      <span class="mypage-real-username">나의 VOTE Like LIST</span>
-      <div class="mypage-like-column" id="polls-like-container">
-        {% for poll_like in page_obj_polls_like %}
-            {% if poll_like.id %}
-                <a href="{% url 'vote:calcstat' poll_like.id %}">{{ poll_like }}</a>
-            {% endif %}
-        {% endfor %}
-    </div>
-      <button id="load-more-btn">더보기</button>
+    {% include 'vote/mypage_like.html' %}
   </div>
   </div>
-    {% if request.user == user %}
-    <a href="{% url 'account:change_password' %}">비밀번호 변경</a>
-    <a id="mypage-user-delete" href="{% url 'account:delete' %}">회원 탈퇴</a>
-    {% endif %}
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
@@ -109,40 +101,6 @@
       });
     });
   </script>
- <script>
-  $(document).ready(function () {
-   var nextPage = {{ page_obj_polls_like.next_page_number }}; // 다음 페이지 번호 초기값
-   var isLoading = false;
-
-   $("#load-more-btn").click(function () {
-       if (isLoading) {
-           return; // 이미 로딩 중인 경우 클릭을 무시
-       }
-       isLoading = true;
-       
-       $.ajax({
-           type: "GET",
-           url: window.location.href + "?page=" + nextPage,
-           success: function (data) {
-               var newPollsLike = $(data).find("#polls-like-container").html();
-               if (newPollsLike.trim() === "") {
-                   $("#load-more-btn").hide();
-               } else {
-                   $("#polls-like-container").append(newPollsLike);
-                   nextPage++;
-               }
-           },
-           error: function () {
-               alert("더보기를 불러오는 도중 오류가 발생했습니다.");
-           },
-           complete: function () {
-               isLoading = false; // 로딩 완료 후 상태 변경
-           }
-       });
-   });
-});
-
-</script>
 
 </div>
 {% endblock %}

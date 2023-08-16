@@ -122,7 +122,6 @@ def poll_like(request):
 def mypage(request):
     polls = Poll.objects.all()
     page = request.GET.get("page")
-
     paginator = Paginator(polls, 4)
     uservotes = UserVote.objects.filter(user=request.user)
     polls_like = Poll.objects.filter(poll_like=request.user)
