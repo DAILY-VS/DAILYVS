@@ -17,6 +17,11 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # 메인페이지
 def main(request):
+    user=request.user
+    if user.is_authenticated and user.custom_active==False:
+        print(34)
+        authentication_url = reverse("account:email_verification", args=[user.id])
+        return redirect(authentication_url)
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
     promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
@@ -387,7 +392,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         if (poll_result.choice1_man + poll_result.choice2_man) != 0
         else 0
     )
-    choice2_man_percentage = (
+    choice2_man_percentage =  (
         (
             np.round(
                 poll_result.choice2_man
