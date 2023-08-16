@@ -166,6 +166,7 @@
   color: var(--darkblue-primary-color);
   font-size: 26px;
   margin: 50px 50px 20px 30px;
+  white-space: break-spaces;
 }
 
 .result-category-name {
@@ -236,4 +237,17 @@ text {
 .modal-footer {
   display: flex;
   justify-content: space-between;
+}
+
+.result-loading {
+  margin-top: 15px;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+}
+
+.result-loading div {
+  margin: auto 3px;
 }
