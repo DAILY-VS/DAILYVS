@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const userLikesPoll = response.data.user_likes_poll;
 
       if (userLikesPoll) {
-        heartImage.src = "../../static/img/icon/pink_heart.png";
+        heartImage.src = "{% static 'img/icon/pink_heart.png' %}";
       } else {
-        heartImage.src = "../../static/img/icon/blank_heart.png";
+        heartImage.src = "{% static 'img/icon/blank_heart.png' %}";
       }
     })
     .catch((error) => {
@@ -37,11 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let userLikesPoll = response.data.user_likes_poll;
 
         if (message === "좋아요 취소") {
-          heartImage.src = "../../static/img/icon/blank_heart.png";
+          heartImage.src = "{% static 'img/icon/blank_heart.png' %}";
           userLikesPoll = false;
           localStorage.setItem("userLikesPoll", false);
         } else {
-          heartImage.src = "../../static/img/icon/pink_heart.png";
+          heartImage.src = "{% static 'img/icon/pink_heart.png' %}";
           userLikesPoll = true;
           localStorage.setItem("userLikesPoll", true);
         }
@@ -60,9 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const userLikesPoll = localStorage.getItem("userLikesPoll");
   if (userLikesPoll === "true") {
-    heartImage.src = "../../static/img/icon/pink_heart.png";
+    heartImage.src = "{% static 'img/icon/pink_heart.png' %}";
   } else {
-    heartImage.src = "../../static/img/icon/blank_heart.png";
+    heartImage.src = "{% static 'img/icon/blank_heart.png' %}";
   }
 
   function getCookie(name) {
