@@ -864,5 +864,17 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         return redirect("/")
 
 
+def get_random_fortune():
+    fortunes = [
+        "포춘 쿠키 문장 1",
+        "포춘 쿠키 문장 2",
+        "포춘 쿠키 문장 3",
+    ]
+    return random.choice(fortunes)
+
+
 def fortune(request):
-    return render(request, "vote/main/main-fortune.html")
+    random_fortune = get_random_fortune()
+    return render(
+        request, "vote/main/main-fortune.html", {"random_fortune": random_fortune}
+    )
