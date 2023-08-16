@@ -178,7 +178,6 @@ def comment_write_view(request, poll_id):
                 user_info=user_info,
                 parent_comment=parent_comment,
             )
-
             parent_comment_data = {
                 "nickname": parent_comment.user_info.nickname,
                 "mbti": parent_comment.user_info.mbti,

@@ -46,7 +46,7 @@
         </br>   
         <span>나의 VOTE Like LIST</span>
         {% for poll_like in polls_like %}
-            <a href="{% url 'vote:calcstat' poll_like.id%}">{{ poll_like }}</a>
+            <a href="{% url 'vote:detail' poll_like.id%}">{{ poll_like }}</a>
         {% endfor %}
     
         <div class="pagination-box">
