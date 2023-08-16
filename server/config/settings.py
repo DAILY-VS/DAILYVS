@@ -5,7 +5,14 @@ from pathlib import Path
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    DATABASE_ENGINE=(str, ''),
+    DATABASE_HOST=(str, ''),
+    DATABASE_NAME=(str, ''),
+    DATABASE_USER=(str, ''),
+    DATABASE_PASSWORD=(str, ''),
+    DATABASE_PORT=(str, ''),
+    DATABASE_OPTIONS_CHARSET=(str, 'utf8mb4'),
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,16 +81,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'daily-vs-db.cluster-cjlrrga1cato.ap-northeast-2.rds.amazonaws.com',
-        'NAME': 'daily-vs-db',
-        'USER': 'admin',
-        'PASSWORD': 'dbpassword',
-        'PORT': '3306',
-        'OPTIONS': {'charset': 'utf8mb4'},
+        'ENGINE': env('DATABASE_ENGINE'),
+        'HOST': env('DATABASE_HOST'),
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'PORT': env('DATABASE_PORT'),
+        'OPTIONS': {'charset': env('DATABASE_OPTIONS_CHARSET')},
     }
 }
-
 
 
 # Password validation
