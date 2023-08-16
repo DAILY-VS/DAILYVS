@@ -17,7 +17,7 @@
           data-user-likes="{{ user_likes_poll }}"
         >
           <img
-            src="{% static 'img/icon/blank_heart.png' %}"
+            src="../../../static/img/icon/blank_heart.png"
             style="width: 30px"
           />
         </span>
@@ -25,6 +25,10 @@
     </div>
     <div class="detail-card-paragraph">{{poll.content}}</div>
   </div>
+      <img
+    src="../../../static/img/icon/blank_heart.png"
+    style="width: 30px"
+    />
 </div>
 <script>
   const isAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
