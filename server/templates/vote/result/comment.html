@@ -32,7 +32,6 @@
                         {{uservote.choice.choice_text}}
                       {% endif %}
                     {% endfor %}                  
-                    
                     </div>
                     <div class="user-sub-info time-line">{{ comment.created_at|timesince }} 전</div>
                 </div>
@@ -150,7 +149,7 @@ $(document).ready(function () {
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
-            '<div class="user-sub-info choice-color">' + response.chioce + '</div>' +
+            '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
             '<div class="user-sub-info time-line">' +  response.created_at +'</div>' +
             '</div>' +
             '</div>' +
@@ -224,7 +223,7 @@ $(document).ready(function () {
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
-            '<div class="user-sub-info choice-color">' + response.chioce + '</div>' +
+            '<div class="user-sub-info choice-color">' + response.choice+ '</div>' +
             '<div class="user-sub-info time-line">'+ '방금 전' + '</div>'  +
             '</div>' +
             '</div>' +
