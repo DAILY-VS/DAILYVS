@@ -24,7 +24,11 @@
           {% endif %}
             <a href="/" id="logo"
               ><img src="{% static 'img/Row.png' %}"/></a>
-            <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/icon/my-page.png'%}" style="width:40px" id="hamburger-icon" /></a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Logged.png'%}" style="width:40px" class="hamburger-icon" /></a>
+            {% else %}
+            <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Unlogged.png'%}" style="width:40px" class="hamburger-icon" /></a>
+            {% endif %}
           </ul>
         </nav>
         <div class="base-block-container">{% block content %} {% endblock %}</div>
