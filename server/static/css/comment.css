@@ -47,6 +47,11 @@
   font-size: 18px;
 }
 
+.comment-top-container {
+  display: flex;
+  flex-direction: row;
+}
+
 .comment-input-container button {
   margin-top: 5px;
   height: 3rem;
@@ -133,6 +138,7 @@
 
 .reply-toggle-btn {
   margin-top: 5px;
+  margin-left:auto;
   border: none;
   width: 50px;
   height: 30px;
@@ -199,4 +205,54 @@
 
 .time-line {
   margin-left: auto;
+}
+
+.comment-sort-area {
+  display:flex;
+  margin-left: auto;
+}
+
+.comment-sort-area form {
+  margin-bottom: 20px;
+}
+
+.comment-sort-area select {
+  width: 100px;
+  height: 40px;
+  margin: 20px 30px auto 25px;
+  padding-left: 15px;
+  border: none;
+  font-size: 15px;
+  color: white;
+  background-color: var(--darkblue-primary-color);
+}
+
+.comment-sort-area select option {
+  width: 100px;
+  height: 40px;
+}
+
+.comment-reply-like-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.comment-reply-like-row .detail-like-container {
+  display:flex;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.comment-reply-like-row .detail-like-container span {
+ display:flex;
+ margin-right: auto;
+}
+
+.comment-reply-like-row .detail-like-container span img {
+  margin-right: 10px;
+}
+
+.like-word {
+  margin-left: 5px;
+  color: var(--darkblue-primary-color)
 }

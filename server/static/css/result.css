@@ -77,17 +77,6 @@
   color: var(--redpink-primary-color);
 }
 
-.result-share-btn {
-  border: none;
-  width: 200px;
-  height: 50px;
-  font-size: 20px;
-  border-radius: 5px;
-  margin-top: 30px;
-  margin-left: auto;
-  margin-right: 10px;
-}
-
 .result-share-btn:hover {
   background-color: var(--redpink-primary-color);
   color: white;
@@ -276,4 +265,36 @@ text {
 
 .result-loading div {
   margin: auto 3px;
+}
+
+.btns-not-bts {
+  display:flex;
+  flex-direction: row;
+
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.result-share-btn {
+  border: none;
+  width: 150px;
+  height: 50px;
+  font-size: 18px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+#capBtn {
+  background-color: var(--darkblue-primary-color);
+  color: white;
+  width: 150px;
+  height: 50px;
+  font-size: 18px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+#capBtn img {
+  margin-left: 5px;
 }

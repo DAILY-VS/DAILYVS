@@ -354,12 +354,6 @@ margin-right: 30px;
   right: 10px;
 }
 
-#capBtn {
-  background-color: var(--darkblue-primary-color);
-  color: white;
-  width: 150px;
-  height: 40px;
-}
 
 .fortune-card-section {
   margin-top: 30px;

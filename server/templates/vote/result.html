@@ -35,11 +35,16 @@
   </div>
   {% endif %}
 </div>
-  <button class="result-share-btn" id="copy-url-btn">
-    공유하기<span
-      ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
-    /></span>
-  </button>
+  <div class="btns-not-bts">
+    <button id="capBtn" style="border: none">캡처하기<span
+        ><img src="{% static 'img/capture.png'%}" style="width: 30px"
+      /></span></button>
+    <button class="result-share-btn" id="copy-url-btn">
+      URL 복사<span
+        ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
+      /></span>
+    </button>
+  </div>
   <div class="graph-category-container">
     <div>{% include 'vote/result/category-gender.html' %}</div>
     <div class="result-category-box">
@@ -73,7 +78,6 @@
   </div>
   <div class="detail-like-container">{% include 'vote/result/like.html' %}</div>
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
-  <button id="capBtn" style="border: none">캡처하기</button>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
 <script>
@@ -171,21 +175,30 @@ let currentNumber2 = 0;
 
 const incrementInterval1 = setInterval(() => {
   currentNumber1++;
-  typingPercent1.textContent = currentNumber1 + "%";
+  if (typingPercent1) {
+    typingPercent1.textContent = currentNumber1 + "%";
+  }
   if (currentNumber1 >= minimumValue) {
     clearInterval(incrementInterval1);
-    typingPercent1.style.color = "#ff495a";
+    if (typingPercent1) {
+      typingPercent1.style.color = "#ff495a";
+    }
   }
 }, 50); // Interval to update the number (milliseconds)
 
 const incrementInterval2 = setInterval(() => {
   currentNumber2++;
-  typingPercent2.textContent = currentNumber2 + "%";
+  if (typingPercent2) {
+    typingPercent2.textContent = currentNumber2 + "%";
+  }
   if (currentNumber2 >= maximumValue) {
     clearInterval(incrementInterval2);
-    typingPercent2.style.color = "#ff495a";
+    if (typingPercent2) {
+      typingPercent2.style.color = "#ff495a";
+    }
   }
 }, 50); // Interval to update the number (milliseconds)
+
 
 </script>
 <script>
