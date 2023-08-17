@@ -91,7 +91,7 @@ nav {
 }
 
 #logo img {
-  width: 130px;
+  width: 145px;
   transition: transform 0.3s ease;
   margin-left: 10px;
 }
@@ -100,43 +100,6 @@ nav {
   cursor: pointer;
 }
 
-#sidebar {
-  font-family: "GongGothicMedium";
-  top: 0;
-  right: -500px;
-  width: 380px;
-  height: 100vh;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  transition: right 0.5s ease-in-out;
-  max-width: 500px;
-  background-color: white;
-  visibility: hidden;
-  position: relative;
-  z-index: 10000;
-}
-
-#sidebar.show {
-  right: -120px;
-  transition: right 0.5s ease-in-out;
-  visibility: visible;
-  z-index: 10000;
-}
-
-#hide-sidebar-icon {
-  padding-top: 20px;
-  color: var(--darkblue-primary-color);
-}
-
-#hide-sidebar-icon img:hover {
-  cursor: pointer;
-  transform: rotate(90deg);
-}
-
-#hide-sidebar-icon img {
-  margin-top: 20px;
-  margin-left: 20px;
-  transition: transform 0.5s ease;
-}
 
 .ham-user-info {
   display: flex;

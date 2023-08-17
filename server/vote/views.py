@@ -673,7 +673,6 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
                 elif letter == "S":
                     dict["S"] = s_choice2_percentage
                 elif letter == "N":
-                    n_choice2_percentage = 10
                     dict["N"] = n_choice2_percentage
                 elif letter == "T":
                     dict["T"] = t_choice2_percentage
@@ -734,6 +733,8 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     print(dict)
     minimum_key = min(dict, key=dict.get)
     minimum_value = dict[min(dict, key=dict.get)]
+    maximum_key = max(dict, key=dict.get)
+    maximum_value = dict[max(dict, key=dict.get)]
 
     ctx = {
         "total_count": total_count,
@@ -775,7 +776,10 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "uservotes": uservotes,
         "minimum_key": minimum_key,
         "minimum_value": 100 - minimum_value,
+        "maximum_key": maximum_key,
+        "maximum_value": maximum_value,
     }
+    print (str(100- minimum_value))
     ##################################################################################
 
     return render(request, template_name="vote/result.html", context=ctx)
@@ -897,9 +901,12 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
 
 def get_random_fortune():
     fortunes = [
-        "포춘 쿠키 문장 1",
-        "포춘 쿠키 문장 2",
-        "포춘 쿠키 문장 3",
+        "그동안의 노력이 보상받는 하루가 예상됩니다!",
+        "매력적인 말로 상대방을 사로잡아 보세요!",
+        "언행에 주의를 해야되는 날입니다!",
+        "예상치 못한 지출에 대비해야되는 날입니다.",
+        "날 죽이지 못하는 고통은 날 더 강하게 만듭니다.",
+        "산책하며 혼자 생각하기 좋은 날입니다.",
     ]
     return random.choice(fortunes)
 

@@ -22,7 +22,7 @@ class SignupForm(UserCreationForm):
             )
         ],
         widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "아이디를 입력하세요"}
+            attrs={"class": "form-control", "placeholder": "아이디 (5자 이상 10자 이하)"}
         ),
     )
     password1 = forms.CharField(
@@ -30,7 +30,7 @@ class SignupForm(UserCreationForm):
         max_length=15,
         min_length=5,
         widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "비밀번호"}
+            attrs={"class": "form-control", "placeholder": "비밀번호 (5자 이상 15자 이하)"}
         ),
     )
     password2 = forms.CharField(
@@ -86,7 +86,7 @@ class SignupForm(UserCreationForm):
                 attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
             ),
             "nickname": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "별명을 입력하세요"}
+                attrs={"class": "form-control", "placeholder": "닉네임 (2자 이상 10자 이하)"}
             ),
         }
 

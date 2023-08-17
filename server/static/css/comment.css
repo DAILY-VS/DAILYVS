@@ -83,7 +83,7 @@
   font-family: "GongGothicMedium";
   font-size: 18px;
   margin-right: 10px;
-  width: 5rem;
+  white-space: nowrap;
 }
 
 .comment-sub-info {

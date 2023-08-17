@@ -15,7 +15,7 @@
   width: 300px;
   height: 50px;
   font-family: "NEXON Lv1 Gothic OTF";
-  font-size: 20px;
+  font-size: 16px;
   border: 1px rgba(128, 128, 128, 0.2) solid;
   background-color: #f4faff;
   padding-left: 20px;
@@ -66,4 +66,52 @@
   background-color: #f4faff;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.change-pw-container{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.change-pw-container form p{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+.change-pw-container form p label{
+  margin-right: auto;
+}
+
+.change-pw-container p input {
+  width: 300px;
+  height: 50px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  font-size: 20px;
+  border: 1px rgba(128, 128, 128, 0.2) solid;
+  background-color: #f4faff;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.change-pw-container ul {
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.change-pw-container button {
+  margin-top: 20px;
+  width: 300px;
+  height: 50px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  font-size: 24px;
+  color: white;
+  background-color: #ff495a;
+  border: none;
+  border-radius: 5px;
+  cursor:pointer;
 }

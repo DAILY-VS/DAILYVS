@@ -27,10 +27,10 @@ class Poll(models.Model):
         return self.title
     
 #투표 선택지 DB
-class Choice(models.Model):
+class Choice(models.Model) :
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=255)
-    image = models.ImageField()
+    image = models.ImageField() 
 
 #회원투표 DB
 class UserVote(models.Model):
