@@ -15,7 +15,17 @@
     <button id="comment_write" class="btnReply">댓글달기</button>
   </div>
   <hr />
-  <div class="replyTable">
+
+  <!-- 정렬 영역 -->
+  <form action="#" method="get">
+    <select name="sort" class="option_select" id="selectSort" onchange="this.form.submit()">
+      <option value="" {% if not sort %}selected{% endif %}>----</option>
+      <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
+      <option value="likes" {% if sort == 'likes' %}selected{% endif %}>좋아요순</option>
+    </select>    
+  </form>
+
+  <div class="replyTable" id="comment-list">
     <div class="replyTody">
       {% for comment in comments reversed%}
       {% if comment.parent_comment is null %}
@@ -367,7 +377,10 @@ $(document).ready(function () {
         });
       } else {
         alert("로그인을 해주세요");
-      }}}
+      }
+    }
+   }
+
 
     function nestedReplyDelete(value) {
     var comment_id = value;
@@ -407,6 +420,7 @@ $(document).ready(function () {
       }
     }
   };
+
 
 </script>
 
