@@ -140,11 +140,21 @@
 
 // 좋아요
 document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
-  likeButton.addEventListener("click", () => {
-    const commentId = likeButton.getAttribute("data-comment-id");
-    const heartImage = likeButton.querySelector("img");
-    
 
+  const commentId = likeButton.getAttribute("data-comment-id");
+  const heartImage = likeButton.querySelector("img");
+
+  // 사용자의 좋아요 상태를 localStorage에서 가져오기
+  const userLikesComment = localStorage.getItem(`userLikesComment-${commentId}`);
+
+  if (userLikesComment === "true") {
+    heartImage.src = "../../../static/img/icon/pink_heart.png";
+  } else {
+    heartImage.src = "../../../static/img/icon/blank_heart.png";
+  }
+
+
+  likeButton.addEventListener("click", () => {
     axios
       .post(
         "/comment_like/",
@@ -158,14 +168,16 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
       .then((response) => {
         const message = response.data.message;
         const likeCount = response.data.like_count;
-        const userLikesComment = response.data.user_likes_comment;
+        const newUserLikesComment = response.data.user_likes_comment;
 
         if (message === "좋아요 취소") {
           heartImage.src = "../../../static/img/icon/blank_heart.png";
           likeButton.setAttribute("data-user-like", "false");
+          localStorage.setItem(`userLikesComment-${commentId}`, "false");
         } else {
           heartImage.src = "../../../static/img/icon/pink_heart.png";
-           likeButton.setAttribute("data-user-like", "true");
+          likeButton.setAttribute("data-user-like", "true");
+          localStorage.setItem(`userLikesComment-${commentId}`, "true");
         }
 
         document.querySelector(
