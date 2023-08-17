@@ -59,7 +59,7 @@
               <span class="like-word"> 명</span>
               <span
                 class="comment-like-button"
-                id="comment-like-button"
+                id="comment-like-button-{{ comment.id }}"
                 data-comment-id="{{ comment.id }}"
                 data-user-like="{{ user_likes_comment }}"
               >
@@ -142,17 +142,16 @@
 document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
 
   const commentId = likeButton.getAttribute("data-comment-id");
+  const userId = "{{ user.id }}";  // 현재 사용자의 ID
   const heartImage = likeButton.querySelector("img");
-
-  // 사용자의 좋아요 상태를 localStorage에서 가져오기
-  const userLikesComment = localStorage.getItem(`userLikesComment-${commentId}`);
+  const likeCountElement = document.querySelector(`#comment-like-count-${commentId}`);
+  const userLikesComment = localStorage.getItem(`userLikesComment-${userId}-${commentId}`);  // 유저별로 독립된 키 생성
 
   if (userLikesComment === "true") {
     heartImage.src = "../../../static/img/icon/pink_heart.png";
   } else {
     heartImage.src = "../../../static/img/icon/blank_heart.png";
   }
-
 
   likeButton.addEventListener("click", () => {
     axios
@@ -170,19 +169,15 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
         const likeCount = response.data.like_count;
         const newUserLikesComment = response.data.user_likes_comment;
 
+        localStorage.setItem(`userLikesComment-${commentId}`, newUserLikesComment);
+
         if (message === "좋아요 취소") {
           heartImage.src = "../../../static/img/icon/blank_heart.png";
-          likeButton.setAttribute("data-user-like", "false");
-          localStorage.setItem(`userLikesComment-${commentId}`, "false");
         } else {
           heartImage.src = "../../../static/img/icon/pink_heart.png";
-          likeButton.setAttribute("data-user-like", "true");
-          localStorage.setItem(`userLikesComment-${commentId}`, "true");
         }
 
-        document.querySelector(
-          `#comment-like-count-${commentId}`
-        ).textContent = likeCount;
+        likeCountElement.textContent = likeCount;
       })
       .catch((error) => {
         if (
@@ -198,13 +193,11 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
   });
 });
 
-
 function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
   if (parts.length === 2) return parts.pop().split(";").shift();
 }
-
 
 
 $(document).ready(function () {
@@ -224,7 +217,6 @@ $(document).ready(function () {
           csrfmiddlewaretoken: "{{ csrf_token }}",
         },
         success: function (response) {
-          console.log(response.choice)
           // 새로운 댓글 생성
           var newComment =
             '<div class="replyTr' +
@@ -250,18 +242,8 @@ $(document).ready(function () {
               response.comment_id +
               ')" />';
           }
-          
-          newComment +=
-            '</div>' +
-            '<div class="nested-reply-input-container">' +
-            '<textarea class="nested-replyContent" id="nested_content_id_' + response.comment_id + '" placeholder="대댓글을 입력해주세요."></textarea>' +
-            '<button class="btnNestedReply" data-comment-id="' + response.comment_id + '">등록</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-          
-          $(".replyTody").prepend(newComment);
-          $(".replyContent").val(""); // 입력창 비우기
+        $(".replyTody").prepend(newComment);
+        $(".replyContent").val("");
         },
         error: function () {
           if ($(".replyContent").val() == "") {

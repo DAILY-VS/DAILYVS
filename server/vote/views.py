@@ -119,7 +119,7 @@ def poll_like(request):
             return JsonResponse(context)
         return redirect("/")
 
-# 투표 게시글 좋아요
+# 댓글 좋아요
 @login_required
 def comment_like(request):
     if request.method == "POST":
@@ -132,21 +132,24 @@ def comment_like(request):
             return JsonResponse({"error": "해당 댓글이 존재하지 않습니다."}, status=404)
 
         user = request.user
+        user_likes_comment = False
+        
         if request.user.is_authenticated:
-            if comment.comment_like.filter(id=user.id).exists():
+            user_id = user.id
+            user_likes_comment = User.objects.get(id=user_id).comment_like.filter(id=comment.id).exists()
+
+            if user_likes_comment:
                 comment.comment_like.remove(user)
                 message = "좋아요 취소"
-                user_likes_comment = False
             else:
                 comment.comment_like.add(user)
                 message = "좋아요"
-                user_likes_comment = True
 
             like_count = comment.comment_like.count()
             context = {
                 "like_count": like_count,
                 "message": message,
-                "user_likes_comment": user_likes_comment,
+                "user_likes_comment": not user_likes_comment,
             }
             return JsonResponse(context)
         return redirect("/")
