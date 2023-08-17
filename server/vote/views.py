@@ -640,7 +640,6 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
                 elif letter == "S":
                     dict["S"] = s_choice2_percentage
                 elif letter == "N":
-                    n_choice2_percentage = 10
                     dict["N"] = n_choice2_percentage
                 elif letter == "T":
                     dict["T"] = t_choice2_percentage
@@ -701,6 +700,8 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     print(dict)
     minimum_key = min(dict, key=dict.get)
     minimum_value = dict[min(dict, key=dict.get)]
+    maximum_key = max(dict, key=dict.get)
+    maximum_value = dict[max(dict, key=dict.get)]
 
     ctx = {
         "total_count": total_count,
@@ -742,7 +743,10 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "uservotes": uservotes,
         "minimum_key": minimum_key,
         "minimum_value": 100 - minimum_value,
+        "maximum_key": maximum_key,
+        "maximum_value": maximum_value,
     }
+    print (str(100- minimum_value))
     ##################################################################################
 
     return render(request, template_name="vote/result.html", context=ctx)

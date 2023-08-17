@@ -15,11 +15,19 @@
     <div id="loading-text">당신의 성향 분석중..</div>
   </div>
  <div class="result-investigation typing-text" >
+  {% if minimum_value > maximum_value %}
     <span class="typing-key">당신은</span>
     <span class="typing-bold">{{ minimum_key }}</span>
     <span class="typing-key">이지만</span>
     <span class="typing-value">0%</span>
-    <span class="typing-key typing-effect"></span>  
+    <span class="typing-key typing-effect"></span>
+  {% else %}
+    <span >당신은</span>
+    <span >{{ maximum_key }}</span>
+    <span >이며</span>
+    <span >{{maximum_value}}%</span>
+    <span >의 {{maximum_key}}와 동일한 선택을 했습니다.</span>
+  {% endif %}
 </div>
   <button class="result-share-btn" id="copy-url-btn">
     공유하기<span
