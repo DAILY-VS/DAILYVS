@@ -1,4 +1,7 @@
-{% extends 'vote/base.html' %} {% load static %} {% block content %}
+{% extends 'vote/base.html' %}
+{% load static %}
+
+{% block content %}
 <div class="fortune-container">
     <p class="fortune-title">🥠 오늘의 포춘 쿠키 🥠</p>
     <img src="{% static 'img/Cookie.png' %}" style="width: 350px"/>
@@ -9,21 +12,41 @@
           <div class="fortune-img-wrap">
             <img class="modal-logo" src="{% static 'img/Only_Text.png' %}" alt="logo">
             <img class="fortune-open-img" src="{% static 'img/slide/BrokenCookie.png' %}" alt="fortune-cookie-open">
-            <p class="fortune-text">{{ random_fortune }}</p>
+            <p class="fortune-text">
+              <span id="fortune-result">
+                {% if user.is_authenticated %}
+                    {{ user.mbti }}인 당신은{{ random_fortune }}
+                {% else %}
+                    {{ random_fortune }}
+                {% endif %}
+              </span>
+          </p>
           </div>
-          <button id="capBtn" style="border: none">캡처하기</button>   
+          <button id="capBtn" style="border: none">캡처하기</button> 
+          <button id="fortune-retry">다시뽑기</button>
         </div>
     </div>
 </div>
 <script>
   const modal = document.querySelector(".fortune-modal");
   const modalOpen = document.querySelector("#fortune-modal-open");
+  const modalRetry = document.querySelector("#fortune-retry");
+  const fortuneResult = document.querySelector("#fortune-result");
+  
   modalOpen.addEventListener("click", () => {
     modal.style.display = "block";
   });
+
   const modalClose = document.querySelector("#fortune-modal-close");
   modalClose.addEventListener("click", () => {
     modal.style.display = "none";
+  });
+
+  modalRetry.addEventListener("click", () => {
+    fortuneResult.textContent = "포춘 쿠키 다시 뽑는 중...";
+    setTimeout(() => {
+      location.reload();
+    }, 2000); // 페이지 새로고침
   });
 </script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
