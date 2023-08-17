@@ -28,20 +28,11 @@
                     <div class="user-sub-info">{{ comment.user_info.mbti}}</div>
                     <div class="user-sub-info">{{ comment.user_info.gender}}</div>
                     <div class="user-sub-info choice-color">
-<<<<<<< HEAD
                       {% for uservote in uservotes %}
                       {%if uservote.user == comment.user_info %}
                         {{uservote.choice.choice_text}}
                       {% endif %}
                     {% endfor %}
-=======
-
-                    {% for uservote in uservotes %}
-                      {%if uservote.user == comment.user_info %}
-                        {{uservote.choice.choice_text}}
-                      {% endif %}
-
->>>>>>> 5bc264079d29a6c31aa17f709462441992feff2d
                     </div>
                     <div class="user-sub-info time-line">{{ comment.created_at|timesince }} 전</div>
                 </div>
@@ -61,9 +52,13 @@
             <!-- 좋아요 표시 영역 -->
             <div class="detail-like-container">
               <span class="like-word">좋아요 : </span>
-              <span id="comment-like-count"> {{ comment.comment_like.count }} </span>
+              <span id="comment-like-count-{{ comment.id }}"
+                    class="comment-like-count">
+                    {{ comment.comment_like.count }}
+              </span>
               <span class="like-word"> 명</span>
               <span
+                class="comment-like-button"
                 id="comment-like-button"
                 data-comment-id="{{ comment.id }}"
                 data-user-like="{{ user_likes_comment }}"
@@ -144,28 +139,11 @@
 <script>
 
 // 좋아요
-document.addEventListener("DOMContentLoaded", () => {
-  const likeButton = document.getElementById("comment-like-button");
-  const commentId = likeButton.getAttribute("data-comment-id");
-  const heartImage = likeButton.querySelector("img");
-
-  axios
-    .get(`/get-like-status/${commentId}/`)
-    .then((response) => {
-      const userLikesComment = response.data.user_likes_comment;
-
-      if (userLikesComment) {
-        heartImage.src = "../../../static/img/icon/pink_heart.png";
-      } else {
-        heartImage.src = "../../../static/img/icon/blank_heart.png";
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-
+document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
   likeButton.addEventListener("click", () => {
-    console.log("클릭!");
+    const commentId = likeButton.getAttribute("data-comment-id");
+    const heartImage = likeButton.querySelector("img");
+    
 
     axios
       .post(
@@ -180,43 +158,40 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((response) => {
         const message = response.data.message;
         const likeCount = response.data.like_count;
-        let userLikesComment = response.data.user_likes_comment;
+        const userLikesComment = response.data.user_likes_comment;
 
         if (message === "좋아요 취소") {
           heartImage.src = "../../../static/img/icon/blank_heart.png";
-          userLikesComment = false;
-          localStorage.setItem("userLikesComment", false);
+          likeButton.setAttribute("data-user-like", "false");
         } else {
           heartImage.src = "../../../static/img/icon/pink_heart.png";
-          userLikesComment = true;
-          localStorage.setItem("userLikesComment", true);
+           likeButton.setAttribute("data-user-like", "true");
         }
 
-        document.querySelector("#comment-like-count").textContent = likeCount;
-        likeButton.setAttribute("data-user-like", userLikesComment);
+        document.querySelector(
+          `#comment-like-count-${commentId}`
+        ).textContent = likeCount;
       })
       .catch((error) => {
-        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        if (
+          confirm(
+            "로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?"
+          )
+        ) {
           var loginUrl = "/account/login/";
           window.location.href = loginUrl;
         }
         console.error("Error:", error);
       });
   });
-
-  const userLikesComment = localStorage.getItem("userLikesComment");
-  if (userLikesComment === "true") {
-    heartImage.src = "../../../static/img/icon/pink_heart.png";
-  } else {
-    heartImage.src = "../../../static/img/icon/blank_heart.png";
-  }
-
-  function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift();
-  }
 });
+
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
 
 
 
