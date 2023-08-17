@@ -28,11 +28,20 @@
                     <div class="user-sub-info">{{ comment.user_info.mbti}}</div>
                     <div class="user-sub-info">{{ comment.user_info.gender}}</div>
                     <div class="user-sub-info choice-color">
+<<<<<<< HEAD
                       {% for uservote in uservotes %}
                       {%if uservote.user == comment.user_info %}
                         {{uservote.choice.choice_text}}
                       {% endif %}
                     {% endfor %}
+=======
+
+                    {% for uservote in uservotes %}
+                      {%if uservote.user == comment.user_info %}
+                        {{uservote.choice.choice_text}}
+                      {% endif %}
+
+>>>>>>> 5bc264079d29a6c31aa17f709462441992feff2d
                     </div>
                     <div class="user-sub-info time-line">{{ comment.created_at|timesince }} 전</div>
                 </div>
