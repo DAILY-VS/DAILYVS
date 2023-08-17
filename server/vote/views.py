@@ -6,7 +6,8 @@ from account.forms import *
 from account.models import *
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.models import AnonymousUser
+from django import template
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -393,12 +394,18 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     
     # 댓글
+    
     comments = Comment.objects.filter(poll_id=poll_id)
     sort = request.GET.get("sort")
     if sort == "likes":
         comments = Comment.objects.filter(poll_id=poll_id).annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')  # 좋아요순
     elif sort == "latest":
         comments = Comment.objects.filter(poll_id=poll_id).order_by('created_at') # 최신순
+    
+    now = datetime.now()
+    for comment in comments:
+        time_difference = now - comment.created_at
+        comment.time_difference = time_difference.total_seconds() / 3600  # 시간 단위로 변환하여 저장
     
     uservotes = UserVote.objects.filter(poll_id=poll_id)
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
