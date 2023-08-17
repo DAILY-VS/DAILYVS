@@ -9,7 +9,7 @@
       {% if poll_like.id %}
         <div class="poll-like-item">
           <div class="circular-image"><img src="../../../media/{{ poll_like.thumbnail}}" style="width:30px"/></div>
-          <a href="{% url 'vote:calcstat' poll_like.id 0 0%}">{{ poll_like.title }}</a>
+          <a href="{% url 'vote:detail' poll_like.id %}">{{ poll_like.title }}</a>
         </div>
       {% endif %}
     {% endfor %}
