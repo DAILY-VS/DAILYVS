@@ -108,8 +108,8 @@ def email_verification(request, user_id):
             smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
             smtp_server.starttls()
 
-            EMAIL_HOST_USER = 'songvv2014@gmail.com'
-            EMAIL_HOST_PASSWORD = 'usrczzcpaxrcorqv'
+            EMAIL_HOST_USER = 'dailyvsofficial@gmail.com'
+            EMAIL_HOST_PASSWORD = 'qousltfgowhagxab'
 
             smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
 
@@ -159,7 +159,7 @@ def send_password_reset_email(email, reset_url):
     
     subject = 'Daily-VS 비밀번호 재설정'
     message = f'비밀번호를 재설정하려면 아래 링크를 클릭하세요:\n\n{reset_link}'
-    sender_email = 'songvv2014@gmail.com'
+    sender_email = 'dailyvs@gmail.com'
     recipient_email = user.email
     msg = f'Subject: {subject}\n\n{message}'
     
@@ -167,8 +167,8 @@ def send_password_reset_email(email, reset_url):
         smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.starttls()
 
-        EMAIL_HOST_USER = 'songvv2014@gmail.com'
-        EMAIL_HOST_PASSWORD = 'usrczzcpaxrcorqv'
+        EMAIL_HOST_USER = 'dailyvsofficial@gmail.com'
+        EMAIL_HOST_PASSWORD = 'qousltfgowhagxab'
 
         smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
         smtp_server.sendmail(sender_email, recipient_email, msg.encode('utf-8'))
