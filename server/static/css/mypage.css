@@ -242,3 +242,17 @@
   display:row;
   align-items: center;
 }
+
+.modify-btns {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.modify-btns a {
+  margin: 50px;
+}
+
+.mypage-update-container button{
+  margin-top: 20px;
+}

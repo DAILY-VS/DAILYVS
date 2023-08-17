@@ -45,6 +45,7 @@
   background-color: #ff495a;
   border: none;
   border-radius: 5px;
+  cursor:pointer;
 }
 
 .login__signup {
@@ -58,7 +59,12 @@
   text-decoration: none;
   color: #ff495a;
   font-weight: bold;
-  margin-left: 3px;
+  margin-left: 5px;
+}
+
+.login__signup span{
+  margin-left:5px;
+  margin-left:5px;
 }
 
 .login__signup a:hover {
@@ -66,7 +72,7 @@
 }
 
 .login-nav {
-  width: 500px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -150,4 +156,8 @@
 
 #modal .title h2 {
   margin: 0;
+}
+
+.email-container {
+  margin-bottom: 20px;
 }
