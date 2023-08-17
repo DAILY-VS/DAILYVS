@@ -1,7 +1,6 @@
 {% load static %} {% block content %} {% csrf_token %}
 <div class="comment-container">
   <div class="comment-category-title">댓글</div>
-  {{poll.comments}}
   <div class="comment-input-container">
     <div class="coment-user-info">
       <div class="comment-user-name">{{ user.nickname }}</div>
@@ -110,7 +109,6 @@
                               />
                             {% endif %}
                           </div>
-                          
                         </div>
                       {% endif %}
                     {% endfor %}
@@ -140,17 +138,15 @@
 
 // 좋아요
 document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
-
   const commentId = likeButton.getAttribute("data-comment-id");
   const userId = "{{ user.id }}";  // 현재 사용자의 ID
   const heartImage = likeButton.querySelector("img");
   const likeCountElement = document.querySelector(`#comment-like-count-${commentId}`);
-  const userLikesComment = localStorage.getItem(`userLikesComment-${userId}-${commentId}`);  // 유저별로 독립된 키 생성
-
+  const userLikesComment = localStorage.getItem(`userLikesComment-${userId}-${commentId}`);
   if (userLikesComment === "true") {
-    heartImage.src = "../../../static/img/icon/pink_heart.png";
+    heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
   } else {
-    heartImage.src = "../../../static/img/icon/blank_heart.png";
+    heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
   }
 
   likeButton.addEventListener("click", () => {
@@ -169,22 +165,18 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
         const likeCount = response.data.like_count;
         const newUserLikesComment = response.data.user_likes_comment;
 
-        localStorage.setItem(`userLikesComment-${commentId}`, newUserLikesComment);
+        localStorage.setItem(`userLikesComment-${userId}-${commentId}`, newUserLikesComment);
 
         if (message === "좋아요 취소") {
-          heartImage.src = "../../../static/img/icon/blank_heart.png";
+          heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
         } else {
-          heartImage.src = "../../../static/img/icon/pink_heart.png";
+          heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
         }
 
         likeCountElement.textContent = likeCount;
       })
       .catch((error) => {
-        if (
-          confirm(
-            "로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?"
-          )
-        ) {
+        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
           var loginUrl = "/account/login/";
           window.location.href = loginUrl;
         }
@@ -199,12 +191,26 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
+// 페이지 로드 시 좋아요 상태 표시
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
+    const commentId = likeButton.getAttribute("data-comment-id");
+    const userId = "{{ user.id }}";  // 현재 사용자의 ID
+    const heartImage = likeButton.querySelector("img");
+    const userLikesComment = localStorage.getItem(`userLikesComment-${userId}-${commentId}`);
+    if (userLikesComment === "true") {
+      heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
+    } else {
+      heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
+    }
+  });
+});
+
 
 $(document).ready(function () {
     //댓글 달기
   $("#comment_write").click(function () {
     var content = $(".replyContent").val();
-
     // 로그인 여부 확인
     var isAuthenticated = "{{ user.is_authenticated }}";
     if (isAuthenticated === "True") {
