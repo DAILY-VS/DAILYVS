@@ -1,14 +1,14 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <div class="fortune-container">
-    <p class="fortune-title">오늘의 포춘 쿠키</p>
-    <img src="{% static 'img/slide/fortune.jpg' %}"/>
+    <p class="fortune-title">🥠 오늘의 포춘 쿠키 🥠</p>
+    <img src="{% static 'img/Cookie.png' %}" style="width: 350px"/>
     <button id="fortune-modal-open">포춘 쿠키 열어보기</button>
     <div class="fortune-modal">
         <div id="capture" class="fortune-modal-content">
           <span class="modal-close-icon" id="fortune-modal-close">&times;</span>
           <div class="fortune-img-wrap">
             <img class="modal-logo" src="{% static 'img/Only_Text.png' %}" alt="logo">
-            <img class="fortune-open-img" src="{% static 'img/slide/fortune-open.jpg' %}" alt="fortune-cookie-open">
+            <img class="fortune-open-img" src="{% static 'img/slide/BrokenCookie.png' %}" alt="fortune-cookie-open">
             <p class="fortune-text">{{ random_fortune }}</p>
           </div>
           <button id="capBtn" style="border: none">캡처하기</button>   
