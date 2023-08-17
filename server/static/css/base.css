@@ -35,6 +35,16 @@ nav {
   padding-right: 5px;
 }
 
+.nav-right {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+}
+
+.nav-right a{
+  margin:0 0 0 20px;
+}
+
 .login-word {
   border: none;
   text-decoration: none;

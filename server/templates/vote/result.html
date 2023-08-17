@@ -14,19 +14,25 @@
     </div>
     <div id="loading-text">당신의 성향 분석중..</div>
   </div>
- <div class="result-investigation typing-text" >
+ <div class="result-investigation" >
   {% if minimum_value > maximum_value %}
+  <div class="typing-line">
     <span class="typing-key">당신은</span>
     <span class="typing-bold">{{ minimum_key }}</span>
     <span class="typing-key">이지만</span>
-    <span class="typing-value">0%</span>
-    <span class="typing-key typing-effect"></span>
+    <span class="typing-value1"><span class="typing-percent">0</span></span>
+    <span class="typing-text1"><span class="typing-cursor"></span></span>
+  </div>
   {% else %}
-    <span >당신은</span>
-    <span >{{ maximum_key }}</span>
-    <span >이며</span>
-    <span >{{maximum_value}}%</span>
-    <span >의 {{maximum_key}}와 동일한 선택을 했습니다.</span>
+  <div class="typing-line">
+    <span class="typing-key">당신은</span>
+    <span class="typing-bold">{{ maximum_key }}</span>
+    <span class="typing-key">이며</span>
+    <span class="typing-value2"><span class="typing-percent">0</span></span>
+    <span class="typing-key">의</span>
+    <span class="typing-bold">{{maximum_key}} </span>
+    <span class="typing-text2"><span class="typing-cursor"></span></span>
+  </div>
   {% endif %}
 </div>
   <button class="result-share-btn" id="copy-url-btn">
@@ -130,57 +136,56 @@
 </script>
 
 <script>
-const typingValueElement = document.querySelector('.typing-value');
-const typingKeyElements = document.querySelectorAll('.typing-key');
-
-let currentKeyIndex = 0;
-let typingInProgress = false;
-
-function typeNextWord(callback) {
-  if (currentKeyIndex < typingKeyElements.length) {
-    const currentKeyElement = typingKeyElements[currentKeyIndex];
-    const word = currentKeyElement.textContent;
-    currentKeyIndex++;
-
-    let currentCharIndex = 0;
-    const typingCharInterval = setInterval(() => {
-      currentCharIndex++;
-      const partialWord = word.slice(0, currentCharIndex);
-      currentKeyElement.textContent = partialWord;
-
-      if (currentCharIndex >= word.length) {
-        clearInterval(typingCharInterval);
-        setTimeout(() => {
-          currentKeyElement.textContent = word;
-          typeNextWord(callback);
-        }, 500); // Delay before typing the next word
-      }
-    }, 100); // Typing speed for each character
-  } else {
-    callback(); 
+function typeTextWithCursor(text, typingTextElement) {
+  if (!typingTextElement) {
+    return;
   }
+
+  let charIndex = 0;
+  const typingInterval = setInterval(() => {
+    typingTextElement.textContent += text[charIndex];
+    charIndex++;
+    if (charIndex === text.length) {
+      clearInterval(typingInterval);
+    }
+  }, 200);
 }
 
-function startTypingEffect() {
-  if (!typingInProgress) {
-    typingInProgress = true;
+const text1 = "와 다른 선택을 했습니다.";
+const typingText1 = document.querySelector(".typing-text1");
+typeTextWithCursor(text1, typingText1);
 
-    let currentValue = 0;
-    const targetValue = {{minimum_value}};
-    const step = targetValue / 60; // 총 40단계로 애니메이션 진행
+const text2 = "(과)와 동일한 선택을 했습니다.";
+const typingText2 = document.querySelector(".typing-text2");
+typeTextWithCursor(text2, typingText2);
 
-    const typingInterval = setInterval(() => {
-      currentValue += step;
-      typingValueElement.textContent = `${currentValue.toFixed(1)}%`;
+</script>
+<script>
+const typingPercent1 = document.querySelector(".typing-value1 .typing-percent");
+const typingPercent2 = document.querySelector(".typing-value2 .typing-percent");
+const minimumValue = {{ minimum_value }}; // Replace with the actual minimum value
+const maximumValue = {{ maximum_value }}; // Replace with the actual maximum value
 
-      if (currentValue >= targetValue) {
-        clearInterval(typingInterval);
-      }
-    }, 90);
+let currentNumber1 = 0;
+let currentNumber2 = 0;
+
+const incrementInterval1 = setInterval(() => {
+  currentNumber1++;
+  typingPercent1.textContent = currentNumber1 + "%";
+  if (currentNumber1 >= minimumValue) {
+    clearInterval(incrementInterval1);
+    typingPercent1.style.color = "#ff495a";
   }
-}
+}, 50); // Interval to update the number (milliseconds)
 
-typeNextWord(startTypingEffect); // Start the typing sequence with the callback
+const incrementInterval2 = setInterval(() => {
+  currentNumber2++;
+  typingPercent2.textContent = currentNumber2 + "%";
+  if (currentNumber2 >= maximumValue) {
+    clearInterval(incrementInterval2);
+    typingPercent2.style.color = "#ff495a";
+  }
+}, 50); // Interval to update the number (milliseconds)
 
 </script>
 <script>
@@ -193,7 +198,7 @@ typeNextWord(startTypingEffect); // Start the typing sequence with the callback
                     loadingTextElement.textContent = '분석완료!';
                     loadingicon.style.display = 'none';
                 }
-            }, 6500);
+            }, 4000);
         });
 </script>
 {% endblock %}
