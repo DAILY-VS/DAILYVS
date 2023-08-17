@@ -1,51 +1,51 @@
 // comment.js
 
-$(document).ready(function () {
-  var page = 1; // 초기 페이지 번호
+// $(document).ready(function () {
+//   var page = 1; // 초기 페이지 번호
 
-  // 스크롤 이벤트 리스너 등록
-  $(window).scroll(function () {
-    if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
-      loadMoreData(page);
-      page++;
-    }
-  });
+//   // 스크롤 이벤트 리스너 등록
+//   $(window).scroll(function () {
+//     if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+//       loadMoreData(page);
+//       page++;
+//     }
+//   });
 
-  // 새로운 데이터를 불러오는 함수
-  function loadMoreData(page) {
-    $.ajax({
-      url: "/get_comments/?page=" + page, // Django API 뷰 URL
-      type: "GET",
-      beforeSend: function () {
-        $(".loader").show(); // 로딩 스피너 표시
-      },
-      success: function (data) {
-        if (data.comments.length > 0) {
-          var comments = data.comments;
-          var html = "";
+//   // 새로운 데이터를 불러오는 함수
+//   function loadMoreData(page) {
+//     $.ajax({
+//       url: "/get_comments/?page=" + page, // Django API 뷰 URL
+//       type: "GET",
+//       beforeSend: function () {
+//         $(".loader").show(); // 로딩 스피너 표시
+//       },
+//       success: function (data) {
+//         if (data.comments.length > 0) {
+//           var comments = data.comments;
+//           var html = "";
 
-          for (var i = 0; i < comments.length; i++) {
-            html +=
-              '<div class="comment">' +
-              "<p>" +
-              comments[i].content +
-              "</p>" +
-              "<p>" +
-              comments[i].created_at +
-              "</p>" +
-              "</div>";
-          }
+//           for (var i = 0; i < comments.length; i++) {
+//             html +=
+//               '<div class="comment">' +
+//               "<p>" +
+//               comments[i].content +
+//               "</p>" +
+//               "<p>" +
+//               comments[i].created_at +
+//               "</p>" +
+//               "</div>";
+//           }
 
-          $(".replyTody").append(html); // 새로운 댓글을 추가합니다.
-        }
-        $(".loader").hide(); // 로딩 스피너 숨김
-      },
-      error: function () {
-        // 오류 처리
-      },
-    });
-  }
-});
+//           $(".replyTody").append(html); // 새로운 댓글을 추가합니다.
+//         }
+//         $(".loader").hide(); // 로딩 스피너 숨김
+//       },
+//       error: function () {
+//         // 오류 처리
+//       },
+//     });
+//   }
+// });
 
 //대댓글 토글
 document.addEventListener("DOMContentLoaded", function () {
@@ -58,9 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ".nested-reply-container[data-parent-id='" + commentId + "']"
       );
       var nestedInputContainer = document.querySelector(
-        " .nested-reply-input-container" + commentId
+        ".nested-reply-input-container[data-parent-id='" + commentId + "']"
       );
-      console.log(nestedInputContainer);
 
       if (parentContainer) {
         if (
@@ -79,8 +78,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
+    
+    // 대댓글 수 초기화
+    var commentId = button.getAttribute("data-comment-id");
+    updateNestedCount(commentId);
+  });
+
+  // 페이지 로드 시 모든 댓글의 대댓글 수 초기화
+  var allCommentButtons = document.querySelectorAll(".reply-toggle-btn");
+  allCommentButtons.forEach(function (button) {
+    var commentId = button.getAttribute("data-comment-id");
+    updateNestedCount(commentId);
   });
 });
+
+
 
 //대댓글 수 카운트
 function updateNestedCount(comment_id) {
