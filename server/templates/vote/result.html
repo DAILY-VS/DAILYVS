@@ -15,14 +15,18 @@
     <div id="loading-text">당신의 성향 분석중..</div>
   </div>
  <div class="result-investigation typing-text" >
-  {% if minimum_value < 50 %}
-    <span class="typing-key">당신은 당신의 MBTI와 성별에 맞는 선택을</span>
-  {% else %}
+  {% if minimum_value > maximum_value %}
     <span class="typing-key">당신은</span>
     <span class="typing-bold">{{ minimum_key }}</span>
     <span class="typing-key">이지만</span>
     <span class="typing-value">0%</span>
     <span class="typing-key typing-effect"></span>
+  {% else %}
+    <span >당신은</span>
+    <span >{{ maximum_key }}</span>
+    <span >이며</span>
+    <span >{{maximum_value}}%</span>
+    <span >의 {{maximum_key}}와 동일한 선택을 했습니다.</span>
   {% endif %}
 </div>
   <button class="result-share-btn" id="copy-url-btn">
