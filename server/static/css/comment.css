@@ -93,8 +93,7 @@
 
 .comment-sub-info {
   display: grid;
-  grid-template-columns: 1fr 0.5fr 1fr 5fr;
-  width: 500px;
+  grid-template-columns: 1fr 0.5fr 1fr;
   font-size: 12px;
 }
 
@@ -106,16 +105,22 @@
   border-bottom: 1px solid var(--mint-secondary-color);
 }
 
+.stored-comment-content {
+  white-space: pre-line;
+}
+
 .comment-created-time {
   font-size: 12px;
   color: gray;
 }
 
 .comment-content-delete {
-  display: flex;
-  flex-direction: row;
-  text-align: left;
-}
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    align-items: center;
+    width: 450px;
+  }
 
 .comment-content-delete img {
   margin-left: auto;
@@ -156,7 +161,7 @@
 .nested-comment-top-section {
   display: flex;
   flex-direction: row;
-  width: 420px;
+  width: 100%;
 }
 
 .nested-stored-comment-container {
@@ -204,7 +209,12 @@
 }
 
 .time-line {
+  display:flex;
   margin-left: auto;
+  margin-right: 20px;
+  font-size: 12px;
+  color: gray;
+  align-items: center;
 }
 
 .comment-sort-area {
@@ -255,4 +265,18 @@
 .like-word {
   margin-left: 5px;
   color: var(--darkblue-primary-color)
+}
+
+[class^="replyTr"] {
+  width: 400px;
+}
+
+#load-more-comments {
+  border: var(--darkblue-primary-color) 1px solid;
+  background-color:var(--darkblue-primary-color);
+  color: white;
+  height:5vh;
+  width: 200px;
+  font-size: 16px;
+  margin: 10px auto;
 }
