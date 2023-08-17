@@ -47,16 +47,14 @@
                       {% endif %}
                     {% endfor %}
                     </div>
-
-                    <div class="user-sub-info time-line">
+                </div>
+                    <div class="time-line">
                       {% if comment.time_difference > 6 %}
                         {{ comment.created_at|date:"m월 d일 H:i" }}
                       {% else %}
                         {{ comment.created_at|timesince }} 전
                       {% endif %}
-                    </div>
-
-                </div>
+                    </div>  
             </div>
             <div class="comment-content-delete">
                 <div class="stored-comment-content">{{ comment.content }}</div>
@@ -116,9 +114,8 @@
                                 {% endfor %}
                               </div>
                             </div>
-                            <div class="user-sub-info time-line">{{ child_comment.created_at|timesince }} 전</div>
+                            <div class="time-line">{{ child_comment.created_at|timesince }} 전</div>
                           </div>
-                          
                           <div class="comment-content-delete">
                             <div class="stored-comment-content">{{ child_comment.content }}</div>
                             {% if user.is_authenticated and user.nickname == child_comment.user_info.nickname %}
@@ -148,6 +145,7 @@
                 </div>
               {% endif %}
               {% endfor %}
+               <button id="load-more-comments">댓글 더보기</button>
             </div>
           </div>
       </div>
@@ -256,7 +254,7 @@ $(document).ready(function () {
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
             '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
-            '<div class="user-sub-info time-line">' +  response.created_at +'</div>' +
+            '<div class="time-line">' +  response.created_at +'</div>' +
             '</div>' +
             '</div>' +
             '<div class="comment-content-delete">' +
@@ -311,25 +309,21 @@ $(document).ready(function () {
           // 새로운 대댓글 생성
           var newNestedComment =
             '<div class="nested-replyTr' + response.comment_id + '">' +
-            '<div class="nested-row">' +
-            '<img src="{% static "img/icon/reply.png" %}" style="width:25px; height: 25px;" />' +
-            '<div class="nested-stored-comment-container">' +
-            '<div class="nested-comment-top-section">' +
+            '<div class="nested-row">' + ' <div>' +
+            '<img src="{% static "img/icon/reply.png" %}" style="width:25px; height: 25px;" />' + '</div>' +
             '<div class="comment-nickname">' + response.nickname + '</div>' +
             '<div class="comment-sub-info">' +
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
             '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
-            '<div class="user-sub-info time-line">'+ '방금 전' + '</div>'  +
             '</div>' +
+            '<div class="time-line">'+ '방금 전' + '</div>'  +
             '</div>' +
             '<div class="comment-content-delete">' +
-            '<div class="stored-comment-content">' + response.content + '</div>' +
+            '<div class="stored-comment-content" style="margin-left: 20px;">' + response.content + '</div>' +
             '<img src="{% static "img/icon/x.png" %}" type="button" value="x" onclick="nestedReplyDelete(' + response.comment_id + ')" />' +
             '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
+            '</div>' ;
 
           updateNestedCount(comment_id);
           // 선택한 부모 댓글 바로 하단에 추가
@@ -434,7 +428,42 @@ $(document).ready(function () {
     }
   };
 
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const loadMoreComments = document.getElementById('load-more-comments');
+    const commentItems = document.querySelectorAll('[class^="replyTr"]');
+    const batchSize = 6;
+    let visibleCount = batchSize;
 
+    // 초기에는 일부 항목만 보이도록 설정
+    for (let i = 0; i < commentItems.length; i++) {
+      if (i < visibleCount) {
+        commentItems[i].style.display = 'flex';
+      } else {
+        commentItems[i].style.display = 'none';
+      }
+    }
+
+    // "더보기" 버튼 클릭 시 처리
+    loadMoreComments.addEventListener('click', function () {
+      visibleCount += batchSize;
+      for (let i = 0; i < commentItems.length; i++) {
+        if (i < visibleCount) {
+          commentItems[i].style.display = 'flex';
+        } else {
+          commentItems[i].style.display = 'none';
+        }
+      }
+
+      // 더 이상 보여줄 항목이 없으면 버튼 비활성화
+      if (visibleCount >= commentItems.length) {
+        loadMoreComments.disabled = true;
+        loadMoreComments.style.backgroundColor = '#c4c4c4';
+        loadMoreComments.textContent = '더 이상 항목 없음';
+      }
+    });
+  });
 </script>
 
 {% endblock %}
