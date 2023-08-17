@@ -148,3 +148,24 @@ class UserDeleteForm(forms.ModelForm):
 
 class EmailForm(forms.Form):
     email = forms.EmailField(label="이메일", max_length=30, widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}))
+
+
+
+class PasswordResetForm(forms.Form):
+    new_password = forms.CharField(
+        label='비밀번호',
+        max_length=15,
+        min_length=5,
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "비밀번호 (5자 이상 15자 이하)"}
+        ),       
+        )
+    confirm_new_password = forms.CharField(
+        label='새 비밀번호',
+        max_length=15,
+        min_length=5,
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "비밀번호 확인"}
+        ),       
+        )
+ 
