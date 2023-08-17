@@ -15,11 +15,15 @@
     <div id="loading-text">당신의 성향 분석중..</div>
   </div>
  <div class="result-investigation typing-text" >
-  <span class="typing-key">당신은</span>
-  <span class="typing-bold">{{ minimum_key }}</span>
-  <span class="typing-key">이지만</span>
-  <span class="typing-value">0%</span>
-  <span class="typing-key typing-effect"></span>
+  {% if minimum_value < 50 %}
+    <span class="typing-key">당신은 당신의 MBTI와 성별에 맞는 선택을</span>
+  {% else %}
+    <span class="typing-key">당신은</span>
+    <span class="typing-bold">{{ minimum_key }}</span>
+    <span class="typing-key">이지만</span>
+    <span class="typing-value">0%</span>
+    <span class="typing-key typing-effect"></span>
+  {% endif %}
 </div>
   <button class="result-share-btn" id="copy-url-btn">
     공유하기<span
