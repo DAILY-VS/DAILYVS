@@ -392,7 +392,14 @@ def classifyuser(request, poll_id):
 # 회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id, uservote_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
+    
+    # 댓글
     comments = Comment.objects.filter(poll_id=poll_id)
+    sort = request.GET.get("sort")
+    if sort == "likes":
+        comments = Comment.objects.filter(poll_id=poll_id).annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')  # 좋아요순
+    elif sort == "latest":
+        comments = Comment.objects.filter(poll_id=poll_id).order_by('created_at') # 최신순
     
     uservotes = UserVote.objects.filter(poll_id=poll_id)
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
@@ -778,6 +785,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "minimum_value": 100 - minimum_value,
         "maximum_key": maximum_key,
         "maximum_value": maximum_value,
+        "sort": sort
     }
     print (str(100- minimum_value))
     ##################################################################################
