@@ -53,12 +53,14 @@
   text-align: center;
   line-height: 30px;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .mypage-real-username1 {
   font-family: "GongGothicMedium";
   color: var(--darkblue-primary-color);
   font-size: 20px;
+  white-space:nowrap;
 } 
 
 .mypage-real-username{
@@ -81,6 +83,7 @@
 .mypage-blue {
   color: #282732;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 #mypage-gray {
