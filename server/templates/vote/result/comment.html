@@ -47,6 +47,28 @@
                     />
                 {% endif %}
             </div>
+
+            <!-- 좋아요 표시 영역 -->
+            <div class="detail-like-container">
+              <span class="like-word">좋아요 : </span>
+              <span id="comment-like-count-{{ comment.id }}"
+                    class="comment-like-count">
+                    {{ comment.comment_like.count }}
+              </span>
+              <span class="like-word"> 명</span>
+              <span
+                class="comment-like-button"
+                id="comment-like-button-{{ comment.id }}"
+                data-comment-id="{{ comment.id }}"
+                data-user-like="{{ user_likes_comment }}"
+              >
+                <img
+                  src="{% static 'img/icon/blank_heart.png'%}"
+                  style="width: 30px"
+                />
+              </span>
+            </div>
+
             <button id="reply-toggle-btn-{{ comment.id }}" class="reply-toggle-btn" data-comment-id="{{ comment.id }}">답글 <span id="nestedCount{{ comment.id }}" data-comment-id="{{ comment.id }}"></span></button>
             </div>
         </div>
@@ -85,7 +107,6 @@
                               />
                             {% endif %}
                           </div>
-                          
                         </div>
                       {% endif %}
                     {% endfor %}
@@ -113,11 +134,81 @@
 <script src="{% static 'js/comment.js' %}"></script>
 <script>
 
+// 좋아요
+document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
+  const commentId = likeButton.getAttribute("data-comment-id");
+  const userId = "{{ user.id }}";  // 현재 사용자의 ID
+  const heartImage = likeButton.querySelector("img");
+  const likeCountElement = document.querySelector(`#comment-like-count-${commentId}`);
+  const userLikesComment = localStorage.getItem(`userLikesComment-${userId}-${commentId}`);
+  if (userLikesComment === "true") {
+    heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
+  } else {
+    heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
+  }
+
+  likeButton.addEventListener("click", () => {
+    axios
+      .post(
+        "/comment_like/",
+        { comment_id: commentId },
+        {
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+        }
+      )
+      .then((response) => {
+        const message = response.data.message;
+        const likeCount = response.data.like_count;
+        const newUserLikesComment = response.data.user_likes_comment;
+
+        localStorage.setItem(`userLikesComment-${userId}-${commentId}`, newUserLikesComment);
+
+        if (message === "좋아요 취소") {
+          heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
+        } else {
+          heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
+        }
+
+        likeCountElement.textContent = likeCount;
+      })
+      .catch((error) => {
+        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+          var loginUrl = "/account/login/";
+          window.location.href = loginUrl;
+        }
+        console.error("Error:", error);
+      });
+  });
+});
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+// 페이지 로드 시 좋아요 상태 표시
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
+    const commentId = likeButton.getAttribute("data-comment-id");
+    const userId = "{{ user.id }}";  // 현재 사용자의 ID
+    const heartImage = likeButton.querySelector("img");
+    const userLikesComment = localStorage.getItem(`userLikesComment-${userId}-${commentId}`);
+    if (userLikesComment === "true") {
+      heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
+    } else {
+      heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
+    }
+  });
+});
+
+
 $(document).ready(function () {
     //댓글 달기
   $("#comment_write").click(function () {
     var content = $(".replyContent").val();
-
     // 로그인 여부 확인
     var isAuthenticated = "{{ user.is_authenticated }}";
     if (isAuthenticated === "True") {
@@ -130,7 +221,6 @@ $(document).ready(function () {
           csrfmiddlewaretoken: "{{ csrf_token }}",
         },
         success: function (response) {
-          console.log(response.choice)
           // 새로운 댓글 생성
           var newComment =
             '<div class="replyTr' +
@@ -156,18 +246,8 @@ $(document).ready(function () {
               response.comment_id +
               ')" />';
           }
-          
-          newComment +=
-            '</div>' +
-            '<div class="nested-reply-input-container">' +
-            '<textarea class="nested-replyContent" id="nested_content_id_' + response.comment_id + '" placeholder="대댓글을 입력해주세요."></textarea>' +
-            '<button class="btnNestedReply" data-comment-id="' + response.comment_id + '">등록</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-          
-          $(".replyTody").prepend(newComment);
-          $(".replyContent").val(""); // 입력창 비우기
+        $(".replyTody").prepend(newComment);
+        $(".replyContent").val("");
         },
         error: function () {
           if ($(".replyContent").val() == "") {

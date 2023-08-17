@@ -138,3 +138,4 @@ if (days > 0) {
 } else {
   timeAgo = "방금 전";
 }
+

@@ -8,8 +8,8 @@ class User(AbstractUser):
         ("W", "여성(Woman)"),
     )
     gender = models.CharField(verbose_name="성별", max_length=1, choices=GENDERS)
-    nickname = models.CharField(max_length=20)
-    email = models.CharField(max_length=60)
+    nickname = models.CharField(max_length=10)
+    email = models.CharField(max_length=30)
     MBTI_set = (
         ("INFP", "INFP"),
         ("ENFP", "ENFP"),
@@ -29,7 +29,7 @@ class User(AbstractUser):
         ("ESTJ", "ESTJ"),
     )
     mbti=models.CharField(verbose_name='MBTI', max_length=4, choices=MBTI_set)
-    nickname = models.CharField(verbose_name='닉네임',max_length=20)
+    nickname = models.CharField(verbose_name='닉네임',max_length=10)
     voted_polls = models.ManyToManyField('vote.Poll', blank=True) #투표한 주제 리스트 
     custom_active = models.BooleanField(default=False)
 

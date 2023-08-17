@@ -8,12 +8,12 @@ from django.core.validators import RegexValidator
 class SignupForm(UserCreationForm):
     email = forms.EmailField(
         label="이메일",
-        max_length=254,
+        max_length=30,
         widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}),
     )
     username = forms.CharField(
         label="아이디",
-        max_length=100,
+        max_length=10,
         min_length=5,
         validators=[
             RegexValidator(
@@ -27,7 +27,7 @@ class SignupForm(UserCreationForm):
     )
     password1 = forms.CharField(
         label="비밀번호",
-        max_length=50,
+        max_length=15,
         min_length=5,
         widget=forms.PasswordInput(
             attrs={"class": "form-control", "placeholder": "비밀번호 (5자 이상 15자 이하)"}
@@ -35,7 +35,7 @@ class SignupForm(UserCreationForm):
     )
     password2 = forms.CharField(
         label="확인 비밀번호",
-        max_length=50,
+        max_length=15,
         min_length=5,
         widget=forms.PasswordInput(
             attrs={"class": "form-control", "placeholder": "비밀번호 확인"}
@@ -147,4 +147,4 @@ class UserDeleteForm(forms.ModelForm):
 
 
 class EmailForm(forms.Form):
-    email = forms.EmailField(label="이메일", max_length=254, widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}))
+    email = forms.EmailField(label="이메일", max_length=30, widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}))

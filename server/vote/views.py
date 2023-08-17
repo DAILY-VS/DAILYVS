@@ -119,6 +119,40 @@ def poll_like(request):
             return JsonResponse(context)
         return redirect("/")
 
+# 댓글 좋아요
+@login_required
+def comment_like(request):
+    if request.method == "POST":
+        req = json.loads(request.body)
+        comment_id = req["comment_id"]
+
+        try:
+            comment = Comment.objects.get(id=comment_id)
+        except Comment.DoesNotExist:
+            return JsonResponse({"error": "해당 댓글이 존재하지 않습니다."}, status=404)
+
+        user = request.user
+        user_likes_comment = False
+        
+        if request.user.is_authenticated:
+            user_id = user.id
+            user_likes_comment = User.objects.get(id=user_id).comment_like.filter(id=comment.id).exists()
+
+            if user_likes_comment:
+                comment.comment_like.remove(user)
+                message = "좋아요 취소"
+            else:
+                comment.comment_like.add(user)
+                message = "좋아요"
+
+            like_count = comment.comment_like.count()
+            context = {
+                "like_count": like_count,
+                "message": message,
+                "user_likes_comment": not user_likes_comment,
+            }
+            return JsonResponse(context)
+        return redirect("/")
 
 @login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
@@ -202,7 +236,7 @@ def comment_write_view(request, poll_id):
             )
             parent_comment_data = None
 
-        poll.update_comments_count()  # 댓글 수 업데이트
+        poll.comments += 1  # 댓글 수 업데이트
         poll.save()
 
         comment_id =Comment.objects.last().pk
@@ -359,9 +393,8 @@ def classifyuser(request, poll_id):
 def calcstat(request, poll_id, uservote_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
-   
+    
     uservotes = UserVote.objects.filter(poll_id=poll_id)
-
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
 
     total_count = poll_result.total
