@@ -119,6 +119,37 @@ def poll_like(request):
             return JsonResponse(context)
         return redirect("/")
 
+# 투표 게시글 좋아요
+@login_required
+def comment_like(request):
+    if request.method == "POST":
+        req = json.loads(request.body)
+        comment_id = req["comment_id"]
+
+        try:
+            comment = Comment.objects.get(id=comment_id)
+        except Comment.DoesNotExist:
+            return JsonResponse({"error": "해당 댓글이 존재하지 않습니다."}, status=404)
+
+        user = request.user
+        if request.user.is_authenticated:
+            if comment.comment_like.filter(id=user.id).exists():
+                comment.comment_like.remove(user)
+                message = "좋아요 취소"
+                user_likes_comment = False
+            else:
+                comment.comment_like.add(user)
+                message = "좋아요"
+                user_likes_comment = True
+
+            like_count = comment.comment_like.count()
+            context = {
+                "like_count": like_count,
+                "message": message,
+                "user_likes_comment": user_likes_comment,
+            }
+            return JsonResponse(context)
+        return redirect("/")
 
 @login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
@@ -202,7 +233,7 @@ def comment_write_view(request, poll_id):
             )
             parent_comment_data = None
 
-        poll.update_comments_count()  # 댓글 수 업데이트
+        poll.comments += 1  # 댓글 수 업데이트
         poll.save()
 
         comment_id =Comment.objects.last().pk
