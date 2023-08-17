@@ -13,6 +13,7 @@
       </form>
     </div>
   </div>
+
   <div class="comment-input-container">
     <div class="coment-user-info">
       <div class="comment-user-name">{{ user.nickname }}</div>
@@ -92,6 +93,7 @@
               </div>
               <button id="reply-toggle-btn-{{ comment.id }}" class="reply-toggle-btn" data-comment-id="{{ comment.id }}">답글 <span id="nestedCount{{ comment.id }}" data-comment-id="{{ comment.id }}"></span></button>
             </div>
+            </div>
         </div>
         <div class="every-reply-container">
               <div class="nested-reply-container" data-parent-id="{{ comment.id }}" style="display:none">
@@ -150,7 +152,6 @@
           </div>
       </div>
   </div>
-  <button id="load-more-comment">더보기</button>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/comment.js' %}"></script>
@@ -435,42 +436,5 @@ $(document).ready(function () {
 
 
 </script>
-<!-- <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const loadMoreBtn = document.getElementById('load-more-comment');
-    const commentItems = document.querySelectorAll('.stored-comment-container');
-    const batchSize = 3;
-    let visibleCount = batchSize;
-
-    // 초기에는 일부 항목만 보이도록 설정
-    for (let i = 0; i < commentItems.length; i++) {
-      if (i < visibleCount) {
-        commentItems[i].style.display = 'flex';
-      } else {
-        commentItems[i].style.display = 'none';
-      }
-    }
-
-    // "더보기" 버튼 클릭 시 처리
-    loadMoreBtn.addEventListener('click', function () {
-      visibleCount += batchSize;
-      for (let i = 0; i < commentItems.length; i++) {
-        if (i < visibleCount) {
-          commentItems[i].style.display = 'flex';
-        } else {
-          commentItems[i].style.display = 'none';
-        }
-      }
-
-      // 더 이상 보여줄 항목이 없으면 버튼 비활성화
-      if (visibleCount >= commentItems.length) {
-        loadMoreBtn.disabled = true;
-        loadMoreBtn.style.backgroundColor = '#c4c4c4';
-        loadMoreBtn.textContent = '더 이상 댓글 없음';
-      }
-    });
-  });
-</script> -->
-
 
 {% endblock %}
