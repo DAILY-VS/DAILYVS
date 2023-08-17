@@ -43,7 +43,15 @@
                       {% endif %}
                     {% endfor %}
                     </div>
-                    <div class="user-sub-info time-line">{{ comment.created_at|timesince }} 전</div>
+
+                    <div class="user-sub-info time-line">
+                      {% if comment.time_difference > 6 %}
+                        {{ comment.created_at|date:"m월 d일 H:i" }}
+                      {% else %}
+                        {{ comment.created_at|timesince }} 전
+                      {% endif %}
+                    </div>
+
                 </div>
             </div>
             <div class="comment-content-delete">
