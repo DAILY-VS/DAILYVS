@@ -108,8 +108,8 @@ def email_verification(request, user_id):
             smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
             smtp_server.starttls()
 
-            EMAIL_HOST_USER = 'songvv2014@gmail.com'
-            EMAIL_HOST_PASSWORD = 'usrczzcpaxrcorqv'
+            EMAIL_HOST_USER = 'dailyvsofficial@gmail.com'
+            EMAIL_HOST_PASSWORD = 'qousltfgowhagxab'
 
             smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
 
@@ -144,7 +144,10 @@ def password_reset_input(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             reset_url = request.build_absolute_uri('/account/password_reset_confirm')
-            send_password_reset_email(email, reset_url)
+            try : 
+                send_password_reset_email(email, reset_url)
+            except :
+                return render(request, "account/password_reset_input.html", {"form": form, "text": "없는 이메일입니다."})
             return render(request, "account/send_password_reset_email.html", {"email": email})
     else:
         form = EmailForm()
@@ -159,7 +162,7 @@ def send_password_reset_email(email, reset_url):
     
     subject = 'Daily-VS 비밀번호 재설정'
     message = f'비밀번호를 재설정하려면 아래 링크를 클릭하세요:\n\n{reset_link}'
-    sender_email = 'songvv2014@gmail.com'
+    sender_email = 'dailyvs@gmail.com'
     recipient_email = user.email
     msg = f'Subject: {subject}\n\n{message}'
     
@@ -167,8 +170,8 @@ def send_password_reset_email(email, reset_url):
         smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.starttls()
 
-        EMAIL_HOST_USER = 'songvv2014@gmail.com'
-        EMAIL_HOST_PASSWORD = 'usrczzcpaxrcorqv'
+        EMAIL_HOST_USER = 'dailyvsofficial@gmail.com'
+        EMAIL_HOST_PASSWORD = 'qousltfgowhagxab'
 
         smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
         smtp_server.sendmail(sender_email, recipient_email, msg.encode('utf-8'))
@@ -185,13 +188,20 @@ def password_reset_confirm(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    
+    print(1234)
     if user is not None and default_token_generator.check_token(user, token):
         if request.method == "POST":
             new_password = request.POST.get("new_password")
-            user.set_password(new_password)
-            user.save()
-            return redirect("account:login")  # 비밀번호 재설정 후 로그인 페이지로 이동
+            confirm_new_password = request.POST.get("confirm_new_password")
+            print(new_password)
+            print(confirm_new_password)
+            if new_password == confirm_new_password : 
+                print(124)
+                user.set_password(new_password)
+                user.save()
+                return redirect("account:login")  # 비밀번호 재설정 후 로그인 페이지로 이동
+            else : 
+                return render(request, "account/password_reset_confirm.html", {"uidb64": uidb64, "token": token, "text" : "비밀번호가 일치하지 않습니다."})
         else:
             return render(request, "account/password_reset_confirm.html", {"uidb64": uidb64, "token": token})
     else:

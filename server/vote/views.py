@@ -161,7 +161,6 @@ def mypage(request):
     paginator = Paginator(polls, 4)
     uservotes = UserVote.objects.filter(user=request.user)
     polls_like = Poll.objects.filter(poll_like=request.user)
-
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
