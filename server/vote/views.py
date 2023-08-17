@@ -4,6 +4,7 @@ import random
 from .models import *
 from account.forms import *
 from account.models import *
+from .fortunes import fortunes
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from django import template
@@ -913,20 +914,17 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         return redirect("/")
 
 
-def get_random_fortune():
-    fortunes = [
-        "그동안의 노력이 보상받는 하루가 예상됩니다!",
-        "매력적인 말로 상대방을 사로잡아 보세요!",
-        "언행에 주의를 해야되는 날입니다!",
-        "예상치 못한 지출에 대비해야되는 날입니다.",
-        "날 죽이지 못하는 고통은 날 더 강하게 만듭니다.",
-        "산책하며 혼자 생각하기 좋은 날입니다.",
-    ]
-    return random.choice(fortunes)
+def get_random_fortune(mbti):
+    default_fortune = "일시적인 오류입니다! 다음에 시도해주세요."
 
-
+    selected_fortunes = fortunes.get(mbti, [])
+    return random.choice(selected_fortunes) if selected_fortunes else default_fortune
+    
 def fortune(request):
-    random_fortune = get_random_fortune()
-    return render(
-        request, "vote/main/main-fortune.html", {"random_fortune": random_fortune}
-    )
+    user = request.user
+    if user.is_authenticated:
+        random_fortune = get_random_fortune(user.mbti)
+    else:
+        random_fortune = get_random_fortune('nonuser')
+
+    return render(request, "vote/main/main-fortune.html", {"random_fortune": random_fortune})
