@@ -77,17 +77,6 @@
   color: var(--redpink-primary-color);
 }
 
-.result-share-btn {
-  border: none;
-  width: 200px;
-  height: 50px;
-  font-size: 20px;
-  border-radius: 5px;
-  margin-top: 30px;
-  margin-left: auto;
-  margin-right: 10px;
-}
-
 .result-share-btn:hover {
   background-color: var(--redpink-primary-color);
   color: white;
@@ -106,58 +95,84 @@
 }
 
 .result-investigation span{
-  overflow: hidden;
   margin-left: 5px;
+  white-space: nowrap;
 
 }
 
-.typing-bold,
-.typing-value {
+.typing-bold {
   font-family: "TheJamsil5Bold";
   color: var(--redpink-primary-color)
 }
 
-.typing-text span {
-  animation: typing 3s forwards; /* 2초 동안 타이핑 애니메이션 실행 */
+.typing-percent {
+  font-family: "TheJamsil5Bold";
 }
 
-@keyframes typing {
-  0% {
-    opacity: 0; /* 숨겨진 상태 */
-    transform: translateY(100%); /* 아래에서 위로 이동하는 애니메이션 */
-  }
-  100% {
-    opacity: 1; /* 텍스트를 보이게 함 */
-    transform: translateY(0); /* 원래 위치로 이동 완료 */
-  }
+.typing-line {
+  display: flex;
+  align-items: center;
 }
 
-.typing-effect {
-        white-space: nowrap;
-        overflow: hidden;
-        font-size: 16px;
-        border-right: 0.15em solid #000;
-        animation: typing 3s steps(40, end), blink-caret 0.5s step-end infinite;
-      }
+.typing-line .typing-text1, .typing-line .typing-text2 {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 0.15em solid #000;
+  margin-left: 5px; /* 추가 */
+}
 
-      @keyframes typing {
-        from {
-          width: 0;
-        }
-        to {
-          width: auto;
-        }
-      }
+.typing-line .typing-text1 .typing-cursor, .typing-line .typing-text2 .typing-cursor {
+  display: inline-block;
+  width: 0.15em;
+  height: 1.1em;
+  background-color: #000;
+  animation: blink-caret 0.75s step-end infinite;
+}
 
-      @keyframes blink-caret {
-        from,
-        to {
-          border-right-color: transparent;
-        }
-        50% {
-          border-right-color: black;
-        }
-      }
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: #000; }
+}
+
+.typing-line .typing-text1 .typing-cursor {
+  animation-name: blink-caret-1;
+  animation-fill-mode: forwards;
+}
+
+.typing-line .typing-text2 .typing-cursor {
+  animation-name: blink-caret-2;
+  animation-fill-mode: forwards;
+}
+
+@keyframes blink-caret-1 {
+  from, to { border-color: transparent; }
+  50% { border-color: #000; }
+}
+
+@keyframes blink-caret-2 {
+  from, to { border-color: transparent; }
+  50% { border-color: #000; }
+}
+
+
+.typing-line .typing-text1 {
+  animation: typing1 3s steps(18) forwards; 
+}
+
+.typing-line .typing-text2 {
+  animation: typing2 3s steps(28) forwards;
+}
+
+@keyframes typing1 {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes typing2 {
+  from { width: 0; }
+  to { width: 100%; }
+}
 
 /*카테고리 차트 섹션*/
 
@@ -166,6 +181,7 @@
   color: var(--darkblue-primary-color);
   font-size: 26px;
   margin: 50px 50px 20px 30px;
+  white-space: break-spaces;
 }
 
 .result-category-name {
@@ -236,4 +252,49 @@ text {
 .modal-footer {
   display: flex;
   justify-content: space-between;
+}
+
+.result-loading {
+  margin-top: 15px;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+}
+
+.result-loading div {
+  margin: auto 3px;
+}
+
+.btns-not-bts {
+  display:flex;
+  flex-direction: row;
+
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.result-share-btn {
+  border: none;
+  width: 150px;
+  height: 50px;
+  font-size: 18px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+#capBtn {
+  background-color: var(--darkblue-primary-color);
+  color: white;
+  width: 150px;
+  height: 50px;
+  font-size: 18px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+#capBtn img {
+  margin-left: 5px;
 }

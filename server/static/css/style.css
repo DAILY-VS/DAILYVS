@@ -33,6 +33,7 @@
 * {
   box-sizing: border-box;
   font-family: "NEXON Lv1 Gothic OTF";
+  word-break: normal;
   margin: 0px;
   padding: 0px;
 }
