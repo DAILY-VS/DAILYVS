@@ -254,8 +254,8 @@ $(document).ready(function () {
             '<div class="user-sub-info">' + response.mbti + '</div>' +
             '<div class="user-sub-info">' + response.gender + '</div>' +
             '<div class="user-sub-info choice-color">' + response.choice + '</div>' +
-            '<div class="time-line">' +  response.created_at +'</div>' +
             '</div>' +
+            '<div class="time-line">' +  response.created_at +'</div>' +
             '</div>' +
             '<div class="comment-content-delete">' +
             '<div class="stored-comment-content">' + response.content + '</div>';
@@ -339,9 +339,10 @@ $(document).ready(function () {
         },
       });
     } else {
-      if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-        var loginUrl = "/account/login/";
-        window.location.href = loginUrl; // 로그인 페이지 URL로 이동
+        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+          var loginUrl = "/account/login/";
+          window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
+        }
       }
     }
   });

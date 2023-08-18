@@ -18,9 +18,9 @@
       <div id="base-container">
         <nav class="nav-list">
           {% if user.is_authenticated %}
-          <a href="{% url 'account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
+          <a href="{% url 'vs_account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
           {% else %}
-          <a href="{% url 'account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
+          <a href="{% url 'vs_account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
           {% endif %}
             <a href="/" id="logo"
               ><img src="{% static 'img/Row.png' %}"/></a>

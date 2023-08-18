@@ -29,9 +29,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "account",
+    "vs_account",
     "vote",
     'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.kakao',
 ]
 
 MIDDLEWARE = [
@@ -47,7 +51,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "config.urls"
-
+SOCIALACCOUNT_LOGIN_ON_GET = True
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -108,7 +112,7 @@ USE_I18N = True
 
 USE_TZ = False
 
-AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "vs_account.User"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -122,7 +126,29 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 FAVICON_PATH = os.path.join(BASE_DIR, "static", "favicon.ico")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "account.User"  ##
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',    
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'kakao': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '6e0b76c3ceeb04bed80541df1eb81445',
+            'secret': '7GHqOVkfQnvOf81TcIxtk91JW2VceNnJ',
+            'key': ''
+        }
+    }
+}
+
+LOGIN_REDIRECT_URL = '/'   # social login redirect
+ACCOUNT_LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/kakao/login/callback/'
+AUTH_USER_MODEL = "vs_account.User"  ##
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
