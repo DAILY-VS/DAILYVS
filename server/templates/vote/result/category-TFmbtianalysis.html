@@ -1,17 +1,19 @@
 {% load static %} {% block content %}
+
 <div class="result-chart-category">
-<div id="GenderChart"> </div>
+  <div id="TFmbtiChartanalysis" style="display: none"></div>
 </div>
+
 <script>
-  var MWoptions = {
+  var TFoptionsanalysis = {
     series: [
       {
         name: "{{ poll.choice_set.all.0.choice_text }}",
-        data: [{{choice1_man_percentage}}, {{choice1_woman_percentage}}],
+        data: [{{t_choice1_percentage}}, {{f_choice1_percentage}}],
       },
       {
         name: "{{ poll.choice_set.all.1.choice_text }}",
-        data: [{{choice2_man_percentage}}, {{choice2_woman_percentage}}],
+        data: [{{t_choice2_percentage}}, {{f_choice2_percentage}}],
       },
     ],
     colors: ["#17355a", "#ff495a"],
@@ -31,10 +33,10 @@
       colors: ["#fff"],
     },
     title: {
-      text: "M vs W Chart",
+      text: "T vs F Chart",
     },
     xaxis: {
-      categories: ["M", "W"],
+      categories: ["T", "F"],
     },
     tooltip: {
       y: {
@@ -53,15 +55,16 @@
     },
   };
 
-  // Wait for the document to load
   document.addEventListener("DOMContentLoaded", function (event) {
     var chart = new ApexCharts(
-      document.querySelector("#GenderChart"),
-      MWoptions
+      document.querySelector("#TFmbtiChartanalysis"),
+      TFoptionsanalysis
     );
     chart.render();
-    const GenderChart = document.getElementById("GenderChart");
-    GenderChart.style.display = "block" 
   });
+  const TFmbtiChart = document.getElementById("TFmbtiChartanalysis");
+  TFmbtiChart.style.display =  "block" 
 </script>
+
+
 {% endblock %}

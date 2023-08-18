@@ -1,17 +1,17 @@
 {% load static %} {% block content %}
-<div class="result-chart-category">
-<div id="GenderChart"> </div>
+<div>
+<div id="EImbtiChartanalysis"></div>
 </div>
 <script>
-  var MWoptions = {
+  var EIoptionsanalysis = {
     series: [
       {
         name: "{{ poll.choice_set.all.0.choice_text }}",
-        data: [{{choice1_man_percentage}}, {{choice1_woman_percentage}}],
+        data: [{{e_choice1_percentage}}, {{i_choice1_percentage}}],
       },
       {
         name: "{{ poll.choice_set.all.1.choice_text }}",
-        data: [{{choice2_man_percentage}}, {{choice2_woman_percentage}}],
+        data: [{{e_choice2_percentage}}, {{i_choice2_percentage}}],
       },
     ],
     colors: ["#17355a", "#ff495a"],
@@ -31,10 +31,10 @@
       colors: ["#fff"],
     },
     title: {
-      text: "M vs W Chart",
+      text: "E vs I Chart",
     },
     xaxis: {
-      categories: ["M", "W"],
+      categories: ["E", "I"],
     },
     tooltip: {
       y: {
@@ -56,12 +56,13 @@
   // Wait for the document to load
   document.addEventListener("DOMContentLoaded", function (event) {
     var chart = new ApexCharts(
-      document.querySelector("#GenderChart"),
-      MWoptions
+      document.querySelector("#EImbtiChartanalysis"),
+      EIoptionsanalysis
     );
     chart.render();
-    const GenderChart = document.getElementById("GenderChart");
-    GenderChart.style.display = "block" 
+    const EImbtiChart = document.getElementById("EImbtiChartanalysis");
+    EImbtiChart.style.display = "block"
   });
 </script>
+
 {% endblock %}

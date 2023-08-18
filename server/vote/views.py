@@ -670,9 +670,9 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         user = uservote.user
         if uservote.choice.id == 2*poll_id - 1:
             if user.gender == "M":
-                dict["남자"] = choice1_man_percentage
+                dict["남성"] = choice1_man_percentage
             elif user.gender == "W":
-                dict["여자"] = choice1_woman_percentage
+                dict["여성"] = choice1_woman_percentage
             for letter in user.mbti:
                 if letter == "E":
                     dict["E"] = e_choice1_percentage
@@ -692,9 +692,9 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
                     dict["J"] = j_choice1_percentage
         if uservote.choice.id == 2*poll_id :
             if user.gender == "M":
-                dict["남자"] = choice2_man_percentage
+                dict["남성"] = choice2_man_percentage
             elif user.gender == "W":
-                dict["여자"] = choice2_woman_percentage
+                dict["여성"] = choice2_woman_percentage
             for letter in user.mbti:
                 if letter == "E":
                     dict["E"] = e_choice2_percentage
@@ -718,9 +718,9 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         nonuser_mbti = nonuservote.MBTI
         if nonuservote.choice.id == 2*poll_id - 1:
             if nonuser_gender == "M":
-                dict["남자"] = choice1_man_percentage
+                dict["남성"] = choice1_man_percentage
             elif nonuser_gender == "W":
-                dict["여자"] = choice1_woman_percentage
+                dict["여성"] = choice1_woman_percentage
             for letter in nonuser_mbti:
                 if letter == "E":
                     dict["E"] = e_choice1_percentage
@@ -740,9 +740,9 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
                     dict["J"] = j_choice1_percentage
         if nonuservote.choice.id == 2*poll_id :
             if nonuser_gender == "M":
-                dict["남자"] = choice2_man_percentage
+                dict["남성"] = choice2_man_percentage
             elif nonuser_gender == "W":
-                dict["여자"] = choice2_woman_percentage
+                dict["여성"] = choice2_woman_percentage
             for letter in nonuser_mbti:
                 if letter == "E":
                     dict["E"] = e_choice2_percentage
@@ -765,11 +765,11 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     minimum_value = dict[min(dict, key=dict.get)]
     maximum_key = max(dict, key=dict.get)
     maximum_value = dict[max(dict, key=dict.get)]
-    if minimum_value >= maximum_value:
+    if 100 - minimum_value >= maximum_value:
         key = minimum_key
     else : 
         key = maximum_key
-
+    key="남성"
     ctx = {
         "total_count": total_count,
         # "choice1_count": total_choice1_count,
