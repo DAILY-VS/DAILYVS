@@ -13,11 +13,11 @@
             <img class="modal-logo" src="{% static 'img/Only_Text.png' %}" alt="logo">
             <img class="fortune-open-img" src="{% static 'img/slide/BrokenCookie.png' %}" alt="fortune-cookie-open">
             <p class="fortune-text">
-              <span id="fortune-result">
+              <span id="fortune-result typing-line2">
                 {% if user.is_authenticated %}
-                    {{ user.mbti }}인 당신은{{ random_fortune }}
+                    <span class="fortune-mbti">{{ user.mbti }}</span><span class="typing-text3"></span>
                 {% else %}
-                    {{ random_fortune }}
+                    <span class="typing-text4"></span>
                 {% endif %}
               </span>
           </p>
@@ -52,4 +52,29 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="../../static/js/html2canvas.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+  function typeFortuneCookie(text, typingTextElement) {
+    if (!typingTextElement) {
+      return;
+    }
+
+    let charIndex = 0;
+    const typingInterval = setInterval(() => {
+      typingTextElement.textContent += text[charIndex];
+      charIndex++;
+      if(charIndex === text.length) {
+        clearInterval(typingInterval);
+      }
+    }, 200);
+  }
+
+  const text3 = "인 당신은" + "{{ random_fortune }}"
+  const typingText3 = document.querySelector(".typing-text3");
+  typeFortuneCookie(text3, typingText3);
+
+  const text4 = "{{ random_fortune }}"
+  const typingText4 = document.querySelector(".typing-text4");
+  typeFortuneCookie(text4, typingText4)
+
+</script>
 {% endblock %}

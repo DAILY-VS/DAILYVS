@@ -323,8 +323,8 @@ margin-right: 30px;
   top: 180px;
   right: 0px;
   background-color: var(--pink-bg-color);
-  width: 225px;
-  height: 65px;
+  width: 35vw;
+  height: 70px;
   z-index: 10;
   border: solid 7px var(--darkblue-primary-color);
   display: flex;
@@ -357,4 +357,45 @@ margin-right: 30px;
 
 .fortune-card-section {
   margin-top: 30px;
+}
+
+.fortune-mbti {
+  font-family: "TheJamsil5Bold";
+  color: var(--redpink-primary-color)
+}
+
+.typing-line2 {
+  display:flex;
+  align-items: center;
+}
+
+.typing-line2 .typing-text3, typing-line3 .typing-text4 {
+  display: inline-block;
+  width: 0.15em;
+  height: 1.1em;
+  background-color: #000;
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: #000; }
+}
+
+.typing-line2 .typing-text3 {
+  animation: typing3 3s steps(18) forwards; 
+}
+
+.typing-line2 .typing-text4 {
+  animation: typing4 3s steps(28) forwards;
+}
+
+@keyframes typing3 {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes typing4 {
+  from { width: 0; }
+  to { width: 100%; }
 }

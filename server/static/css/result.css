@@ -135,16 +135,6 @@
   50% { border-color: #000; }
 }
 
-.typing-line .typing-text1 .typing-cursor {
-  animation-name: blink-caret-1;
-  animation-fill-mode: forwards;
-}
-
-.typing-line .typing-text2 .typing-cursor {
-  animation-name: blink-caret-2;
-  animation-fill-mode: forwards;
-}
-
 @keyframes blink-caret-1 {
   from, to { border-color: transparent; }
   50% { border-color: #000; }
@@ -155,6 +145,16 @@
   50% { border-color: #000; }
 }
 
+
+.typing-line .typing-text1 .typing-cursor {
+  animation-name: blink-caret-1;
+  animation-fill-mode: forwards;
+}
+
+.typing-line .typing-text2 .typing-cursor {
+  animation-name: blink-caret-2;
+  animation-fill-mode: forwards;
+}
 
 .typing-line .typing-text1 {
   animation: typing1 3s steps(18) forwards; 
@@ -298,3 +298,4 @@ text {
 #capBtn img {
   margin-left: 5px;
 }
+
