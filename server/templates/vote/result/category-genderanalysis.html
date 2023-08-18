@@ -1,30 +1,16 @@
 {% load static %} {% block content %}
-<div class="mbti-category-box">
-  <div
-    class="result-category-name"
-    id="EImbtiToggle"
-    onclick="toggleRotation3()"
-  >
-    <img
-      src="{% static 'img/icon/chevron_up.png'%}"
-      style="width: 30px"
-      class="chevron3"
-    />
-    E / I
-  </div>
-</div>
-<div id="EImbtiChart"></div>
+<div id="GenderChart"></div>
 
 <script>
-  var EIoptions = {
+  var MWoptions = {
     series: [
       {
         name: "{{ poll.choice_set.all.0.choice_text }}",
-        data: [{{e_choice1_percentage}}, {{i_choice1_percentage}}],
+        data: [{{choice1_man_percentage}}, {{choice1_woman_percentage}}],
       },
       {
         name: "{{ poll.choice_set.all.1.choice_text }}",
-        data: [{{e_choice2_percentage}}, {{i_choice2_percentage}}],
+        data: [{{choice2_man_percentage}}, {{choice2_woman_percentage}}],
       },
     ],
     colors: ["#17355a", "#ff495a"],
@@ -44,10 +30,10 @@
       colors: ["#fff"],
     },
     title: {
-      text: "E vs I Chart",
+      text: "M vs W Chart",
     },
     xaxis: {
-      categories: ["E", "I"],
+      categories: ["M", "W"],
     },
     tooltip: {
       y: {
@@ -69,8 +55,8 @@
   // Wait for the document to load
   document.addEventListener("DOMContentLoaded", function (event) {
     var chart = new ApexCharts(
-      document.querySelector("#EImbtiChart"),
-      EIoptions
+      document.querySelector("#GenderChart"),
+      MWoptions
     );
     chart.render();
   });
@@ -89,8 +75,8 @@
     }
 
     isGraphVisible = !isGraphVisible;
-    const EImbtiChart = document.getElementById("EImbtiChart");
-    EImbtiChart.style.display = isGraphVisible ? "block" : "none";
+    const GenderChart = document.getElementById("GenderChart");
+    GenderChart.style.display = isGraphVisible ? "block" : "none";
     isRotated3 = !isRotated3;
   }
 </script>
