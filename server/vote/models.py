@@ -19,9 +19,9 @@ class Poll(models.Model):
         self.views_count=self.views_count+1
         self.save()
 
-    def update_comments_count(self): # 댓글수
-        self.comments = Comment.objects.filter(poll=self).count()
-        self.save()
+    # def update_comments_count(self): # 댓글수
+    #     self.comments = Comment.objects.filter(poll=self).count()
+    #     self.save()
         
     def __str__(self):
         return self.title
@@ -60,16 +60,16 @@ class Comment(models.Model):
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     comment_like = models.ManyToManyField('vs_account.User', blank=True, related_name='comment_like')
    
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None  # 새로운 댓글인지 확인
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     is_new = self.pk is None  # 새로운 댓글인지 확인
+    #     super().save(*args, **kwargs)
         
-        if is_new:  # 새로운 댓글인 경우 댓글 수 업데이트
-            self.poll.update_comments_count()
+    #     if is_new:  # 새로운 댓글인 경우 댓글 수 업데이트
+    #         self.poll.update_comments_count()
 
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        self.poll.update_comments_count()
+    # def delete(self, *args, **kwargs):
+    #     super().delete(*args, **kwargs)
+    #     self.poll.update_comments_count()
    
     def __str__(self):
         return self.content

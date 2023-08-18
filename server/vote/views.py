@@ -7,9 +7,9 @@ from vs_account.models import *
 from .fortunes import fortunes
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
-from django import template
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
@@ -98,7 +98,6 @@ def get_like_status(request, poll_id):
 
 
 # 투표 게시글 좋아요
-@login_required
 def poll_like(request):
     if request.method == "POST":
         req = json.loads(request.body)
@@ -109,8 +108,9 @@ def poll_like(request):
         except Poll.DoesNotExist:
             return JsonResponse({"error": "해당 투표가 존재하지 않습니다."}, status=404)
 
-        user = request.user
+        
         if request.user.is_authenticated:
+            user = request.user
             if poll.poll_like.filter(id=user.id).exists():
                 poll.poll_like.remove(user)
                 message = "좋아요 취소"
@@ -127,7 +127,8 @@ def poll_like(request):
                 "user_likes_poll": user_likes_poll,
             }
             return JsonResponse(context)
-        return redirect("/")
+        else:
+            return JsonResponse({"error": "로그인이 필요합니다."}, status=401)
 
 # 댓글 좋아요
 @login_required
