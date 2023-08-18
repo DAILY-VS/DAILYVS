@@ -283,10 +283,6 @@
 }
 
 .fortune-modal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   width: 400px;
   height: 400px;
   background-color: white;
@@ -338,7 +334,6 @@ margin-right: 30px;
 
 .fortune-modal-content {
   width: 80%;
-  height: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -400,3 +395,25 @@ margin-right: 30px;
   to { width: 100%; }
 }
 
+.fortune-reload {
+  z-index: 1;
+}
+
+.fortune-hidden {
+  display: none;
+}
+
+.fortune-btns {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#fortune-retry {
+  background-color: var(--redpink-primary-color);
+  color: white;
+  width: 150px;
+  border: 0;
+  border-radius: 5px;
+}

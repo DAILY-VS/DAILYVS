@@ -15,24 +15,56 @@
             <p class="fortune-text">
               <span id="fortune-result typing-line2">
                 {% if user.is_authenticated %}
-                    <span class="fortune-mbti">{{ user.mbti }}</span><span class="typing-text3"></span>
+                    <span class="fortune-reload"><span class="fortune-mbti">{{ user.mbti }}</span><span class="typing-text3"></span></span>
                 {% else %}
-                    <span class="typing-text4"></span>
+                     <span class="fortune-reload"><span class="typing-text4"></span></span>
                 {% endif %}
+                </div>
               </span>
-          </p>
+            </p>
           </div>
-          <button id="capBtn" style="border: none">캡처하기</button> 
-          <button id="fortune-retry">다시뽑기</button>
+          <div class="fortune-btns">
+            <button id="capBtn" style="border: none">캡처하기</button> 
+            <button id="fortune-retry">다시뽑기</button>
+          </div>
         </div>
     </div>
 </div>
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+  function typeFortuneCookie(text, typingTextElement) {
+    if (!typingTextElement) {
+      return;
+    }
+
+    let charIndex = 0;
+    const typingInterval = setInterval(() => {
+      typingTextElement.textContent += text[charIndex];
+      charIndex++;
+      if (charIndex === text.length) {
+        clearInterval(typingInterval);
+      }
+    }, 150);
+  }
+
+  const text3 = "인 당신은" + "{{ random_fortune }}";
+  const typingText3 = document.querySelector(".typing-text3");
+  typeFortuneCookie(text3, typingText3);
+
+  const text4 = "{{ random_fortune }}";
+  const typingText4 = document.querySelector(".typing-text4");
+  typeFortuneCookie(text4, typingText4);
+});
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
   const modal = document.querySelector(".fortune-modal");
   const modalOpen = document.querySelector("#fortune-modal-open");
   const modalRetry = document.querySelector("#fortune-retry");
   const fortuneResult = document.querySelector("#fortune-result");
-  
+  const fortuneReload = document.querySelector('.fortune-reload')
+
   modalOpen.addEventListener("click", () => {
     modal.style.display = "block";
   });
@@ -43,38 +75,29 @@
   });
 
   modalRetry.addEventListener("click", () => {
-    fortuneResult.textContent = "포춘 쿠키 다시 뽑는 중...";
+    if (fortuneResult) {
+      fortuneResult.textContent = "포춘 쿠키 다시 뽑는 중...";
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+       // 페이지 새로고침
+    }
+    else {
+    const retryMessageElement = document.createElement("p");
+    retryMessageElement.textContent = "포춘 쿠키 다시 뽑는 중...";
+    fortuneReload.classList.add("fortune-hidden");
+    document.querySelector(".fortune-text").appendChild(retryMessageElement);
+
     setTimeout(() => {
       location.reload();
-    }, 2000); // 페이지 새로고침
-  });
+    }, 1500); // 페이지 새로고침
+  }
+});
+});
+
 </script>
+
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="../../static/js/html2canvas.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script>
-  function typeFortuneCookie(text, typingTextElement) {
-    if (!typingTextElement) {
-      return;
-    }
-
-    let charIndex = 0;
-    const typingInterval = setInterval(() => {
-      typingTextElement.textContent += text[charIndex];
-      charIndex++;
-      if(charIndex === text.length) {
-        clearInterval(typingInterval);
-      }
-    }, 200);
-  }
-
-  const text3 = "인 당신은" + "{{ random_fortune }}"
-  const typingText3 = document.querySelector(".typing-text3");
-  typeFortuneCookie(text3, typingText3);
-
-  const text4 = "{{ random_fortune }}"
-  const typingText4 = document.querySelector(".typing-text4");
-  typeFortuneCookie(text4, typingText4)
-
-</script>
 {% endblock %}
