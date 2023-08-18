@@ -403,7 +403,7 @@ def classifyuser(request, poll_id):
 
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
-def calcstat(request, poll_id):
+def calcstat(request, poll_id, uservote_id, nonuservote_id):
     user= request.user
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
