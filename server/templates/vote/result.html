@@ -34,21 +34,10 @@
       <span class="typing-bold">{{maximum_key}} </span>
       <span class="typing-text2"><span class="typing-cursor"></span></span>
     </div>
-  </div>
-  {% endif %}
-</div>
-  <div class="btns-not-bts">
-    <button id="capBtn2" style="border: none">캡처하기<span
-        ><img src="{% static 'img/capture.png'%}" style="width: 30px"
-      /></span></button>
-    <button class="result-share-btn" id="copy-url-btn">
-      URL 복사<span
-        ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
-      /></span>
-    </button>
+    {% endif %}
   </div>
   {% if key == "남자" or key == "여자" %}
-  <div>{% include 'vote/result/category-genderanalysis.html' %}</div>
+  {% include 'vote/result/category-genderanalysis.html' %}
   {% endif %}
   {% if key == "I" or key == "E" %}
   {% include 'vote/result/category-EImbti.html' %}
@@ -62,6 +51,18 @@
   {% if key == "J" or key == "P" %}
   {% include 'vote/result/category-PJmbti.html' %}
   {% endif %}
+</div>
+  <div class="btns-not-bts">
+    <button id="capBtn2" style="border: none">캡처하기<span
+        ><img src="{% static 'img/capture.png'%}" style="width: 30px"
+      /></span></button>
+    <button class="result-share-btn" id="copy-url-btn">
+      URL 복사<span
+        ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
+      /></span>
+    </button>
+  </div>
+
   
   <div class="graph-category-container">
     <div>{% include 'vote/result/category-gender.html' %}</div>
