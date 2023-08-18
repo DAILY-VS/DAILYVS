@@ -269,10 +269,6 @@
   color: var(--darkblue-primary-color)
 }
 
-[class^="replyTr"] {
-  width: 400px;
-}
-
 #load-more-comments {
   border: var(--darkblue-primary-color) 1px solid;
   background-color:var(--darkblue-primary-color);
