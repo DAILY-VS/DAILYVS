@@ -133,7 +133,7 @@ def call(request):
     if token == code:
             request.user.is_active = True
             request.user.save()
-            return redirect("account:login")  # Redirect to login page after successful verification
+            return redirect("vs_account:login")  # Redirect to login page after successful verification
     else:
             return render(request, "account/verification_error.html")
 
@@ -199,7 +199,7 @@ def password_reset_confirm(request, uidb64, token):
                     print(124)
                     user.set_password(new_password)
                     user.save()
-                    return redirect("account:login")  # 비밀번호 재설정 후 로그인 페이지로 이동
+                    return redirect("vs_account:login")  # 비밀번호 재설정 후 로그인 페이지로 이동
                 else : 
                     print(5)
                     return render(request, "account/password_reset_confirm.html", {"uidb64": uidb64, "token": token, "text" : "비밀번호가 일치하지 않습니다.",'form' :form})

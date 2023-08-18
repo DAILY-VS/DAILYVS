@@ -3,8 +3,7 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta property="og:title" content="내 사이트의 제목" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0" />    <meta property="og:title" content="내 사이트의 제목" />
     <meta property="og:description" content="보고 있는 페이지의 내용 요약" />
     <link rel="stylesheet" href="{%static 'css/style.css'%}?after" />
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
@@ -18,9 +17,9 @@
       <div id="base-container">
         <nav class="nav-list">
           {% if user.is_authenticated %}
-          <a href="{% url 'account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
+          <a href="{% url 'vs_account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
           {% else %}
-          <a href="{% url 'account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
+          <a href="{% url 'vs_account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
           {% endif %}
             <a href="/" id="logo"
               ><img src="{% static 'img/Row.png' %}"/></a>

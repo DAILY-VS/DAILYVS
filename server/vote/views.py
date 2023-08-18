@@ -2,8 +2,8 @@ import json
 import numpy as np
 import random
 from .models import *
-from account.forms import *
-from account.models import *
+from vs_account.forms import *
+from vs_account.models import *
 from .fortunes import fortunes
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
@@ -19,6 +19,10 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # 메인페이지
 def main(request):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
     promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
@@ -53,6 +57,10 @@ def main(request):
 
 # 투표 디테일 페이지
 def poll_detail(request, poll_id):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     user = request.user
     poll = get_object_or_404(Poll, id=poll_id)
 
@@ -158,6 +166,10 @@ def comment_like(request):
 
 @login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     polls = Poll.objects.all()
     page = request.GET.get("page")
     paginator = Paginator(polls, 4)
@@ -301,7 +313,7 @@ def classifyuser(request, poll_id):
                 user.voted_polls.add(poll_id)
                 poll_result, created = Poll_Result.objects.get_or_create(
                     poll_id=poll_id
-                )
+                )   
                 poll_result.total += 1
                 if user.gender == "M":
                     poll_result.choice1_man += (
@@ -396,6 +408,10 @@ def classifyuser(request, poll_id):
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id, uservote_id, nonuservote_id):
+    user= request.user
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     poll = get_object_or_404(Poll, pk=poll_id)
     
     # 댓글
@@ -771,6 +787,10 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     minimum_value = dict[min(dict, key=dict.get)]
     maximum_key = max(dict, key=dict.get)
     maximum_value = dict[max(dict, key=dict.get)]
+    if minimum_value >= maximum_value:
+        key = minimum_key
+    else : 
+        key = maximum_key
 
     ctx = {
         "total_count": total_count,
@@ -815,6 +835,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "maximum_key": maximum_key,
         "maximum_value": maximum_value,
         "sort": sort,
+        "key": key,
         "choices": choices,
         "choice_filter":choice_filter,
     }
