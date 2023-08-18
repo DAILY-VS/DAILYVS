@@ -6,13 +6,6 @@ from pathlib import Path
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
-    DATABASE_ENGINE=(str, ''),
-    DATABASE_HOST=(str, ''),
-    DATABASE_NAME=(str, ''),
-    DATABASE_USER=(str, ''),
-    DATABASE_PASSWORD=(str, ''),
-    DATABASE_PORT=(str, ''),
-    DATABASE_OPTIONS_CHARSET=(str, 'utf8mb4'),
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,13 +74,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': env('DATABASE_ENGINE'),
-        'HOST': env('DATABASE_HOST'),
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
-        'PORT': env('DATABASE_PORT'),
-        'OPTIONS': {'charset': env('DATABASE_OPTIONS_CHARSET')},
+        'ENGINE': 'django.db.backends.mysql', 
+        'HOST': 'localhost',
+        'NAME': 'dailyvsdb',
+        'USER': 'root',
+        'PASSWORD': 'dbpassword',
+        'PORT': '3306',
+        'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
 
