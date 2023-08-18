@@ -2,8 +2,7 @@
 
 매일매일 투표와 통계로 느끼는 재미
 
-------------------
-코드 리뷰 guideline </br>
+guideline </br>
 0. pip install -r requirements.txt </br>
 1. db.sqlite3 파일 받기. </br>
 2. 메인페이지 </br>

@@ -21,4 +21,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 초기 배경색 설정
   resultContainer.style.backgroundColor = currentBgColor;
+
+  const typingElement = document.querySelector(".typing-effect");
+        const text = "     (과)와 다른 선택을 했습니다.";
+        let charIndex = 0;
+
+        const typingInterval = setInterval(() => {
+          typingElement.textContent += text[charIndex];
+          charIndex++;
+
+          if (charIndex >= text.length) {
+            clearInterval(typingInterval);
+          }
+        }, 300); // Typing speed for each character
+
 });

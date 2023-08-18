@@ -92,9 +92,72 @@
   background-color: var(--redpink-primary-color);
   color: white;
 }
+
 .result-share-btn img {
   margin-left: 10px;
 }
+
+.result-investigation {
+  margin-top: 20px;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.result-investigation span{
+  overflow: hidden;
+  margin-left: 5px;
+
+}
+
+.typing-bold,
+.typing-value {
+  font-family: "TheJamsil5Bold";
+  color: var(--redpink-primary-color)
+}
+
+.typing-text span {
+  animation: typing 3s forwards; /* 2초 동안 타이핑 애니메이션 실행 */
+}
+
+@keyframes typing {
+  0% {
+    opacity: 0; /* 숨겨진 상태 */
+    transform: translateY(100%); /* 아래에서 위로 이동하는 애니메이션 */
+  }
+  100% {
+    opacity: 1; /* 텍스트를 보이게 함 */
+    transform: translateY(0); /* 원래 위치로 이동 완료 */
+  }
+}
+
+.typing-effect {
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: 16px;
+        border-right: 0.15em solid #000;
+        animation: typing 3s steps(40, end), blink-caret 0.5s step-end infinite;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: auto;
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-right-color: transparent;
+        }
+        50% {
+          border-right-color: black;
+        }
+      }
 
 /*카테고리 차트 섹션*/
 

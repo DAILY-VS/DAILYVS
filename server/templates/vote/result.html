@@ -1,6 +1,5 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section id="capture" class="result-container" data-color="pink">
-  당신은 {{minimum_key}}이지만 {{minimum_value}}%와의 {{minimum_key}}과 다른 선택을 했습니다.
   <div class="result-title">{{poll.title}}</div>
   <div class="result-graph-content">{{poll.content}}</div>
   <div class="graph-information-container">
@@ -9,6 +8,13 @@
   <div class="graph-container" data-color="skyblue">
     {% include 'vote/result/result-chart.html' %}
   </div>
+ <div class="result-investigation typing-text" >
+  <span class="typing-key">당신은</span>
+  <span class="typing-bold">{{ minimum_key }}</span>
+  <span class="typing-key">이지만</span>
+  <span class="typing-value">0%</span>
+  <span class="typing-key typing-effect"></span>
+</div>
   <button class="result-share-btn" id="copy-url-btn">
     공유하기<span
       ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
@@ -107,6 +113,61 @@
     // 클릭 이벤트 트리거로 클립보드 복사 실행
     clipboard.onClick();
   });
+</script>
+
+<script>
+const typingValueElement = document.querySelector('.typing-value');
+const typingKeyElements = document.querySelectorAll('.typing-key');
+
+let currentKeyIndex = 0;
+let typingInProgress = false;
+
+function typeNextWord(callback) {
+  if (currentKeyIndex < typingKeyElements.length) {
+    const currentKeyElement = typingKeyElements[currentKeyIndex];
+    const word = currentKeyElement.textContent;
+    currentKeyIndex++;
+
+    let currentCharIndex = 0;
+    const typingCharInterval = setInterval(() => {
+      currentCharIndex++;
+      const partialWord = word.slice(0, currentCharIndex);
+      currentKeyElement.textContent = partialWord;
+
+      if (currentCharIndex >= word.length) {
+        clearInterval(typingCharInterval);
+        setTimeout(() => {
+          currentKeyElement.textContent = word;
+          typeNextWord(callback);
+        }, 500); // Delay before typing the next word
+      }
+    }, 100); // Typing speed for each character
+  } else {
+    callback(); 
+  }
+}
+
+function startTypingEffect() {
+  if (!typingInProgress) {
+    typingInProgress = true;
+
+    let currentValue = 0;
+    const targetValue = {{minimum_value}};
+    const step = targetValue / 60; // 총 40단계로 애니메이션 진행
+
+    const typingInterval = setInterval(() => {
+      currentValue += step;
+      typingValueElement.textContent = `${currentValue.toFixed(1)}%`;
+
+      if (currentValue >= targetValue) {
+        clearInterval(typingInterval);
+      }
+    }, 90);
+  }
+}
+
+typeNextWord(startTypingEffect); // Start the typing sequence with the callback
+
 </script>
 
 {% endblock %}
