@@ -5,12 +5,11 @@ shared_fortunes = [
 ]
 
 fortunes = {
-    "INFP": shared_fortunes,
+    "INFP": shared_fortunes + ["오늘 햇살이 많이 드는 날입니다."],
     "ENFP": [
         "오늘 햇살이 많이 드는 날입니다.",
         "밝은 에너지로 주변을 활력을 불어넣어보세요!",
         "새로운 사람들과의 만남이 행운을 가져올 것입니다.",
-
     ],
     "INFJ": [
         "내면의 감정을 정리하며 조용한 시간을 가져보세요.",

@@ -284,6 +284,7 @@ def comment_delete_view(request, pk):
 
     if request.user == target_comment.user_info:
         target_comment.delete()
+        poll.comments -= 1  # 댓글 수 감소
         poll.save()
         data = {"comment_id": comment_id, "success": True}
     else:
