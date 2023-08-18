@@ -232,6 +232,7 @@ def comment_write_view(request, poll_id):
                 content=content,
                 user_info=user_info,
                 parent_comment=parent_comment,
+                
             )
             parent_comment_data = {
                 "nickname": parent_comment.user_info.nickname,
@@ -263,6 +264,9 @@ def comment_write_view(request, poll_id):
             "comment_id": comment_id,
             "choice": choice_text,
         }
+        
+        comment.choice = user_vote.choice
+        comment.save()
         if parent_comment_data:
             data["parent_comment"] = parent_comment_data
 
@@ -280,6 +284,7 @@ def comment_delete_view(request, pk):
 
     if request.user == target_comment.user_info:
         target_comment.delete()
+        poll.comments -= 1  # 댓글 수 감소
         poll.save()
         data = {"comment_id": comment_id, "success": True}
     else:
@@ -411,20 +416,38 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     
     # 댓글
-    
+    choices=Choice.objects.filter(poll_id=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
+    uservotes = UserVote.objects.filter(poll_id=poll_id)
+    choice_filter = request.GET.get("choice_filter")  # 새로 추가된 부분
+    choice1 = choices[0].choice_text
+    choice2 = choices[1].choice_text
+
     sort = request.GET.get("sort")
-    if sort == "likes":
-        comments = Comment.objects.filter(poll_id=poll_id).annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')  # 좋아요순
-    elif sort == "latest":
-        comments = Comment.objects.filter(poll_id=poll_id).order_by('created_at') # 최신순
     
+    if choice_filter == choice1:
+        comments = Comment.objects.filter(poll_id=poll_id, choice__choice_text=choice1)
+    elif choice_filter == choice2:
+        comments = Comment.objects.filter(poll_id=poll_id, choice__choice_text=choice2)
+        
+    if sort == "likes":
+        comments = comments.annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')
+    elif sort == "latest":
+        comments = comments.order_by('created_at')    
+
+    if sort == "likes" and choice_filter == choice1:
+        comments = comments.filter(choice__choice_text=choice1).annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')
+    elif sort == "likes" and choice_filter == choice2:
+        comments = comments.filter(choice__choice_text=choice2).annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')
+
+    
+
     now = datetime.now()
     for comment in comments:
         time_difference = now - comment.created_at
         comment.time_difference = time_difference.total_seconds() / 3600  # 시간 단위로 변환하여 저장
     
-    uservotes = UserVote.objects.filter(poll_id=poll_id)
+    
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
 
     total_count = poll_result.total
@@ -812,8 +835,10 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "minimum_value": 100 - minimum_value,
         "maximum_key": maximum_key,
         "maximum_value": maximum_value,
-        "key": key,
         "sort": sort,
+        "key": key,
+        "choices": choices,
+        "choice_filter":choice_filter,
     }
     print (str(100- minimum_value))
     ##################################################################################

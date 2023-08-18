@@ -4,14 +4,20 @@
     <div class="comment-category-title">댓글</div>
     <div class="comment-sort-area">
       <!-- 정렬 영역 -->
-
       <form action="#" method="get">
         <select name="sort" class="option_select" id="selectSort" onchange="this.form.submit()">
           <option value="" {% if not sort %}selected{% endif %}>----</option>
-          <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
-          <option value="likes" {% if sort == 'likes' %}selected{% endif %}>좋아요순</option>
+            <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
+            <option value="likes" {% if sort == 'likes' and not choice_filter %}selected{% endif %}>좋아요순</option>
         </select>
-      </form>
+
+        <select name="choice_filter" class="option_select" id="selectChoice" onchange="this.form.submit()">
+            <option value="" {% if not choice_filter %}selected{% endif %}>----</option>
+            {% for choice in choices %}
+                <option value="{{ choice.choice_text }}" {% if choice_filter == choice.choice_text %}selected{% endif %}>{{ choice.choice_text }} </option>
+            {% endfor %}
+        </select>
+    </form>
     </div>
   </div>
 
@@ -163,6 +169,9 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
   const heartImage = likeButton.querySelector("img");
   const likeCountElement = document.querySelector(`#comment-like-count-${commentId}`);
   const userLikesComment = localStorage.getItem(`userLikesComment-${userId}-${commentId}`);
+  const isAuthenticated = "{{ user.is_authenticated }}";
+
+  if (isAuthenticated === "True") {
   if (userLikesComment === "true") {
     heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
   } else {
@@ -196,13 +205,17 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
         likeCountElement.textContent = likeCount;
       })
       .catch((error) => {
-        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-          var loginUrl = "/account/login/";
-          window.location.href = loginUrl;
-        }
         console.error("Error:", error);
       });
-  });
+    });
+  } else {
+    likeButton.addEventListener("click", () => {
+      if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+        var loginUrl = "/account/login/";
+        window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
+      }
+    });
+  }
 });
 
 function getCookie(name) {
