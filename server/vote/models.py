@@ -57,7 +57,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
-    comment_like = models.ManyToManyField('account.User', blank=True, related_name='comment_like')
+    comment_like = models.ManyToManyField('vs_account.User', blank=True, related_name='comment_like')
    
     def save(self, *args, **kwargs):
         is_new = self.pk is None  # 새로운 댓글인지 확인
