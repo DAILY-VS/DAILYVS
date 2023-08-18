@@ -17,7 +17,7 @@
                 {% if user.is_authenticated %}
                     <span class="fortune-reload"><span class="fortune-mbti">{{ user.mbti }}</span><span class="typing-text3"></span></span>
                 {% else %}
-                     <span class="fortune-reload"><span class="typing-text4"></span></span>
+                    <span class="fortune-reload"><span class="typing-text4"></span></span>
                 {% endif %}
                 </div>
               </span>
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 150);
   }
 
-  const text3 = "인 당신은" + "{{ random_fortune }}";
+  const text3 = "인 당신은 " + "{{ random_fortune }}";
   const typingText3 = document.querySelector(".typing-text3");
   typeFortuneCookie(text3, typingText3);
 

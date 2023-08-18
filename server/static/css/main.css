@@ -417,3 +417,7 @@ margin-right: 30px;
   border: 0;
   border-radius: 5px;
 }
+
+.typing-text3, .typing-text4 {
+  word-break: keep-all;
+}
