@@ -18,10 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch((error) => {
       console.error("Error:", error);
     });
-  if (isAuthenticated === "True"){
-    likeButton.addEventListener("click", () => {
 
-      console.log("클릭!");
+  likeButton.addEventListener("click", () => {
+
+    console.log("클릭!");
+
     axios
       .post(
         "/like/",
@@ -33,9 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       )
       .then((response) => {
-        const message = response.data.message;
-        const likeCount = response.data.like_count;
-        let userLikesPoll = response.data.user_likes_poll;
+      
+          const message = response.data.message;
+          const likeCount = response.data.like_count;
+          let userLikesPoll = response.data.user_likes_poll;
 
         if (message === "좋아요 취소") {
           heartImage.src = "../../../static/img/icon/blank_heart.png";
@@ -48,23 +50,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         document.querySelector("#like-count").textContent = likeCount;
-        likeButton.setAttribute("data-user-likes", userLikesPoll);      
+        likeButton.setAttribute("data-user-likes", userLikesPoll);
+      
       })
       .catch((error) => {
-        console.error("Error:", error);
-      });
-    });
-      } else {
-        // 비로그인 유저에게는 클릭 이벤트 적용하지 않음
-        likeButton.addEventListener("click", () => {
+        if (error.response && error.response.status === 401) {
+          // 로그인이 필요한 경우
           if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
             var loginUrl = "/account/login/";
-            window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
+            window.location.href = loginUrl;
           }
-        });
-      }
+        } else {
+          console.error("Error:", error);
+        }
+      });
+  });
 
-  
   const userLikesPoll = localStorage.getItem("userLikesPoll");
   if (userLikesPoll === "true") {
     heartImage.src = "../../../static/img/icon/pink_heart.png";
