@@ -8,7 +8,13 @@
 }
 
 .detail-top {
-  display: flex;
+  width: 350px;
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .back-button {
@@ -16,12 +22,11 @@
   color: var(--redpink-primary-color);
   align-items: center;
   display: flex;
-  margin-left: 40px;
 }
 
 .detail-views {
   display: flex;
-  margin: 5px 60px 0 auto;
+  justify-content: center;
   font-size: 12px;
 }
 
@@ -249,6 +254,7 @@
 .gender-choice-input:checked {
   background-color: var(--redpink-primary-color);
   color: white;
+  cursor: pointer;
 }
 
 .gender-choice-input {
@@ -285,6 +291,11 @@
 .mbti-detail-option.selected {
   background-color: var(--redpink-primary-color);
   color: white;
+  cursor: pointer;
+}
+
+.mbti-detail-option label:hover {
+  cursor: pointer;
 }
 
 .mbti-choice-input {
@@ -307,4 +318,14 @@
   font-family: "GongGothicMedium";
   color: var(--redpink-primary-color);
   font-size: 24px;
+}
+
+.mypage-like-votelist {
+  display:flex;
+  flex-direction: column;
+}
+
+.mypage-like-column {
+  display:flex;
+  flex-direction: column;
 }

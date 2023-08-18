@@ -21,4 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 초기 배경색 설정
   resultContainer.style.backgroundColor = currentBgColor;
+
+
 });

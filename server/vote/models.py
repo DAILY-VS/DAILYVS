@@ -27,10 +27,10 @@ class Poll(models.Model):
         return self.title
     
 #투표 선택지 DB
-class Choice(models.Model):
+class Choice(models.Model) :
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=255)
-    image = models.ImageField()
+    image = models.ImageField() 
 
 #회원투표 DB
 class UserVote(models.Model):
@@ -57,7 +57,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
-   
+    comment_like = models.ManyToManyField('account.User', blank=True, related_name='comment_like')
    
     def save(self, *args, **kwargs):
         is_new = self.pk is None  # 새로운 댓글인지 확인

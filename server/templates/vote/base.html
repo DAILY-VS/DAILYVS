@@ -7,43 +7,37 @@
     <meta property="og:title" content="내 사이트의 제목" />
     <meta property="og:description" content="보고 있는 페이지의 내용 요약" />
     <link rel="stylesheet" href="{%static 'css/style.css'%}?after" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <title>Daily VS</title>
   </head>
   <body>
-    <div id="base-container">
-      <nav class="nav-list">
-        {% if user.is_authenticated %}
-        <a href="{% url 'vs_account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
-        {% else %}
-        <a href="{% url 'vs_account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
-        {% endif %}
-          <a href="/" id="logo"
-            ><img src="{% static 'img/Row.png' %}"/></a>
-          <span class="nav-ham-btn"><img src="{% static 'img/icon/hamburger.png'%}" style="width:25px" id="hamburger-icon"  onclick="toggleHamRotation(event)"/></span>
-        </ul>
-      </nav>
-      <div class="base-block-container">{% block content %} {% endblock %}</div>
-    </div>
-    <div id="sidebar" class="hidden">
-      <span id="hide-sidebar-icon"><img src="{% static 'img/icon/right_round.png' %}" style="width: 35px" /></span>
-      <div class="ham-user-info">
-        <img src="{% static 'img/user.png'%}" style="width:80px" />
-        <div class="ham-user-name">
-          <span class="ham-logged-user-name">
-            {% if user.is_authenticated %}
-              {{ user.username }} <span class="ham-user-nim">님</span>
-            {% else %}
-              로그인을 해주세요
-            {% endif %}
-          </span>
-        </div>
+    <div class="main-container">
+      <div id="base-container">
+        <nav class="nav-list">
+          {% if user.is_authenticated %}
+          <a href="{% url 'vs_account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
+          {% else %}
+          <a href="{% url 'vs_account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
+          {% endif %}
+            <a href="/" id="logo"
+              ><img src="{% static 'img/Row.png' %}"/></a>
+            <div class="nav-right">
+              <a href="{% url 'vote:fortune' %}"> <img src="{% static 'img/Cookie.png' %}" style="width: 50px"/></a>
+              {% if user.is_authenticated %}
+              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Logged.png'%}" style="width:40px" class="hamburger-icon" /></a>
+              {% else %}
+              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Unlogged.png'%}" style="width:40px" class="hamburger-icon" /></a>
+              {% endif %}
+            </div>
+          </ul>
+        </nav>
+        <div class="base-block-container">{% block content %} {% endblock %}</div>
       </div>
       
   </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{% static 'js/base.js' %}"></script>
 </html>

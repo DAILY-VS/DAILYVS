@@ -1,11 +1,10 @@
 {% load static %} {% block content %}
 <div id="editor-pick">
-  <div class="editor-pick-title">오늘의 볼거리 👀</div>
+  <div class="editor-pick-title">📊오늘의 투표</div>
   <div class="editor-card-section">
     {% if random_poll.id %}
     <a href="{% url 'vote:detail' random_poll.id %}">
     {% endif %}      
-    <div class="today-topic">📊랜덤 추천 투표</div>
       <div class="editor-card">
         <div class="card-img">
           <img src="../../../media/{{random_poll.thumbnail}}" />
@@ -17,18 +16,6 @@
         </div>
       </div>
     </a>
-    <div>
-      <div class="today-taro">🪄포춘 쿠키</div>
-      <div class="editor-card">
-        <div class="card-img">
-          <img src="{% static 'img/slide/mintchoco.jpg' %}" />
-        </div>
-        <div class="card-content">
-          <div class="card-content-title">민트초코 호불호 대전</div>
-          <div class="card-content-paragraph">상쾌한 단맛! vs 치약맛!</div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 {% endblock %}

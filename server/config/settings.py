@@ -46,6 +46,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django.contrib.auth.middleware.AuthenticationMiddleware', #
+    'django.contrib.auth.middleware.RemoteUserMiddleware', #
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -126,8 +128,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 
-SITE_ID = 1
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',    
 ]
@@ -148,3 +148,15 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_REDIRECT_URL = '/'   # social login redirect
 ACCOUNT_LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/kakao/login/callback/'
+AUTH_USER_MODEL = "account.User"  ##
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'songvv2014@gmail.com'
+EMAIL_HOST_PASSWORD = 'usrczzcpaxrcorqv'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+SITE_ID = 1 
