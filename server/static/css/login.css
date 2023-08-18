@@ -158,6 +158,52 @@
   margin: 0;
 }
 
-.email-container {
+
+.email-container{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.email-container form p{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+.email-container form p label{
+  margin-right: auto;
+}
+
+.email-container p input {
+  width: 300px;
+  height: 50px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  font-size: 20px;
+  border: 1px rgba(128, 128, 128, 0.2) solid;
+  background-color: #f4faff;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.email-container ul {
+  font-size: 12px;
   margin-bottom: 20px;
+}
+
+.email-container button {
+  margin-top: 20px;
+  width: 300px;
+  height: 50px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  font-size: 24px;
+  color: white;
+  background-color: #ff495a;
+  border: none;
+  border-radius: 5px;
+  cursor:pointer;
 }
