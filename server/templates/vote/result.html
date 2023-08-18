@@ -16,7 +16,7 @@
       <div id="loading-text">당신의 성향 분석중..</div>
     </div>
   <div class="result-investigation" >
-    {% if minimum_value > maximum_value %}
+    {% if minimum_value >= maximum_value %}
     <div class="typing-line">
       <span class="typing-key">당신은</span>
       <span class="typing-bold">{{ minimum_key }}</span>
@@ -36,22 +36,21 @@
     </div>
     {% endif %}
   </div>
-  {% if key == "남자" or key == "여자" %}
+  {% if key == "남성" or key == "여성" %}
   {% include 'vote/result/category-genderanalysis.html' %}
   {% endif %}
   {% if key == "I" or key == "E" %}
-  {% include 'vote/result/category-EImbti.html' %}
+  {% include 'vote/result/category-EImbtianalysis.html' %}
   {% endif %}
   {% if key == "N" or key == "S" %}
-  {% include 'vote/result/category-SNmbti.html' %}
+  {% include 'vote/result/category-SNmbtianalysis.html' %}
   {% endif %}
   {% if key == "T" or key == "F" %}
-  {% include 'vote/result/category-TFmbti.html' %}
+  {% include 'vote/result/category-TFmbtianalysis.html' %}
   {% endif %}
   {% if key == "J" or key == "P" %}
-  {% include 'vote/result/category-PJmbti.html' %}
+  {% include 'vote/result/category-PJmbtianalysis.html' %}
   {% endif %}
-</div>
   <div class="btns-not-bts">
     <button id="capBtn2" style="border: none">캡처하기<span
         ><img src="{% static 'img/capture.png'%}" style="width: 30px"

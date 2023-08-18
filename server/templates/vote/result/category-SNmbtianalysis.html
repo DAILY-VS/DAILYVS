@@ -1,17 +1,19 @@
 {% load static %} {% block content %}
+
 <div class="result-chart-category">
-<div id="GenderChart"> </div>
+  <div id="SNmbtiChartanalysis" style="display: none"></div>
 </div>
+
 <script>
-  var MWoptions = {
+  var SNoptionsanalysis = {
     series: [
       {
         name: "{{ poll.choice_set.all.0.choice_text }}",
-        data: [{{choice1_man_percentage}}, {{choice1_woman_percentage}}],
+        data: [{{s_choice1_percentage}}, {{n_choice1_percentage}}],
       },
       {
         name: "{{ poll.choice_set.all.1.choice_text }}",
-        data: [{{choice2_man_percentage}}, {{choice2_woman_percentage}}],
+        data: [{{s_choice2_percentage}}, {{n_choice2_percentage}}],
       },
     ],
     colors: ["#17355a", "#ff495a"],
@@ -31,10 +33,10 @@
       colors: ["#fff"],
     },
     title: {
-      text: "M vs W Chart",
+      text: "S vs N Chart",
     },
     xaxis: {
-      categories: ["M", "W"],
+      categories: ["S", "N"],
     },
     tooltip: {
       y: {
@@ -53,15 +55,14 @@
     },
   };
 
-  // Wait for the document to load
-  document.addEventListener("DOMContentLoaded", function (event) {
+  document.addEventListener("DOMContentLoaded", function () {
     var chart = new ApexCharts(
-      document.querySelector("#GenderChart"),
-      MWoptions
+      document.querySelector("#SNmbtiChartanalysis"),
+      SNoptionsanalysis
     );
     chart.render();
-    const GenderChart = document.getElementById("GenderChart");
-    GenderChart.style.display = "block" 
+    const SNmbtiChart = document.getElementById("SNmbtiChartanalysis");
+    SNmbtiChart.style.display = "block" 
   });
 </script>
 {% endblock %}
