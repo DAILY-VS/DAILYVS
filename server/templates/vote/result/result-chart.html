@@ -11,7 +11,7 @@
       data: {
         labels: [
           {% for choice in poll.choice_set.all %}
-        "{{ choice.choice_text }}",
+          "{{ choice.choice_text }}",
           {% endfor %}],
         datasets: [
           {

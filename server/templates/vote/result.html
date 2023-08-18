@@ -1,42 +1,44 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
-<section id="capture" class="result-container" data-color="pink">
-  <div class="result-title">{{poll.title}}</div>
-  <div class="result-graph-content">{{poll.content}}</div>
-  <div class="graph-information-container">
-    {% include 'vote/result/graph-information.html' %}
-  </div>
-  <div class="graph-container" data-color="skyblue">
-    {% include 'vote/result/result-chart.html' %}
-  </div>
-  <div class="result-loading">
-    <div class="spinner-border text-secondary" role="status">
-      <span class="visually-hidden">Loading...</span>
+<section class="result-container" data-color="pink">
+  <div id="capture2" class="capture-container">
+    <div class="result-title">{{poll.title}}</div>
+    <div class="result-graph-content">{{poll.content}}</div>
+    <div class="graph-information-container">
+      {% include 'vote/result/graph-information.html' %}
     </div>
-    <div id="loading-text">당신의 성향 분석중..</div>
-  </div>
- <div class="result-investigation" >
-  {% if minimum_value > maximum_value %}
-  <div class="typing-line">
-    <span class="typing-key">당신은</span>
-    <span class="typing-bold">{{ minimum_key }}</span>
-    <span class="typing-key">이지만</span>
-    <span class="typing-value1"><span class="typing-percent">0</span></span>
-    <span class="typing-text1"><span class="typing-cursor"></span></span>
-  </div>
-  {% else %}
-  <div class="typing-line">
-    <span class="typing-key">당신은</span>
-    <span class="typing-bold">{{ maximum_key }}</span>
-    <span class="typing-key">이며</span>
-    <span class="typing-value2"><span class="typing-percent">0</span></span>
-    <span class="typing-key">의</span>
-    <span class="typing-bold">{{maximum_key}} </span>
-    <span class="typing-text2"><span class="typing-cursor"></span></span>
+    <div class="graph-container" data-color="skyblue">
+      {% include 'vote/result/result-chart.html' %}
+    </div>
+    <div class="result-loading">
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div id="loading-text">당신의 성향 분석중..</div>
+    </div>
+  <div class="result-investigation" >
+    {% if minimum_value > maximum_value %}
+    <div class="typing-line">
+      <span class="typing-key">당신은</span>
+      <span class="typing-bold">{{ minimum_key }}</span>
+      <span class="typing-key">이지만</span>
+      <span class="typing-value1"><span class="typing-percent">0</span></span>
+      <span class="typing-text1"><span class="typing-cursor"></span></span>
+    </div>
+    {% else %}
+    <div class="typing-line">
+      <span class="typing-key">당신은</span>
+      <span class="typing-bold">{{ maximum_key }}</span>
+      <span class="typing-key">이며</span>
+      <span class="typing-value2"><span class="typing-percent">0</span></span>
+      <span class="typing-key">의</span>
+      <span class="typing-bold">{{maximum_key}} </span>
+      <span class="typing-text2"><span class="typing-cursor"></span></span>
+    </div>
   </div>
   {% endif %}
 </div>
   <div class="btns-not-bts">
-    <button id="capBtn" style="border: none">캡처하기<span
+    <button id="capBtn2" style="border: none">캡처하기<span
         ><img src="{% static 'img/capture.png'%}" style="width: 30px"
       /></span></button>
     <button class="result-share-btn" id="copy-url-btn">
@@ -99,7 +101,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="{% static 'js/scroll.js' %}"></script>
-<script src="../../static/js/html2canvas.js"></script>
+<!-- <script src="../../static/js/html2canvas2.js"></script> -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const mbtiToggle = document.getElementById("mbtiToggle");
@@ -213,5 +215,30 @@ const incrementInterval2 = setInterval(() => {
                 }
             }, 4000);
         });
+</script>
+<script>
+   $(function(){
+    $("#capBtn2").on("click", function(){
+      // 캡쳐할 영역을 html2canvas로 캡쳐하여 canvas로 변환
+      html2canvas(document.querySelector("#capture2")).then(canvas => {
+        // 캡쳐된 이미지를 저장
+        saveImg(canvas.toDataURL('image/png'), "capture-test.png");
+      });
+    });
+
+    // 캡쳐된 파일을 저장하는 함수
+    function saveImg(uri, filename) { 
+      var link = document.createElement('a'); 
+      if (typeof link.download === 'string') { 
+        link.href = uri; 
+        link.download = filename; 
+        document.body.appendChild(link); 
+        link.click(); 
+        document.body.removeChild(link); 
+      } else { 
+        window.open(uri); 
+      } 
+    }
+  });
 </script>
 {% endblock %}
