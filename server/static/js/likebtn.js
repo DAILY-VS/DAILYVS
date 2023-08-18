@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const likeButton = document.getElementById("like-button");
   const pollId = likeButton.getAttribute("data-poll-id");
   const heartImage = likeButton.querySelector("img");
+  var isAuthenticated = "{{ user.is_authenticated }}";
 
   axios
     .get(`/get-like-status/${pollId}/`)
@@ -17,10 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch((error) => {
       console.error("Error:", error);
     });
+  if (isAuthenticated === "True"){
+    likeButton.addEventListener("click", () => {
 
-  likeButton.addEventListener("click", () => {
-    console.log("클릭!");
-
+      console.log("클릭!");
     axios
       .post(
         "/like/",
@@ -47,17 +48,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         document.querySelector("#like-count").textContent = likeCount;
-        likeButton.setAttribute("data-user-likes", userLikesPoll);
+        likeButton.setAttribute("data-user-likes", userLikesPoll);      
       })
       .catch((error) => {
-        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-          var loginUrl = "/account/login/";
-          window.location.href = loginUrl;
-        }
         console.error("Error:", error);
       });
-  });
+    });
+      } else {
+        // 비로그인 유저에게는 클릭 이벤트 적용하지 않음
+        likeButton.addEventListener("click", () => {
+          if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
+            var loginUrl = "/account/login/";
+            window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
+          }
+        });
+      }
 
+  
   const userLikesPoll = localStorage.getItem("userLikesPoll");
   if (userLikesPoll === "true") {
     heartImage.src = "../../../static/img/icon/pink_heart.png";
