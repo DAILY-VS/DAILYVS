@@ -79,6 +79,9 @@
   margin-left: auto;
 }
 
+.detail-like-container .like-word {
+  color: white;
+}
 #like-count {
   font-weight: bold;
   margin-left: 3px;
