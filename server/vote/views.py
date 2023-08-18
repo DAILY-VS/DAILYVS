@@ -792,7 +792,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         key = minimum_key
     else : 
         key = maximum_key
-    key="남성"
+    #key="남성"
     ctx = {
         "total_count": total_count,
         # "choice1_count": total_choice1_count,
