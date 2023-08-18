@@ -45,6 +45,22 @@
       /></span>
     </button>
   </div>
+  {% if key == "남자" or key == "여자" %}
+  <div>{% include 'vote/result/category-genderanalysis.html' %}</div>
+  {% endif %}
+  {% if key == "I" or key == "E" %}
+  {% include 'vote/result/category-EImbti.html' %}
+  {% endif %}
+  {% if key == "N" or key == "S" %}
+  {% include 'vote/result/category-SNmbti.html' %}
+  {% endif %}
+  {% if key == "T" or key == "F" %}
+  {% include 'vote/result/category-TFmbti.html' %}
+  {% endif %}
+  {% if key == "J" or key == "P" %}
+  {% include 'vote/result/category-PJmbti.html' %}
+  {% endif %}
+  
   <div class="graph-category-container">
     <div>{% include 'vote/result/category-gender.html' %}</div>
     <div class="result-category-box">

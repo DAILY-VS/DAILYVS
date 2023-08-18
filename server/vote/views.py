@@ -765,6 +765,10 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     minimum_value = dict[min(dict, key=dict.get)]
     maximum_key = max(dict, key=dict.get)
     maximum_value = dict[max(dict, key=dict.get)]
+    if minimum_value >= maximum_value:
+        key = minimum_key
+    else : 
+        key = maximum_key
 
     ctx = {
         "total_count": total_count,
@@ -808,7 +812,8 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "minimum_value": 100 - minimum_value,
         "maximum_key": maximum_key,
         "maximum_value": maximum_value,
-        "sort": sort
+        "key": key,
+        "sort": sort,
     }
     print (str(100- minimum_value))
     ##################################################################################
