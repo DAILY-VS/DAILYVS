@@ -63,7 +63,7 @@
   content: "";
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .carousel-image {
@@ -80,6 +80,31 @@
 
 .carousel-poll-content {
   color: var(--blue-bg-color);
+}
+
+.carousel-item.active .carousel-poll-title {
+  color: var(--mint-secondary-color);
+  font-family: "GongGothicMedium";
+  white-space: break-spaces;
+  font-size: 24px;
+}
+
+.carousel-item.active .carousel-poll-content {
+  color: var(--blue-bg-color);
+  white-space: break-spaces;
+  font-size: 16px;
+}
+.carousel-item-next .carousel-poll-title {
+  color: var(--mint-secondary-color);
+  font-family: "GongGothicMedium";
+  white-space: break-spaces;
+  font-size: 24px;
+}
+
+.carousel-item-next .carousel-poll-content {
+  color: var(--blue-bg-color);
+  white-space: break-spaces;
+  font-size: 16px;
 }
 /*editor-pick*/
 .editor-pick-container {
@@ -111,7 +136,7 @@
 
 .editor-card {
   width: 20rem;
-  height: 400px; /* 이 부분 필요하면 더 줄이기 */
+  height: 400px;
   border-radius: 10px;
   margin-top: 30px;
   background-color: white;
