@@ -26,13 +26,12 @@
   <!-- 정렬 영역 -->
       <form action="#" method="get" class="comment-sort-area">
         <select name="sort" class="option_select" id="selectSort" onchange="this.form.submit()">
-          <option value="" {% if not sort %}selected{% endif %}>정렬순</option>
             <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
             <option value="likes" {% if sort == 'likes' and not choice_filter %}selected{% endif %}>좋아요순</option>
         </select>
 
         <select name="choice_filter" class="option_select_choice" id="selectChoice" onchange="this.form.submit()">
-            <option value="" {% if not choice_filter %}selected{% endif %}>의견별</option>
+            <option value="" {% if not choice_filter %}selected{% endif %}>--전체--</option>
             {% for choice in choices %}
                 <option value="{{ choice.choice_text }}" {% if choice_filter == choice.choice_text %}selected{% endif %}>{{ choice.choice_text }} </option>
             {% endfor %}
@@ -155,7 +154,9 @@
                 </div>
               {% endif %}
               {% endfor %}
+              {% if new_comment_count > 6 %}
                <button id="load-more-comments">댓글 더보기</button>
+              {% endif %}
             </div>
           </div>
       </div>
@@ -480,7 +481,6 @@ $(document).ready(function () {
     const batchSize = 6;
     let visibleCount = batchSize;
 
-    // 초기에는 일부 항목만 보이도록 설정
     for (let i = 0; i < commentItems.length; i++) {
       if (i < visibleCount) {
         commentItems[i].style.display = 'flex';
@@ -489,7 +489,6 @@ $(document).ready(function () {
       }
     }
 
-    // "더보기" 버튼 클릭 시 처리
     loadMoreComments.addEventListener('click', function () {
       visibleCount += batchSize;
       for (let i = 0; i < commentItems.length; i++) {
@@ -500,7 +499,6 @@ $(document).ready(function () {
         }
       }
 
-      // 더 이상 보여줄 항목이 없으면 버튼 비활성화
       if (visibleCount >= commentItems.length) {
         loadMoreComments.disabled = true;
         loadMoreComments.style.backgroundColor = '#c4c4c4';
