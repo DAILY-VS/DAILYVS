@@ -187,7 +187,8 @@
 
 <script>
 // 좋아요
-document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
+// 좋아요 기능 처리 함수
+function handleLikeButton(likeButton) {
   const commentId = likeButton.getAttribute("data-comment-id");
   const userId = "{{ user.id }}";  // 현재 사용자의 ID
   const heartImage = likeButton.querySelector("img");
@@ -196,41 +197,41 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
   const isAuthenticated = "{{ user.is_authenticated }}";
 
   if (isAuthenticated === "True") {
-  if (userLikesComment === "true") {
-    heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
-  } else {
-    heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
-  }
+    if (userLikesComment === "true") {
+      heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
+    } else {
+      heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
+    }
 
-  likeButton.addEventListener("click", () => {
-    axios
-      .post(
-        "/comment_like/",
-        { comment_id: commentId },
-        {
-          headers: {
-            "X-CSRFToken": getCookie("csrftoken"),
-          },
-        }
-      )
-      .then((response) => {
-        const message = response.data.message;
-        const likeCount = response.data.like_count;
-        const newUserLikesComment = response.data.user_likes_comment;
+    likeButton.addEventListener("click", () => {
+      axios
+        .post(
+          "/comment_like/",
+          { comment_id: commentId },
+          {
+            headers: {
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+          }
+        )
+        .then((response) => {
+          const message = response.data.message;
+          const likeCount = response.data.like_count;
+          const newUserLikesComment = response.data.user_likes_comment;
 
-        localStorage.setItem(`userLikesComment-${userId}-${commentId}`, newUserLikesComment);
+          localStorage.setItem(`userLikesComment-${userId}-${commentId}`, newUserLikesComment);
 
-        if (message === "좋아요 취소") {
-          heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
-        } else {
-          heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
-        }
+          if (message === "좋아요 취소") {
+            heartImage.src = "{% static 'img/icon/blank_heart.png'%}";
+          } else {
+            heartImage.src = "{% static 'img/icon/pink_heart.png'%}";
+          }
 
-        likeCountElement.textContent = likeCount;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+          likeCountElement.textContent = likeCount;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     });
   } else {
     likeButton.addEventListener("click", () => {
@@ -240,7 +241,13 @@ document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
       }
     });
   }
+}
+
+// 페이지 로드 시 좋아요 버튼 처리
+document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
+  handleLikeButton(likeButton);
 });
+
 
 function getCookie(name) {
   var value = "; " + document.cookie;
@@ -300,8 +307,6 @@ $(document).ready(function () {
           //btnReplay.setAttribute('data-comment-id', `${response.comment_id}`);
           btnReply.innerHTML = `
           답글 <span id="nestedCount${response.comment_id}" data-comment-id="${response.comment_id}"></span>`;
-
-          console.log(btnReply);
 
           var newComment =
             '<div class="replyTr' +
@@ -363,10 +368,11 @@ $(document).ready(function () {
         $(".replyContent").val("");
         var newComment_quantity = $(".comment-quantity");
         newComment_quantity.text(response.new_comment_count);
-        console.log(newComment_quantity);
         
+        const commentLikeButton = document.querySelector(`#comment-like-button-${response.comment_id}`);
+        handleLikeButton(commentLikeButton);
+
         var comment_id = response.comment_id;
-        console.log(comment_id)
         var nestedReplyButton = $(".btnNestedReply[data-comment-id='" + response.comment_id + "']");
         nestedReplyButton.data("comment-id", response.comment_id); // 데이터 설정
         },
@@ -401,7 +407,7 @@ $(document).ready(function () {
     }
 
     var nestedContent = $("#nested_content_id_" + comment_id).val(); 
-    console.log(comment_id)
+    console.log(comment_id);
     console.log(nestedContent)
     if (isAuthenticated === "True") {
       $.ajax({
@@ -445,7 +451,7 @@ $(document).ready(function () {
           if ($("#nested_content_id_" + comment_id).val() == "") {
             alert("대댓글을 입력해주세요.");
           } else {
-            console.log(error.message)
+            console.log(error)
             alert("오류가 발생했습니다.");
           }
         },
