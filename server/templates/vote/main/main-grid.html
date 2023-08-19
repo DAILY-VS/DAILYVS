@@ -3,8 +3,8 @@
   <div id="main-grid-content" class="main-list-title">🗒️ 투표 모음 리스트</div>
   <form action="{% url 'vote:main' %}" method="get">
     <select name="sort" class="option_select" id="selectSort" data-url="{% url 'vote:main' %}">
-      <option value="popular" {% if sort == 'popular' %}selected{% endif %}>인기순</option>
       <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
+      <option value="popular" {% if sort == 'popular' %}selected{% endif %}>인기순</option>
       <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>등록순</option>
     </select>    
   </form>
@@ -47,28 +47,23 @@ document.addEventListener("DOMContentLoaded", function () {
   const pagination = document.querySelector(".pagination");
   const selectSort = document.querySelector("#selectSort");
 
-  // 세션 스토리지에 저장된 값 불러오기
   const savedSortValue = sessionStorage.getItem("selectedSort");
   if (savedSortValue) {
     selectSort.value = savedSortValue;
   }
 
-  // 페이지 로드 시에도 필터 값에 따라 내용 업데이트
   const initialSortValue = selectSort.value;
   const initialPageUrl = `${selectSort.getAttribute('data-url')}?sort=${initialSortValue}`;
   updateContent(initialPageUrl);
 
-  // 필터링 옵션 변경 시 이벤트 핸들러 추가
   selectSort.addEventListener("change", function () {
     const sortValue = selectSort.value;
     const pageUrl = `${selectSort.getAttribute('data-url')}?sort=${sortValue}`;
     updateContent(pageUrl);
     
-    // 선택한 값 세션 스토리지에 저장
     sessionStorage.setItem("selectedSort", sortValue);
   });
 
-  // 페이지 내용 업데이트 함수
   function updateContent(pageUrl) {
     fetch(pageUrl)
       .then((response) => response.text())
