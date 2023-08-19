@@ -25,7 +25,7 @@ def main(request):
             return redirect("vote:update")
     polls = Poll.objects.all()
     sort = request.GET.get("sort")
-    promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
+    promotion_polls = Poll.objects.filter(active=True).order_by("-views_count")[:3]
     if sort == "popular":
         polls = polls.order_by("-views_count")  # 인기순
     elif sort == "latest":
@@ -173,9 +173,10 @@ def mypage(request):
             return redirect("vote:update")
     polls = Poll.objects.all()
     page = request.GET.get("page")
-    paginator = Paginator(polls, 4)
     uservotes = UserVote.objects.filter(user=request.user)
+    paginator = Paginator(uservotes, 4)
     polls_like = Poll.objects.filter(poll_like=request.user)
+    length_polls_like = len(polls_like)
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -184,13 +185,13 @@ def mypage(request):
     except EmptyPage:
         page = paginator.num_pages
         page_obj = paginator.page(page)
-
     context = {
         "polls": polls,
         "uservotes": uservotes,
         "polls_like": polls_like,
         "page_obj": page_obj,
         "paginator": paginator,
+        "length_polls_like": length_polls_like,
     }
     return render(request, "vote/mypage.html", context)
 
@@ -254,7 +255,6 @@ def comment_write_view(request, poll_id):
         poll.comments = comments.count()
         poll.save()
         comment_id =Comment.objects.last().pk
-
         data = {
             "nickname": user_info.nickname,
             "mbti": user_info.mbti,
@@ -415,8 +415,10 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
             return redirect("vote:update")
+        
     poll = get_object_or_404(Poll, pk=poll_id)
-    
+    comments = Comment.objects.filter(poll_id=poll_id)
+    poll.comments = comments.count()
     # 댓글
     choices=Choice.objects.filter(poll_id=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
@@ -795,6 +797,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     else : 
         key = maximum_key
     #key="남성"
+
     ctx = {
         "total_count": total_count,
         # "choice1_count": total_choice1_count,
@@ -842,8 +845,8 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "key": key,
         "choices": choices,
         "choice_filter":choice_filter,
+        "new_comment_count": poll.comments,
     }
-    print (str(100- minimum_value))
     ##################################################################################
 
     return render(request, template_name="vote/result.html", context=ctx)

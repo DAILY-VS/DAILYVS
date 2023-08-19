@@ -161,7 +161,6 @@
 .mypage-voted-pagination {
   display: flex;
   flex-direction: column;
-  margin: 0.5vw;
   padding-top: 10px;
 }
 
@@ -258,4 +257,8 @@
 
 .mypage-update-container button{
   margin-top: 20px;
+}
+
+.voted-list-container {
+  width: 420px;
 }
