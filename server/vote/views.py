@@ -202,7 +202,7 @@ def mypage_update(request):
         form = UserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("vote:mypage")
+            return redirect("/")
     else:
         form = UserChangeForm(instance=request.user)
     context = {"form": form}
@@ -251,8 +251,7 @@ def comment_write_view(request, poll_id):
             )
             parent_comment_data = None
 
-        poll.comments += 1  # 댓글 수 업데이트
-        poll.save()
+
 
         comment_id =Comment.objects.last().pk
 
@@ -285,8 +284,6 @@ def comment_delete_view(request, pk):
 
     if request.user == target_comment.user_info:
         target_comment.delete()
-        poll.comments -= 1  # 댓글 수 감소
-        poll.save()
         data = {"comment_id": comment_id, "success": True}
     else:
         data = {"success": False, "error": "본인 댓글이 아닙니다."}
@@ -831,6 +828,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
         "comments": comments,
+        "comments_count":comments.count(),
         "uservotes": uservotes,
         "minimum_key": minimum_key,
         "minimum_value": 100 - minimum_value,
