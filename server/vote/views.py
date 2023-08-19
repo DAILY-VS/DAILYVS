@@ -202,7 +202,7 @@ def mypage_update(request):
         form = UserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("vote:mypage")
+            return redirect("/")
     else:
         form = UserChangeForm(instance=request.user)
     context = {"form": form}
@@ -250,10 +250,9 @@ def comment_write_view(request, poll_id):
                 user_info=user_info,
             )
             parent_comment_data = None
-
-        poll.comments += 1  # 댓글 수 업데이트
+        comments = Comment.objects.filter(poll_id=poll_id)
+        poll.comments = comments.count()
         poll.save()
-
         comment_id =Comment.objects.last().pk
 
         data = {
@@ -264,6 +263,7 @@ def comment_write_view(request, poll_id):
             "created_at": comment.created_at.strftime("%Y년 %m월 %d일"),
             "comment_id": comment_id,
             "choice": choice_text,
+            "new_comment_count": poll.comments,
         }
         
         comment.choice = user_vote.choice
@@ -282,12 +282,13 @@ def comment_delete_view(request, pk):
     poll = get_object_or_404(Poll, id=pk)
     comment_id = request.POST.get("comment_id")
     target_comment = Comment.objects.get(pk=comment_id)
-
     if request.user == target_comment.user_info:
         target_comment.delete()
-        poll.comments -= 1  # 댓글 수 감소
+        comments = Comment.objects.filter(poll_id=pk)
+        poll.comments = comments.count()
         poll.save()
-        data = {"comment_id": comment_id, "success": True}
+        data = {"comment_id": comment_id, "success": True,
+                "new_comment_count": poll.comments,}
     else:
         data = {"success": False, "error": "본인 댓글이 아닙니다."}
     return HttpResponse(
@@ -831,6 +832,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
         "comments": comments,
+        "comments_count":comments.count(),
         "uservotes": uservotes,
         "minimum_key": minimum_key,
         "minimum_value": 100 - minimum_value,
