@@ -1,6 +1,8 @@
 {% load static %} {% block content %}
+<div class="chart-analysis-container">
 <div class="result-chart-category">
-<div id="GenderChart"> </div>
+<div id="GenderChart" style="opacity:0"> </div>
+</div>
 </div>
 <script>
   var MWoptions = {
@@ -17,7 +19,8 @@
     colors: ["#17355a", "#ff495a"],
     chart: {
       type: "bar",
-      height: 200,
+      height: 180,
+      width: 450,
       stacked: true,
       stackType: "100%",
     },
@@ -31,10 +34,10 @@
       colors: ["#fff"],
     },
     title: {
-      text: "M vs W Chart",
+      text: "",
     },
     xaxis: {
-      categories: ["M", "W"],
+      categories: ["남성", "여성"],
     },
     tooltip: {
       y: {
@@ -55,13 +58,14 @@
 
   // Wait for the document to load
   document.addEventListener("DOMContentLoaded", function (event) {
+    setTimeout(function() {
     var chart = new ApexCharts(
       document.querySelector("#GenderChart"),
       MWoptions
     );
     chart.render();
     const GenderChart = document.getElementById("GenderChart");
-    GenderChart.style.display = "block" 
-  });
+    GenderChart.style.opacity = "1" 
+  }, 3500); });
 </script>
 {% endblock %}

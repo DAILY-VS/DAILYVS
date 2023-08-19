@@ -2,7 +2,7 @@ $(function(){
     $("#capBtn").on("click", function(){
       // 캡쳐할 영역을 html2canvas로 캡쳐하여 canvas로 변환
       html2canvas(document.querySelector("#capture")).then(canvas => {
-				saveImg(canvas.toDataURL('image/png'),"capture-test.png");
+				saveImg(canvas.toDataURL('image/png'),"dailyVS-fortune.png");
 			});
     });
 

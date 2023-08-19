@@ -1,66 +1,70 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section class="result-container" data-color="pink">
   <div id="capture2" class="capture-container">
-    <div class="result-title">{{poll.title}}</div>
-    <div class="result-graph-content">{{poll.content}}</div>
-    <div class="graph-information-container">
-      {% include 'vote/result/graph-information.html' %}
-    </div>
-    <div class="graph-container" data-color="skyblue">
-      {% include 'vote/result/result-chart.html' %}
-    </div>
-    <div class="result-loading">
-      <div class="spinner-border text-secondary" role="status">
-        <span class="visually-hidden">Loading...</span>
+      <div class="result-title">{{poll.title}}</div>
+      <div class="result-graph-content">{{poll.content}}</div>
+      <div class="graph-information-container">
+        {% include 'vote/result/graph-information.html' %}
       </div>
-      <div id="loading-text">당신의 성향 분석중..</div>
+      <div class="graph-container" data-color="skyblue">
+        {% include 'vote/result/result-chart.html' %}
+      </div>
+      <div class="result-loading">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div id="loading-text">당신의 성향 분석중..</div>
+      </div>
+    <div class="result-investigation" >
+      {% if minimum_value >= maximum_value %}
+      <div class="typing-line">
+        <span class="typing-key">당신은</span>
+        <span class="typing-bold">{{ minimum_key }}</span>
+        <span class="typing-key">이지만</span>
+        <span class="typing-value1"><span class="typing-percent">0</span></span>
+        <span class="typing-text1"><span class="typing-cursor"></span></span>
+      </div>
+      {% else %}
+      <div class="typing-line">
+        <span class="typing-key">당신은</span>
+        <span class="typing-bold">{{ maximum_key }}</span>
+        <span class="typing-key">이며</span>
+        <span class="typing-value2"><span class="typing-percent">0</span></span>
+        <span class="typing-key">의</span>
+        <span class="typing-bold">{{maximum_key}} </span>
+        <span class="typing-text2"><span class="typing-cursor"></span></span>
+      </div>
+      {% endif %}
     </div>
-  <div class="result-investigation" >
-    {% if minimum_value >= maximum_value %}
-    <div class="typing-line">
-      <span class="typing-key">당신은</span>
-      <span class="typing-bold">{{ minimum_key }}</span>
-      <span class="typing-key">이지만</span>
-      <span class="typing-value1"><span class="typing-percent">0</span></span>
-      <span class="typing-text1"><span class="typing-cursor"></span></span>
-    </div>
-    {% else %}
-    <div class="typing-line">
-      <span class="typing-key">당신은</span>
-      <span class="typing-bold">{{ maximum_key }}</span>
-      <span class="typing-key">이며</span>
-      <span class="typing-value2"><span class="typing-percent">0</span></span>
-      <span class="typing-key">의</span>
-      <span class="typing-bold">{{maximum_key}} </span>
-      <span class="typing-text2"><span class="typing-cursor"></span></span>
-    </div>
+    {% if key == "남성" or key == "여성" %}
+    {% include 'vote/result/category-genderanalysis.html' %}
     {% endif %}
+    {% if key == "I" or key == "E" %}
+    {% include 'vote/result/category-EImbtianalysis.html' %}
+    {% endif %}
+    {% if key == "N" or key == "S" %}
+    {% include 'vote/result/category-SNmbtianalysis.html' %}
+    {% endif %}
+    {% if key == "T" or key == "F" %}
+    {% include 'vote/result/category-TFmbtianalysis.html' %}
+    {% endif %}
+    {% if key == "J" or key == "P" %}
+    {% include 'vote/result/category-PJmbtianalysis.html' %}
+    {% endif %}
+    <div class="water-mark">
+      <img src="{% static 'img/Logo.png' %}" style="width: 60px"/>
+    </div>
   </div>
-  {% if key == "남성" or key == "여성" %}
-  {% include 'vote/result/category-genderanalysis.html' %}
-  {% endif %}
-  {% if key == "I" or key == "E" %}
-  {% include 'vote/result/category-EImbtianalysis.html' %}
-  {% endif %}
-  {% if key == "N" or key == "S" %}
-  {% include 'vote/result/category-SNmbtianalysis.html' %}
-  {% endif %}
-  {% if key == "T" or key == "F" %}
-  {% include 'vote/result/category-TFmbtianalysis.html' %}
-  {% endif %}
-  {% if key == "J" or key == "P" %}
-  {% include 'vote/result/category-PJmbtianalysis.html' %}
-  {% endif %}
-  <div class="btns-not-bts">
-    <button id="capBtn2" style="border: none">캡처하기<span
-        ><img src="{% static 'img/capture.png'%}" style="width: 30px"
-      /></span></button>
-    <button class="result-share-btn" id="copy-url-btn">
-      URL 복사<span
-        ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
-      /></span>
-    </button>
-  </div>
+    <div class="btns-not-bts">
+      <button id="capBtn2" style="border: none">캡처하기<span
+          ><img src="{% static 'img/capture.png'%}" style="width: 30px"
+        /></span></button>
+      <button class="result-share-btn" id="copy-url-btn">
+        URL 복사<span
+          ><img src="{% static 'img/icon/share.png'%}" style="width: 30px"
+        /></span>
+      </button>
+    </div>
 
   
   <div class="graph-category-container">
@@ -73,7 +77,7 @@
       >
         <img
           src="{% static 'img/icon/chevron_up.png'%}"
-          style="width: 30px"
+          style="width: 30px; transform: rotate(180deg);"
           class="chevron"
         />
         MBTI
@@ -94,7 +98,11 @@
       </div>
     </div>
   </div>
-  <div class="detail-like-container">{% include 'vote/result/like.html' %}</div>
+  <div class="result-like-section"> 
+    <div class="result-like-recommend">
+      투표 좋아요 눌러주기 <img src="{% static 'img/icon/right-arrow.png' %}" style="width: 50px"/>
+    </div>
+    <div class="detail-like-container">{% include 'vote/result/like.html' %}</div></div>
   <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
@@ -104,9 +112,9 @@
   function toggleRotation2() {
     const chevron = document.querySelector(".chevron");
     if (isRotated2) {
-      chevron.style.transform = "rotate(0deg)";
-    } else {
       chevron.style.transform = "rotate(180deg)";
+    } else {
+      chevron.style.transform = "rotate(0deg)";
     }
 
     isRotated2 = !isRotated2;
@@ -185,8 +193,8 @@ typeTextWithCursor(text2, typingText2);
 <script>
 const typingPercent1 = document.querySelector(".typing-value1 .typing-percent");
 const typingPercent2 = document.querySelector(".typing-value2 .typing-percent");
-const minimumValue = {{ minimum_value }}; // Replace with the actual minimum value
-const maximumValue = {{ maximum_value }}; // Replace with the actual maximum value
+const minimumValue = {{ minimum_value }}; 
+const maximumValue = {{ maximum_value }};
 
 let currentNumber1 = 0;
 let currentNumber2 = 0;
@@ -202,7 +210,7 @@ const incrementInterval1 = setInterval(() => {
       typingPercent1.style.color = "#ff495a";
     }
   }
-}, 50); // Interval to update the number (milliseconds)
+}, 50); 
 
 const incrementInterval2 = setInterval(() => {
   currentNumber2++;
@@ -215,7 +223,7 @@ const incrementInterval2 = setInterval(() => {
       typingPercent2.style.color = "#ff495a";
     }
   }
-}, 50); // Interval to update the number (milliseconds)
+}, 50);
 
 
 </script>
@@ -235,14 +243,19 @@ const incrementInterval2 = setInterval(() => {
 <script>
    $(function(){
     $("#capBtn2").on("click", function(){
+      var captureContainer = document.querySelector("#capture2");
+      captureContainer.classList.add("capture-logo-visible");
+
+      setTimeout(function() {
+        captureContainer.classList.remove("capture-logo-visible")
+      }, 1000);
       // 캡쳐할 영역을 html2canvas로 캡쳐하여 canvas로 변환
       html2canvas(document.querySelector("#capture2")).then(canvas => {
         // 캡쳐된 이미지를 저장
-        saveImg(canvas.toDataURL('image/png'), "capture-test.png");
+        saveImg(canvas.toDataURL('image/png'), "dailyVS-chart.png");
       });
     });
 
-    // 캡쳐된 파일을 저장하는 함수
     function saveImg(uri, filename) { 
       var link = document.createElement('a'); 
       if (typeof link.download === 'string') { 

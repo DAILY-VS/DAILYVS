@@ -1,9 +1,9 @@
 {% load static %} {% block content %}
-
+<div class="chart-analysis-container">
 <div class="result-chart-category">
-  <div id="SNmbtiChartanalysis" style="display: none"></div>
+  <div id="SNmbtiChartanalysis" style="opacity:0"></div>
 </div>
-
+</div>
 <script>
   var SNoptionsanalysis = {
     series: [
@@ -19,7 +19,8 @@
     colors: ["#17355a", "#ff495a"],
     chart: {
       type: "bar",
-      height: 200,
+      height: 180,
+      width: 450,
       stacked: true,
       stackType: "100%",
     },
@@ -33,7 +34,7 @@
       colors: ["#fff"],
     },
     title: {
-      text: "S vs N Chart",
+      text: "",
     },
     xaxis: {
       categories: ["S", "N"],
@@ -55,14 +56,16 @@
     },
   };
 
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function (event) {
+    setTimeout (function() { 
     var chart = new ApexCharts(
       document.querySelector("#SNmbtiChartanalysis"),
       SNoptionsanalysis
     );
     chart.render();
     const SNmbtiChart = document.getElementById("SNmbtiChartanalysis");
-    SNmbtiChart.style.display = "block" 
+    SNmbtiChart.style.opacity = "1" 
+  }, 3500);
   });
 </script>
 {% endblock %}

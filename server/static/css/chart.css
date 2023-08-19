@@ -1,0 +1,75 @@
+.chart-analysis-container .apexcharts-toolbar {
+  display: none;
+}
+
+.result-chart-category .apexcharts-toolbar {
+  display: none; }
+
+.chart-analysis-container .apexcharts-align-left {
+  display: none;
+}
+
+#SNmbtiChartanalysis {
+  display:flex;
+  justify-content: center;
+}
+
+#TFmbtiChartanalysis {
+  display:flex;
+  justify-content: center;
+}
+
+#EImbtiChartanalysis {
+  display:flex;
+  justify-content: center;
+}
+
+#PJmbtiChartanalysis {
+  display:flex;
+  justify-content: center;
+}
+
+#GenderChart {
+  display:flex;
+  justify-content: center;
+}
+
+.darkblue-choice {
+  color: var(--darkblue-primary-color);
+  font-family: "GongGothicMedium";
+}
+
+.redpink-choice {
+  color: var(--redpink-primary-color);
+  font-family: "GongGothicMedium";
+}
+
+.water-mark {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+.capture-container.capture-logo-visible .water-mark {
+  top: 80px;
+  left: 20px;
+}
+
+#EImbtiToggle,
+#SNmbtiToggle,
+#TFmbtiToggle,
+#PJmbtiToggle {
+  display: flex;
+  margin-right: 50px;
+}
+
+.result-like-section {
+  margin-top: 20px;
+  display:flex;
+  flex-direction: row;
+}
+
+#mbtiToggle,
+#genderToggle {
+  margin-left: 20px;
+}

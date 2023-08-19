@@ -1,7 +1,7 @@
 {% load static %} {% block content %} {% csrf_token %}
 <div class="comment-container">
   <div class="comment-top-container">
-    <div class="comment-category-title">댓글</div>
+    <div class="comment-category-title">댓글{{poll.comments}}</div>
     <div class="comment-sort-area">
       <!-- 정렬 영역 -->
       <form action="#" method="get">
@@ -34,8 +34,28 @@
     ></textarea>
     <button id="comment_write" class="btnReply">댓글달기</button>
   </div>
-  <hr />
+  <div class="comment-additional-info">
+    <div class="comment-quantity-count">
+      <span class="comment-qc-s">댓글수</span>
+      <img src="{% static 'img/icon/chat.png' %}" style="width: 20px; padding-bottom:2px;"/>
+      <span>{{poll.comments}}</span>
+    </div>
+  <!-- 정렬 영역 -->
+      <form action="#" method="get" class="comment-sort-area">
+        <select name="sort" class="option_select" id="selectSort" onchange="this.form.submit()">
+          <option value="" {% if not sort %}selected{% endif %}>정렬순</option>
+            <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
+            <option value="likes" {% if sort == 'likes' and not choice_filter %}selected{% endif %}>좋아요순</option>
+        </select>
 
+        <select name="choice_filter" class="option_select_choice" id="selectChoice" onchange="this.form.submit()">
+            <option value="" {% if not choice_filter %}selected{% endif %}>의견별</option>
+            {% for choice in choices %}
+                <option value="{{ choice.choice_text }}" {% if choice_filter == choice.choice_text %}selected{% endif %}>{{ choice.choice_text }} </option>
+            {% endfor %}
+        </select>
+    </form>
+  </div>
   <div class="replyTable" id="comment-list">
     <div class="replyTody">
       {% for comment in comments reversed%}
