@@ -34,7 +34,7 @@
     style="width: 30px"
   /></span><div class="mypage-real-username">나의 VOTE LIST</div><span></div>
     <div class="mypage-voted-pagination">
-       <div>
+       <div class="voted-list-container">
         {% for uservote in page_obj %}
               <div class="mypage-voted-list">
                 <a href="{% url 'vote:calcstat' uservote.poll.id uservote.id 0%}">{{ uservote.poll }}</a>
