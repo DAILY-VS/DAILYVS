@@ -12,13 +12,19 @@ env = environ.Env(
 
 environ.Env.read_env(BASE_DIR / '../.env')
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY=env('SECRET_KEY')
 
 MYSQL_DBNAME=env('MYSQL_DBNAME')
 MYSQL_USERNAME=env('MYSQL_USERNAME')
 MYSQL_PASSWD=env('MYSQL_PASSWD')
 MYSQL_HOST=env('MYSQL_HOST')
 MYSQL_PORT=env('MYSQL_PORT')
+
+
+
+
+
+
 
 DATABASES = {
     "default": {
@@ -171,16 +177,15 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_REDIRECT_URL = '/'   # social login redirect
-ACCOUNT_LOGOUT_REDIRECT_URL = 'https://daily-vs.com//accounts/kakao/login/callback/'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'https://daily-vs.com/accounts/kakao/login/callback/'
 AUTH_USER_MODEL = "vs_account.User"  ##
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'dailyvsofficial@gmail.com'
-EMAIL_HOST_PASSWORD = 'qousltfgowhagxab'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-SITE_ID = 1 
+EMAIL_HOST=env('EMAIL_HOST')
+EMAIL_PORT=env('EMAIL_PORT')
+EMAIL_HOST_USER=env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=EMAIL_HOST_USER
+SITE_ID=env('SITE_ID')
