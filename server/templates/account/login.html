@@ -67,7 +67,7 @@
     {% if user.is_authenticated %}
         <a href="/accounts/logout" type="button" class="h1">Logout</a>   
     {% else %}                
-        <a href="{% provider_login_url 'kakao' %}" method='post'> <img src="{% static 'img/Kakao.png' %}" alt="" style="width: 300px; margin-top: 10px;"></a>        
+        <a href="{% provider_login_url 'kakao' %}" method='post'> <div class="kakao-login-btn"><img src="{% static 'img/icon/kakao-talk-i.png' %}" style="width:30px"/>카카오 로그인</div></a>        
     {% endif %}
 </div>
 {% comment %} end social {% endcomment %}
