@@ -115,3 +115,8 @@
   border-radius: 5px;
   cursor:pointer;
 }
+
+.logo-font-design {
+  font-family: "GongGothicMedium";
+  color: var(--darkblue-primary-color)
+}
