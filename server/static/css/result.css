@@ -28,6 +28,10 @@
 .result-graph-content {
   display: flex;
   justify-content: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: break-spaces;
+  text-align: center;
 }
 /* 차트 정보 섹션 */
 .graph-information-box {
@@ -37,6 +41,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.graph-information-container{
+  margin-top: 5px;
+}
+
 
 .choice-circle {
   width: 20px;
