@@ -154,8 +154,8 @@ AUTH_USER_MODEL = "vs_account.User"  ##
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'songvv2014@gmail.com'
-EMAIL_HOST_PASSWORD = 'usrczzcpaxrcorqv'
+EMAIL_HOST_USER = 'dailyvsofficial@gmail.com'
+EMAIL_HOST_PASSWORD = 'qousltfgowhagxab'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

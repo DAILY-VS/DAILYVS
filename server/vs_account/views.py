@@ -133,7 +133,7 @@ def call(request):
     if token == code:
             request.user.is_active = True
             request.user.save()
-            return redirect("vs_account:login")  # Redirect to login page after successful verification
+            return redirect("/")  # Redirect to login page after successful verification
     else:
             return render(request, "account/verification_error.html")
 
