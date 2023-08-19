@@ -147,7 +147,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_REDIRECT_URL = '/'   # social login redirect
-ACCOUNT_LOGOUT_REDIRECT_URL = 'https://daily-vs.com//accounts/kakao/login/callback/'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'https://daily-vs.com/accounts/kakao/login/callback/'
 AUTH_USER_MODEL = "vs_account.User"  ##
 
 
