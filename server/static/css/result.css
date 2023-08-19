@@ -31,6 +31,7 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: break-spaces;
+  text-align: center;
 }
 /* 차트 정보 섹션 */
 .graph-information-box {

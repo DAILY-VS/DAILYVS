@@ -315,6 +315,29 @@ $(document).ready(function () {
             '<img src="{% static 'img/icon/x.png' %}" type="button" value="x" onclick="replyDelete(' + response.comment_id + ')" style="width: 10px" class="addtion-delete-btn"/>' + '</div>' +
             `<button id="reply-toggle-btn-${ response.comment_id }" class="reply-toggle-btn" data-comment-id="${ response.comment_id }" onclick="openReply('${ response.comment_id }')">답글 <span id="nestedCount${ response.comment_id }" data-comment-id="${ response.comment_id }"></span></button>`+'</div>'+
             '</div>' +
+            `<div class="comment-reply-like-row">
+              <!-- 좋아요 표시 영역 -->
+              <div class="detail-like-container">
+                  <span
+                  class="comment-like-button"
+                  id="comment-like-button-${ response.comment_id }"
+                  data-comment-id="${ response.comment_id }"
+                  data-user-like="${ response.comment_id }"
+                >
+                  <img
+                    src="{% static 'img/icon/blank_heart.png'%}"
+                    style="width: 20px"
+                  />
+                </span>
+                <span id="comment-like-count-${ response.comment_id }"
+                      class="comment-like-count">
+                      {{ comment.comment_like.count }}
+                </span>
+                <span class="like-word"> likes</span>
+
+              </div>
+            </div>
+            ` +
             `<div class="every-reply-container">
               <div class="nested-reply-container" data-parent-id="${ response.comment_id }" style="display:none">
                   <!-- 대댓글 표시 영역 -->
@@ -366,9 +389,15 @@ $(document).ready(function () {
 
   // 대댓글 달기
   $(document).on("click", ".btnNestedReply", function () {
-    var comment_id = savedCommentId;
-    var nestedContent = $("#nested_content_id_" + comment_id).val();
     var isAuthenticated = "{{ user.is_authenticated }}";
+    var comment_id;
+    if (savedCommentId) {
+      comment_id = savedCommentId; 
+    } else {
+      comment_id = $(this).data("comment-id"); 
+    }
+
+    var nestedContent = $("#nested_content_id_" + comment_id).val(); 
     console.log(comment_id)
     console.log(nestedContent)
     if (isAuthenticated === "True") {
