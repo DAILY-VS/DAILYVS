@@ -265,6 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 $(document).ready(function () {
+  var savedCommentId;
     //댓글 달기
   $("#comment_write").click(function () {
     var content = $(".replyContent").val();
@@ -280,6 +281,7 @@ $(document).ready(function () {
           csrfmiddlewaretoken: "{{ csrf_token }}",
         },
         success: function (response) {
+          savedCommentId = response.comment_id;
           // 새로운 댓글 생성
           
           //btnReply = $(`
@@ -310,7 +312,9 @@ $(document).ready(function () {
             '</div>' +
             '<div class="comment-content-delete">' +
             '<div class="stored-comment-content">' + response.content + '</div>' +
-            `<button id="reply-toggle-btn-${ response.comment_id }" class="reply-toggle-btn" data-comment-id="${ response.comment_id }" onclick="openReply('${ response.comment_id }')">답글 <span id="nestedCount${ response.comment_id }" data-comment-id="${ response.comment_id }"></span></button>`+
+            '<img src="{% static 'img/icon/x.png' %}" type="button" value="x" onclick="replyDelete(' + response.comment_id + ')" style="width: 10px" class="addtion-delete-btn"/>' + '</div>' +
+            `<button id="reply-toggle-btn-${ response.comment_id }" class="reply-toggle-btn" data-comment-id="${ response.comment_id }" onclick="openReply('${ response.comment_id }')">답글 <span id="nestedCount${ response.comment_id }" data-comment-id="${ response.comment_id }"></span></button>`+'</div>'+
+            '</div>' +
             `<div class="every-reply-container">
               <div class="nested-reply-container" data-parent-id="${ response.comment_id }" style="display:none">
                   <!-- 대댓글 표시 영역 -->
@@ -326,29 +330,26 @@ $(document).ready(function () {
                     <button class="btnNestedReply" data-comment-id="{{ comment.id }}">등록</button>
                   </div>        
                 </div>
-            </div>
-          </div>`
+            </div>` 
             ;
 
-          
-          // 로그인한 사용자와 댓글 작성자가 동일한 경우에만 삭제 버튼 추가
-          if ("{{ user.is_authenticated }}" === "True" && "{{ user.nickname }}" === response.nickname) {
-            newComment +=
-              '<img src="{% static 'img/icon/x.png' %}" type="button" value="x" onclick="replyDelete(' +
-              response.comment_id +
-              ')" />';
-          }
         $(".replyTody").prepend(newComment);
         $(".replyContent").val("");
         var newComment_quantity = $(".comment-quantity");
         newComment_quantity.text(response.new_comment_count);
-        console.log(newComment_quantity)
+        console.log(newComment_quantity);
+        
+        var comment_id = response.comment_id;
+        console.log(comment_id)
+        var nestedReplyButton = $(".btnNestedReply[data-comment-id='" + response.comment_id + "']");
+        nestedReplyButton.data("comment-id", response.comment_id); // 데이터 설정
         },
         error: function () {
           if ($(".replyContent").val() == "") {
             alert("댓글을 입력해주세요.");
           } else {
             alert("오류가 발생했습니다.");
+            console.log(error)
           }
         },
       });
@@ -365,10 +366,11 @@ $(document).ready(function () {
 
   // 대댓글 달기
   $(document).on("click", ".btnNestedReply", function () {
-    var comment_id = $(this).data("comment-id");
+    var comment_id = savedCommentId;
     var nestedContent = $("#nested_content_id_" + comment_id).val();
     var isAuthenticated = "{{ user.is_authenticated }}";
-
+    console.log(comment_id)
+    console.log(nestedContent)
     if (isAuthenticated === "True") {
       $.ajax({
         type: "POST",
@@ -398,6 +400,7 @@ $(document).ready(function () {
             '<div class="stored-comment-content" style="margin-left: 20px;">' + response.content + '</div>' +
             '<img src="{% static "img/icon/x.png" %}" type="button" value="x" onclick="nestedReplyDelete(' + response.comment_id + ')" />' +
             '</div>' +
+            '</div>' +
             '</div>' ;
 
           updateNestedCount(comment_id);
@@ -409,6 +412,7 @@ $(document).ready(function () {
           if ($("#nested_content_id_" + comment_id).val() == "") {
             alert("대댓글을 입력해주세요.");
           } else {
+            console.log(error.message)
             alert("오류가 발생했습니다.");
           }
         },
@@ -446,7 +450,6 @@ $(document).ready(function () {
                 `.replyTr${response.comment_id}`
               );
               if (replyTr) {
-                console.log(replyTr);
                 replyTr.remove();
               }
             } else {
@@ -488,7 +491,6 @@ $(document).ready(function () {
                 `.nested-replyTr${response.comment_id}`
               );
               if (nestedReplyTr) {
-                console.log(nestedReplyTr);
                 nestedReplyTr.remove();
               }
             } else {

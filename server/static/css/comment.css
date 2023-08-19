@@ -310,3 +310,12 @@
   margin-right: 10px;
   color: var(--turquois-secondary-color)
 }
+
+.delete-comment-btn {
+  width: 10px;
+}
+
+.toggle-right-end {
+  display:flex;
+  justify-content: end;
+}

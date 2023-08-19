@@ -46,6 +46,7 @@
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .carousel-image-container {
@@ -74,6 +75,7 @@
 }
 
 .carousel-poll-title {
+  margin-top: 20px;
   color: var(--blue-bg-color);
   font-family: "GongGothicMedium";
 }
@@ -83,6 +85,7 @@
 }
 
 .carousel-item.active .carousel-poll-title {
+  margin-top: 20px;
   color: var(--mint-secondary-color);
   font-family: "GongGothicMedium";
   white-space: break-spaces;
@@ -95,6 +98,7 @@
   font-size: 16px;
 }
 .carousel-item-next .carousel-poll-title {
+  margin-top: 20px;
   color: var(--mint-secondary-color);
   font-family: "GongGothicMedium";
   white-space: break-spaces;
