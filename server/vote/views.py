@@ -173,8 +173,8 @@ def mypage(request):
             return redirect("vote:update")
     polls = Poll.objects.all()
     page = request.GET.get("page")
-    paginator = Paginator(polls, 4)
     uservotes = UserVote.objects.filter(user=request.user)
+    paginator = Paginator(uservotes, 4)
     polls_like = Poll.objects.filter(poll_like=request.user)
     try:
         page_obj = paginator.page(page)
