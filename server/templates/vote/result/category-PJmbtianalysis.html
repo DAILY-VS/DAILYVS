@@ -1,6 +1,8 @@
 {% load static %} {% block content %}
+<div class="chart-analysis-container">
 <div class="result-chart-category">
-<div id="PJmbtiChartanalysis" style="display: none"></div>
+<div id="PJmbtiChartanalysis" style="opacity:0"></div>
+</div>
 </div>
 
 <script>
@@ -18,7 +20,8 @@
     colors: ["#17355a", "#ff495a"],
     chart: {
       type: "bar",
-      height: 200,
+      height: 180,
+      width: 450,
       stacked: true,
       stackType: "100%",
     },
@@ -32,7 +35,7 @@
       colors: ["#fff"],
     },
     title: {
-      text: "P vs J Chart",
+      text: "",
     },
     xaxis: {
       categories: ["P", "J"],
@@ -56,14 +59,17 @@
 
   // Wait for the document to load
   document.addEventListener("DOMContentLoaded", function (event) {
-    var chart = new ApexCharts(
+    setTimeout(function() {
+       var chart = new ApexCharts(
       document.querySelector("#PJmbtiChartanalysis"),
       PJoptionsanalysis
     );
     chart.render();
-  });
-  const PJmbtiChart = document.getElementById("PJmbtiChartanalysis");
-  PJmbtiChart.style.display = "block" 
+    const PJmbtiChart = document.getElementById("PJmbtiChartanalysis");
+    PJmbtiChart.style.opacity = "1" 
+  }, 3500);
+    });
+   
 </script>
 
 
