@@ -163,8 +163,28 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/comment.js' %}"></script>
-<script>
 
+<script>
+  // 이전 스크롤 위치를 localStorage에서 가져옵니다.
+  var scrollPosition = localStorage.getItem('scrollPosition') || 0;
+
+  // 페이지가 로드될 때 스크롤 위치를 설정합니다.
+  window.onload = function () {
+      window.scrollTo(0, scrollPosition);
+      localStorage.setItem('scrollPosition', 0)
+  };
+  
+  // 정렬 또는 필터링 옵션을 선택할 때마다 스크롤 위치를 저장합니다.
+  document.getElementById('selectSort').addEventListener('change', function () {
+      localStorage.setItem('scrollPosition', window.scrollY);
+  });
+  
+  document.getElementById('selectChoice').addEventListener('change', function () {
+      localStorage.setItem('scrollPosition', window.scrollY);
+  });
+  </script>
+
+<script>
 // 좋아요
 document.querySelectorAll(".comment-like-button").forEach((likeButton) => {
   const commentId = likeButton.getAttribute("data-comment-id");

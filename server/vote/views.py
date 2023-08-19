@@ -795,6 +795,7 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
     else : 
         key = maximum_key
     #key="남성"
+
     ctx = {
         "total_count": total_count,
         # "choice1_count": total_choice1_count,
@@ -843,7 +844,6 @@ def calcstat(request, poll_id, uservote_id, nonuservote_id):
         "choices": choices,
         "choice_filter":choice_filter,
     }
-    print (str(100- minimum_value))
     ##################################################################################
 
     return render(request, template_name="vote/result.html", context=ctx)
