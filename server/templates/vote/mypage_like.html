@@ -14,7 +14,9 @@
       {% endif %}
     {% endfor %}
   </div>
+  {% if length_polls_like > 3 %}
   <button id="load-more-btn">더보기</button>
+  {% endif %}
 </div>
 {% endblock %}
 <script>
