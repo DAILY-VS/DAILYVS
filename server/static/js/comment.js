@@ -1,10 +1,63 @@
 
+// const openReply1 = (commentId) => {
+//   console.log('here!!!!!!!!!!');
+//   //var commentId = btn.getAttribute("data-comment-id");
+//   var parentContainer = document.querySelector(`#reply-${commentId}`);
+//   var nestedInputContainer = document.querySelector(`.nested-reply-input-container`);
+
+//   if (parentContainer) {
+//     if (
+//       parentContainer.style.display === "none" ||
+//       parentContainer.style.display === ""
+//     ) {
+//       parentContainer.style.display = "block";
+//       if (nestedInputContainer) {
+//         nestedInputContainer.style.display = "block";
+//       }
+//     } else {
+//       parentContainer.style.display = "none";
+//       if (nestedInputContainer) {
+//         nestedInputContainer.style.display = "none";
+//       }
+//     }
+//   }
+// }
+
+const openReply = (commentId) => {
+  console.log('here!!!!!!!!!!');
+  //var commentId = btn.getAttribute("data-comment-id");
+  var parentContainer = document.querySelector(
+    ".nested-reply-container[data-parent-id='" + commentId + "']"
+  );
+  var nestedInputContainer = document.querySelector(
+    ".nested-reply-input-container[data-parent-id='" + commentId + "']"
+  );
+
+  if (parentContainer) {
+    if (
+      parentContainer.style.display === "none" ||
+      parentContainer.style.display === ""
+    ) {
+      parentContainer.style.display = "block";
+      if (nestedInputContainer) {
+        nestedInputContainer.style.display = "block";
+      }
+    } else {
+      parentContainer.style.display = "none";
+      if (nestedInputContainer) {
+        nestedInputContainer.style.display = "none";
+      }
+    }
+  }
+}
+
 //대댓글 토글
 document.addEventListener("DOMContentLoaded", function () {
   var toggleButtons = document.querySelectorAll(".reply-toggle-btn");
 
   toggleButtons.forEach(function (button) {
     button.addEventListener("click", function () {
+      console.log('jewkfjweklfjwke')
       var commentId = this.getAttribute("data-comment-id");
       var parentContainer = document.querySelector(
         ".nested-reply-container[data-parent-id='" + commentId + "']"

@@ -281,6 +281,18 @@ $(document).ready(function () {
         },
         success: function (response) {
           // 새로운 댓글 생성
+          
+          //btnReply = $(`
+          //<button id="reply-toggle-btn-${ comment.id }" class="reply-toggle-btn" id="${ comment.id }">답글 <span id="nestedCount${ comment.id }" id="${ comment.id }"></span></button>
+          //`)
+          btnReply = document.createElement('button');
+          btnReply.className = "reply-toggle-btn";
+          btnReply.id = `reply-toggle-btn-${response.comment_id}`;
+          //btnReplay.setAttribute('data-comment-id', `${response.comment_id}`);
+          btnReply.innerHTML = `
+          답글 <span id="nestedCount${response.comment_id}" data-comment-id="${response.comment_id}"></span>`;
+
+          console.log(btnReply);
 
           var newComment =
             '<div class="replyTr' +
@@ -297,7 +309,27 @@ $(document).ready(function () {
             '<div class="time-line">' +  response.created_at +'</div>' +
             '</div>' +
             '<div class="comment-content-delete">' +
-            '<div class="stored-comment-content">' + response.content + '</div>';
+            '<div class="stored-comment-content">' + response.content + '</div>' +
+            `<button id="reply-toggle-btn-${ response.comment_id }" class="reply-toggle-btn" data-comment-id="${ response.comment_id }" onclick="openReply('${ response.comment_id }')">답글 <span id="nestedCount${ response.comment_id }" data-comment-id="${ response.comment_id }"></span></button>`+
+            `<div class="every-reply-container">
+              <div class="nested-reply-container" data-parent-id="${ response.comment_id }" style="display:none">
+                  <!-- 대댓글 표시 영역 -->
+                  <div class="nested-replyTody">
+                  </div>
+                  <!-- 대댓글 작성 영역 -->
+                  <div class="nested-reply-input-container">
+                    <textarea
+                      class="nested-replyContent"
+                      id="nested_content_id_${response.comment_id}"
+                      placeholder="대댓글을 입력해주세요."
+                    ></textarea>
+                    <button class="btnNestedReply" data-comment-id="{{ comment.id }}">등록</button>
+                  </div>        
+                </div>
+            </div>
+          </div>`
+            ;
+
           
           // 로그인한 사용자와 댓글 작성자가 동일한 경우에만 삭제 버튼 추가
           if ("{{ user.is_authenticated }}" === "True" && "{{ user.nickname }}" === response.nickname) {
