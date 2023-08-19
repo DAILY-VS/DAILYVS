@@ -266,6 +266,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 $(document).ready(function () {
   var savedCommentId;
+  $(".comment-like-button").each(function () {
+    const commentId = $(this).attr("data-comment-id");
+    const likeCountElement = $(this).closest(".detail-like-container").find(".comment-like-count");
+    const commentLikeCount = $(this).closest(".detail-like-container").attr("data-comment-like-count");
+    
+    likeCountElement.text(commentLikeCount);
+  });
     //댓글 달기
   $("#comment_write").click(function () {
     var content = $(".replyContent").val();
@@ -313,11 +320,8 @@ $(document).ready(function () {
             '<div class="comment-content-delete">' +
             '<div class="stored-comment-content">' + response.content + '</div>' +
             '<img src="{% static 'img/icon/x.png' %}" type="button" value="x" onclick="replyDelete(' + response.comment_id + ')" style="width: 10px" class="addtion-delete-btn"/>' + '</div>' +
-            `<button id="reply-toggle-btn-${ response.comment_id }" class="reply-toggle-btn" data-comment-id="${ response.comment_id }" onclick="openReply('${ response.comment_id }')">답글 <span id="nestedCount${ response.comment_id }" data-comment-id="${ response.comment_id }"></span></button>`+'</div>'+
-            '</div>' +
-            `<div class="comment-reply-like-row">
-              <!-- 좋아요 표시 영역 -->
-              <div class="detail-like-container">
+            '<div class="comment-reply-like-row">'+
+            `<div class="detail-like-container">
                   <span
                   class="comment-like-button"
                   id="comment-like-button-${ response.comment_id }"
@@ -331,13 +335,12 @@ $(document).ready(function () {
                 </span>
                 <span id="comment-like-count-${ response.comment_id }"
                       class="comment-like-count">
-                      {{ comment.comment_like.count }}
+                      0
                 </span>
                 <span class="like-word"> likes</span>
 
-              </div>
-            </div>
-            ` +
+              </div>` + `<button id="reply-toggle-btn-${ response.comment_id }" class="reply-toggle-btn" data-comment-id="${ response.comment_id }" onclick="openReply('${ response.comment_id }')">답글 <span id="nestedCount${ response.comment_id }" data-comment-id="${ response.comment_id }"></span></button>`+
+            '</div>' +
             `<div class="every-reply-container">
               <div class="nested-reply-container" data-parent-id="${ response.comment_id }" style="display:none">
                   <!-- 대댓글 표시 영역 -->
@@ -436,6 +439,7 @@ $(document).ready(function () {
           // 선택한 부모 댓글 바로 하단에 추가
           $(".nested-reply-container[data-parent-id='" + comment_id + "']").prepend(newNestedComment);
           $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
+          savedCommentId = undefined;
         },
         error: function () {
           if ($("#nested_content_id_" + comment_id).val() == "") {
