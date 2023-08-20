@@ -148,7 +148,7 @@
                       id="nested_content_id_{{ comment.id }}"
                       placeholder="대댓글을 입력해주세요."
                     ></textarea>
-                    <button class="btnNestedReply" data-comment-id="{{ comment.id }}">등록</button>
+                    <button class="btnNestedReply" data-comment-id="{{ comment.id }}" data-parent-id="{{ parent_comment_id }}">등록</button>
                   </div>        
                   {% endif %}
                 </div>
@@ -272,6 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 $(document).ready(function () {
   var savedCommentId;
+  var savedCommentIds = [];
+  var special_comment_id;
   $(".comment-like-button").each(function () {
     const commentId = $(this).attr("data-comment-id");
     const likeCountElement = $(this).closest(".detail-like-container").find(".comment-like-count");
@@ -295,11 +297,8 @@ $(document).ready(function () {
         },
         success: function (response) {
           savedCommentId = response.comment_id;
-          // 새로운 댓글 생성
-          
-          //btnReply = $(`
-          //<button id="reply-toggle-btn-${ comment.id }" class="reply-toggle-btn" id="${ comment.id }">답글 <span id="nestedCount${ comment.id }" id="${ comment.id }"></span></button>
-          //`)
+          savedCommentIds.push(savedCommentId);
+
           btnReply = document.createElement('button');
           btnReply.className = "reply-toggle-btn";
           btnReply.id = `reply-toggle-btn-${response.comment_id}`;
@@ -357,7 +356,7 @@ $(document).ready(function () {
                       id="nested_content_id_${response.comment_id}"
                       placeholder="대댓글을 입력해주세요."
                     ></textarea>
-                    <button class="btnNestedReply" data-comment-id="{{ comment.id }}">등록</button>
+                    <button class="btnNestedReply" data-comment-id="{{ comment.id }}" data-parent-id="{{ parent_comment_id }}">등록</button>
                   </div>        
                 </div>
             </div>` 
@@ -398,16 +397,24 @@ $(document).ready(function () {
   // 대댓글 달기
   $(document).on("click", ".btnNestedReply", function () {
     var isAuthenticated = "{{ user.is_authenticated }}";
+    var parent_comment_id = $(this).data("data-parent-id");
     var comment_id;
     if (savedCommentId) {
       comment_id = savedCommentId; 
-    } else {
+      special_comment_id = savedCommentId;
+    } 
+    else {
       comment_id = $(this).data("comment-id"); 
+      if (comment_id == '') {
+          comment_id = special_comment_id;
+      }
     }
 
-    var nestedContent = $("#nested_content_id_" + comment_id).val(); 
-    console.log(comment_id);
-    console.log(nestedContent)
+    var nestedContent;
+    if (comment_id !== '') {
+        nestedContent = $("#nested_content_id_" + comment_id).val();
+    }
+
     if (isAuthenticated === "True") {
       $.ajax({
         type: "POST",
@@ -444,6 +451,8 @@ $(document).ready(function () {
           // 선택한 부모 댓글 바로 하단에 추가
           $(".nested-reply-container[data-parent-id='" + comment_id + "']").prepend(newNestedComment);
           $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
+          savedCommentId = response.comment_id;
+          savedCommentIds.push(savedCommentId);
           savedCommentId = undefined;
         },
         error: function () {
