@@ -12,6 +12,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import User
+from django.urls import reverse
+
 
 import random
 import string
@@ -27,10 +29,18 @@ User = get_user_model()
 
 #회원가입
 def signup(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.custom_active=False
             auth.login(request, user)
             pk=str(user.pk)
             return redirect(f'/account/email_verification/{user.pk}/')
@@ -48,6 +58,13 @@ def signup(request):
     
 #로그인
 def login(request):  
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -75,6 +92,13 @@ def logout(request):
 
 #비밀번호 변경
 def change_password(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -131,7 +155,7 @@ def call(request):
     code = request.POST.get('code')  # Get the code from the form submission
     token = request.POST.get('token')
     if token == code:
-            request.user.is_active = True
+            request.user.custom_active = True
             request.user.save()
             return redirect("/")  # Redirect to login page after successful verification
     else:

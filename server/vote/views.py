@@ -20,12 +20,17 @@ from django.core.exceptions import ObjectDoesNotExist
 # 메인페이지
 def main(request):
     user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
             return redirect("vote:update")
     polls = Poll.objects.all()
+    polls = polls.order_by("-id")
     sort = request.GET.get("sort")
     promotion_polls = Poll.objects.filter(active=True).order_by("-views_count")[:3]
+
     if sort == "popular":
         polls = polls.order_by("-views_count")  # 인기순
     elif sort == "latest":
@@ -34,8 +39,8 @@ def main(request):
         polls = polls.order_by("id")  # 등록순
 
     page = request.GET.get("page")
-    random_poll = random.choice(polls) if polls.exists() else None
     paginator = Paginator(polls, 4)
+
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -44,6 +49,9 @@ def main(request):
     except EmptyPage:
         page = paginator.num_pages
         page_obj = paginator.page(page)
+
+    random_poll = random.choice(polls) if polls.exists() else None
+    
     context = {
         "polls": polls,
         "page_obj": page_obj,
@@ -58,6 +66,9 @@ def main(request):
 # 투표 디테일 페이지
 def poll_detail(request, poll_id):
     user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
             return redirect("vote:update")
@@ -99,10 +110,16 @@ def get_like_status(request, poll_id):
 
 # 투표 게시글 좋아요
 def poll_like(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         req = json.loads(request.body)
         poll_id = req["poll_id"]
-
         try:
             poll = Poll.objects.get(id=poll_id)
         except Poll.DoesNotExist:
@@ -133,6 +150,13 @@ def poll_like(request):
 # 댓글 좋아요
 @login_required
 def comment_like(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         req = json.loads(request.body)
         comment_id = req["comment_id"]
@@ -168,6 +192,9 @@ def comment_like(request):
 @login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
     user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
             return redirect("vote:update")
@@ -199,6 +226,10 @@ def mypage(request):
 # 마이페이지 정보 수정
 @login_required(login_url="/account/login/")  # 비로그인시 mypage/update 막음
 def mypage_update(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
     if request.method == "POST":
         form = UserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -213,6 +244,13 @@ def mypage_update(request):
 # 댓글 쓰기
 @login_required
 def comment_write_view(request, poll_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     poll = get_object_or_404(Poll, id=poll_id)
     user_info = request.user  # 현재 로그인한 사용자
     content = request.POST.get("content")
@@ -279,6 +317,13 @@ def comment_write_view(request, poll_id):
 # 댓글 삭제
 @login_required
 def comment_delete_view(request, pk):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     poll = get_object_or_404(Poll, id=pk)
     comment_id = request.POST.get("comment_id")
     target_comment = Comment.objects.get(pk=comment_id)
@@ -298,12 +343,26 @@ def comment_delete_view(request, pk):
 
 # 대댓글 수 파악
 def calculate_nested_count(request, comment_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     nested_count = Comment.objects.filter(parent_comment_id=comment_id).count()
     return JsonResponse({"nested_count": nested_count})
 
 
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
 def classifyuser(request, poll_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         poll = get_object_or_404(Poll, pk=poll_id)
         choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
@@ -412,10 +471,12 @@ def classifyuser(request, poll_id):
 # 회원/비회원 투표 통계 계산 및 결과 페이지
 def calcstat(request, poll_id, uservote_id, nonuservote_id):
     user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
             return redirect("vote:update")
-        
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
     poll.comments = comments.count()
