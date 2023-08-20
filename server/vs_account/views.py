@@ -41,6 +41,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             user.custom_active=False
+            user.save()
             auth.login(request, user)
             pk=str(user.pk)
             return redirect(f'/account/email_verification/{user.pk}/')
