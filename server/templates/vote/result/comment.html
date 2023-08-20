@@ -311,6 +311,7 @@ $(document).ready(function () {
   function submitComment(content) {
     var content = $(".replyContent").val();
     var isAuthenticated = "{{ user.is_authenticated }}";
+    var parent_comment_id;
     if (isAuthenticated === "True") {
       $.ajax({
         type: "POST",
@@ -393,7 +394,7 @@ $(document).ready(function () {
         
         const commentLikeButton = document.querySelector(`#comment-like-button-${response.comment_id}`);
         handleLikeButton(commentLikeButton);
-
+        // var parent_comment_id = response.comment_id;
         var comment_id = response.comment_id;
         var nestedReplyButton = $(".btnNestedReply[data-comment-id='" + response.comment_id + "']");
         nestedReplyButton.data("comment-id", response.comment_id); // 데이터 설정
@@ -418,7 +419,10 @@ $(document).ready(function () {
   // 대댓글 달기
   $(document).on("click", ".btnNestedReply", function () {
     var isAuthenticated = "{{ user.is_authenticated }}";
-    var parent_comment_id = $(this).data("data-parent-id");
+    // var parent_comment_id;
+    // console.log("pci",parent_comment_id)
+    // $(this).attr("data-parent-id", parent_comment_id);
+
     var comment_id;
     if (savedCommentId) {
       comment_id = savedCommentId; 
@@ -435,7 +439,14 @@ $(document).ready(function () {
     if (comment_id !== '') {
         nestedContent = $("#nested_content_id_" + comment_id).val();
     }
-
+    
+    if (nestedContent == undefined) {
+      comment_id = savedCommentIds[-2]; 
+      nestedContent = $("#nested_content_id_" + comment_id).val();
+    }
+    console.log(comment_id)
+    console.log(nestedContent)
+    // console.log(parent_comment_id)
     if (isAuthenticated === "True") {
       $.ajax({
         type: "POST",
@@ -474,14 +485,17 @@ $(document).ready(function () {
           $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
           savedCommentId = response.comment_id;
           savedCommentIds.push(savedCommentId);
+          console.log(savedCommentIds)
           savedCommentId = undefined;
         },
         error: function () {
           if ($("#nested_content_id_" + comment_id).val() == "") {
             alert("대댓글을 입력해주세요.");
+            location.reload();
           } else {
             console.log(error)
             alert("오류가 발생했습니다.");
+            location.reload();
           }
         },
       });
