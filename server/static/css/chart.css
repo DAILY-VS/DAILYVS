@@ -69,6 +69,10 @@
  display: none;
 }
 
+.capture-container.capture-logo-visible .result-title {
+  white-space: nowrap;
+}
+
 #EImbtiToggle,
 #SNmbtiToggle,
 #TFmbtiToggle,

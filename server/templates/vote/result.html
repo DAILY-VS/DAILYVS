@@ -128,6 +128,7 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
 <script src="{% static 'js/scroll.js' %}"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -244,8 +245,9 @@ const incrementInterval2 = setInterval(() => {
             }, 4500);
         });
 </script>
-<script>
+<!-- <script>
 $(function(){
+  const html2canvas = require('html2canvas');
   $("#capBtn2").on("click", function(){
     var captureContainer = document.querySelector("#capture2");
     captureContainer.classList.add("capture-logo-visible"); // 캡처 시작 시 클래스 추가
@@ -271,7 +273,7 @@ $(function(){
   }
 });
 
-</script>
+</script> -->
 <script>
  window.onload = function() {
   // 버튼 요소를 가져옵니다.
@@ -292,5 +294,24 @@ $(function(){
     capBtn2.style.backgroundColor = '#17355a';
   }, 4800);
 };
+</script>
+<script>
+  const captureBtn = document.getElementById("capBtn2");
+  captureBtn.addEventListener("click", captureElement);
+
+  function captureElement() {
+    const captureContainer = document.getElementById("capture2");
+    captureContainer.classList.add("capture-logo-visible"); // 캡처 시작 시 클래스 추가
+    captureContainer.classList.add("pink-background");
+
+    domtoimage.toPng(captureContainer)
+      .then(dataUrl => {
+        const link = document.createElement('a');
+        link.download = 'dailyvs.png';
+        link.href = dataUrl;
+        link.click();
+        captureContainer.classList.remove("capture-logo-visible"); // 캡처 끝난 후 클래스 제거
+      });
+  }
 </script>
 {% endblock %}
