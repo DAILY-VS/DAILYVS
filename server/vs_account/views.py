@@ -27,6 +27,13 @@ User = get_user_model()
 
 #회원가입
 def signup(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -48,6 +55,13 @@ def signup(request):
     
 #로그인
 def login(request):  
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -75,6 +89,13 @@ def logout(request):
 
 #비밀번호 변경
 def change_password(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
