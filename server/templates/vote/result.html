@@ -71,7 +71,7 @@
     </div>
 
   
-  <div class="graph-category-container">
+  <div class="graph-category-container" id="fake-capture">
     <div>{% include 'vote/result/category-gender.html' %}</div>
     <div class="result-category-box">
       <div
@@ -128,9 +128,11 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
 <script src="{% static 'js/scroll.js' %}"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    console.log('hello')
     const mbtiToggle = document.getElementById("mbtiToggle");
     const mbtiChart = document.getElementById("mbtiChart");
 
@@ -243,58 +245,73 @@ const incrementInterval2 = setInterval(() => {
             }, 4500);
         });
 </script>
-<script>
-   $(function(){
-    $("#capBtn2").on("click", function(){
-      var captureContainer = document.querySelector("#capture2");
-      captureContainer.classList.add("capture-logo-visible");
-      captureContainer.classList.add("pink-background");
-      setTimeout(function() {
-        captureContainer.classList.remove("capture-logo-visible")
-      }, 10);
-      // 캡쳐할 영역을 html2canvas로 캡쳐하여 canvas로 변환
-      html2canvas(document.querySelector("#capture2")).then(canvas => {
-        // 캡쳐된 이미지를 저장
-        saveImg(canvas.toDataURL('image/png'), "dailyVS-chart.png");
-      });
-    });
+<!-- <script>
+$(function(){
+  const html2canvas = require('html2canvas');
+  $("#capBtn2").on("click", function(){
+    var captureContainer = document.querySelector("#capture2");
+    captureContainer.classList.add("capture-logo-visible"); // 캡처 시작 시 클래스 추가
+    captureContainer.classList.add("pink-background");
 
-    function saveImg(uri, filename) { 
-      var link = document.createElement('a'); 
-      if (typeof link.download === 'string') { 
-        link.href = uri; 
-        link.download = filename; 
-        document.body.appendChild(link); 
-        link.click(); 
-        document.body.removeChild(link); 
-      } else { 
-        window.open(uri); 
-      } 
-    }
+    html2canvas(document.querySelector("#capture2")).then(canvas => {
+      saveImg(canvas.toDataURL('image/png'), "dailyVS-chart.png");
+      captureContainer.classList.remove("capture-logo-visible"); // 캡처 끝난 후 클래스 제거
+    });
   });
-</script>
+
+  function saveImg(uri, filename) { 
+    var link = document.createElement('a'); 
+    if (typeof link.download === 'string') { 
+      link.href = uri; 
+      link.download = filename; 
+      document.body.appendChild(link); 
+      link.click(); 
+      document.body.removeChild(link); 
+    } else { 
+      window.open(uri); 
+    } 
+  }
+});
+
+</script> -->
 <script>
  window.onload = function() {
   // 버튼 요소를 가져옵니다.
   var capBtn2 = document.getElementById("capBtn2");
   var copyUrlBtn = document.getElementById("copy-url-btn");
-  var capBtn1 = document.getElementById("capBtn");
 
-  capBtn1.style.backgroundColor = '#d4d4d4'
+
   capBtn2.style.backgroundColor = '#d4d4d4'
   // 버튼들을 초기에 비활성화 상태로 만듭니다.
-  capBtn1.disabled = true;
+
   capBtn2.disabled = true;
   copyUrlBtn.disabled = true;
 
 
   setTimeout(function() {
-    capBtn1.disabled = false;
     capBtn2.disabled = false;
     copyUrlBtn.disabled = false;
-    capBtn1.style.backgroundColor = '#17355a';
     capBtn2.style.backgroundColor = '#17355a';
   }, 4800);
 };
+</script>
+<script>
+  const captureBtn = document.getElementById("capBtn2");
+  captureBtn.addEventListener("click", captureElement);
+
+  function captureElement() {
+    const captureContainer = document.getElementById("capture2");
+    captureContainer.classList.add("capture-logo-visible"); // 캡처 시작 시 클래스 추가
+    captureContainer.classList.add("pink-background");
+
+    domtoimage.toPng(captureContainer)
+      .then(dataUrl => {
+        const link = document.createElement('a');
+        link.download = 'dailyvs.png';
+        link.href = dataUrl;
+        link.click();
+        captureContainer.classList.remove("capture-logo-visible"); // 캡처 끝난 후 클래스 제거
+      });
+  }
 </script>
 {% endblock %}
