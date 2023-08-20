@@ -24,8 +24,10 @@ def main(request):
         if user.gender== "" or user.mbti=="":
             return redirect("vote:update")
     polls = Poll.objects.all()
+    polls = polls.order_by("-id")
     sort = request.GET.get("sort")
     promotion_polls = Poll.objects.filter(active=True).order_by("-views_count")[:3]
+
     if sort == "popular":
         polls = polls.order_by("-views_count")  # 인기순
     elif sort == "latest":
@@ -34,8 +36,8 @@ def main(request):
         polls = polls.order_by("id")  # 등록순
 
     page = request.GET.get("page")
-    random_poll = random.choice(polls) if polls.exists() else None
     paginator = Paginator(polls, 4)
+
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -44,6 +46,9 @@ def main(request):
     except EmptyPage:
         page = paginator.num_pages
         page_obj = paginator.page(page)
+
+    random_poll = random.choice(polls) if polls.exists() else None
+    
     context = {
         "polls": polls,
         "page_obj": page_obj,
