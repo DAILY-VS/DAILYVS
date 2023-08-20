@@ -21,11 +21,6 @@ MYSQL_HOST=env('MYSQL_HOST')
 MYSQL_PORT=env('MYSQL_PORT')
 
 
-
-
-
-
-
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',
