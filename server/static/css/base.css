@@ -206,3 +206,16 @@ nav {
     opacity: 1; /* 종료 시 완전 불투명 */
   }
 }
+
+
+
+.footer-social-row {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-social-row a {
+  margin : 5px;
+}
