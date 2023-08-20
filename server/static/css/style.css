@@ -34,8 +34,6 @@
 * {
   box-sizing: border-box;
   font-family: "NEXON Lv1 Gothic OTF";
-  white-space: pre-line;
-  word-wrap: break-word; /* 긴 단어를 줄바꿈하여 표시 */
   white-space: normal; /* 공백과 줄바꿈 처리 */
   margin: 0px;
   padding: 0px;

@@ -44,21 +44,14 @@
   font-family: "GongGothicMedium";
 }
 
-.water-mark, .water-mark2, .water-mark3 {
-  display:none;
-}
-
 .water-mark {
+  display: none;
   margin-right: 10px;
-  margin-top: -20px;
   margin-bottom: 20px;
 }
 
 
-.water-mark3 {
-  margin-top: 10px;
-  margin-bottom: -5px;
-}
+
 
 .capture-container.capture-logo-visible .water-mark {
   display: block;
