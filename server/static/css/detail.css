@@ -54,7 +54,7 @@
 .vote-detail-card {
   position: relative;
   width: 25rem;
-  height: 40vh;
+  height: 20rem;
   margin: 15px auto;
   border-radius: 10px;
   overflow: hidden;
@@ -129,8 +129,8 @@
   position: relative;
   margin: 10px auto;
   border: 1px gray solid;
-  width: 22rem;
-  height: 12rem;
+  width: 25rem;
+  height: 15rem;
   background-size: 100%;
 }
 
