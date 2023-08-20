@@ -12,6 +12,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import User
+from django.urls import reverse
+
 
 import random
 import string
@@ -29,7 +31,7 @@ User = get_user_model()
 def signup(request):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -57,7 +59,7 @@ def signup(request):
 def login(request):  
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -91,7 +93,7 @@ def logout(request):
 def change_password(request):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":

@@ -21,7 +21,7 @@ from django.core.exceptions import ObjectDoesNotExist
 def main(request):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -67,7 +67,7 @@ def main(request):
 def poll_detail(request, poll_id):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -112,7 +112,7 @@ def get_like_status(request, poll_id):
 def poll_like(request):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -152,7 +152,7 @@ def poll_like(request):
 def comment_like(request):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -193,7 +193,7 @@ def comment_like(request):
 def mypage(request):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -228,7 +228,7 @@ def mypage(request):
 def mypage_update(request):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if request.method == "POST":
         form = UserChangeForm(request.POST, instance=request.user)
@@ -246,7 +246,7 @@ def mypage_update(request):
 def comment_write_view(request, poll_id):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -319,7 +319,7 @@ def comment_write_view(request, poll_id):
 def comment_delete_view(request, pk):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -345,7 +345,7 @@ def comment_delete_view(request, pk):
 def calculate_nested_count(request, comment_id):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -358,7 +358,7 @@ def calculate_nested_count(request, comment_id):
 def classifyuser(request, poll_id):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
@@ -472,7 +472,7 @@ def classifyuser(request, poll_id):
 def calcstat(request, poll_id, uservote_id, nonuservote_id):
     user= request.user
     if user.is_authenticated and user.custom_active==False:
-        authentication_url = reverse("account:email_verification", args=[user.id])
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
         return redirect(authentication_url)
     if user.is_authenticated :
         if user.gender== "" or user.mbti=="":
