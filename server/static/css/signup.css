@@ -120,3 +120,35 @@
   font-family: "GongGothicMedium";
   color: var(--darkblue-primary-color)
 }
+
+.email-name-row {
+  display:flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.email-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.email-container input {
+  height: 50px;
+  font-family: "NEXON Lv1 Gothic OTF";
+  font-size: 16px;
+  border: 1px rgba(128, 128, 128, 0.2) solid;
+  background-color: #f4faff;
+  padding-left: 20px;
+}
+
+.email-signup-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin-top:20px;
+  width: 300px;
+  height: 40px;
+  color: white;
+  background-color: var(--redpink-primary-color);
+}

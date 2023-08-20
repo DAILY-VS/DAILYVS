@@ -3,6 +3,7 @@
   height: auto;
   display: flex;
   flex-direction: column;
+  margin-bottom: 50px;
 }
 
 .mypage-greeting {
@@ -12,6 +13,13 @@
   margin: 30px auto 10px auto;
 }
 
+.mypage-greet-name {
+  display:flex;
+}
+
+.mypage-greet-name span {
+  margin-left: 3px;
+}
 .mypage-prof-container {
   width: 100%;
   height: 150px;

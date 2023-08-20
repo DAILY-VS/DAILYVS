@@ -23,7 +23,7 @@
         <div>
           <img src="{% static 'img/Only_Text.png' %}" style="width: 250px" />
         </div>
-          <p class="email-container"><span style="font-family: GongGothicMedium;">{{ user.username }}</span>님, 이메일 주소를 확인하고 <br/>아래의 인증 코드를 입력하세요.</p>
+          <div class="email-container"><div class="email-name-row"><span style="font-family: GongGothicMedium;">{{ user.username }}</span><span>님,</span></div> 이메일 주소를 확인하고 <br/>아래의 인증 코드를 입력하세요.</div>
         <div class="change-pw-container">
           <form method="POST" action="/account/call/">
               {% csrf_token %}
