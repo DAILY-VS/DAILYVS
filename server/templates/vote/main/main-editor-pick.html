@@ -12,10 +12,19 @@
 
         <div class="card-content">
           <div class="card-content-title">{{today_poll.title}}</div>
-          <div class="card-content-paragraph">{{today_poll.content}}</div>
+          <div class="card-content-paragraph" id="card-content-container">{{today_poll.content}}</div>
         </div>
       </div>
     </a>
   </div>
 </div>
+<script>
+var textContainer = document.getElementById("card-content-container");
+var maxLength = 70; // 최대 길이
+var ellipsis = "..."; // 생략 부호
+
+if (textContainer.textContent.length > maxLength) {
+  textContainer.textContent = textContainer.textContent.substring(0, maxLength) + ellipsis;
+}
+</script>
 {% endblock %}

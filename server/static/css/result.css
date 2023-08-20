@@ -26,12 +26,17 @@
 }
 
 .result-graph-content {
+  width: 400px;
   display: flex;
   justify-content: center;
-  word-wrap: break-word;
   overflow-wrap: break-word;
-  white-space: break-spaces;
+  white-space: pre-line;
+  word-break: keep-all;
   text-align: center;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: var(--darkblue-primary-color)
 }
 /* 차트 정보 섹션 */
 .graph-information-box {
@@ -63,9 +68,12 @@
 
 .choice-percentage-result {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 50px 60px 110px;
   column-gap: 5px;
-  width: 200px;
+  width: 220px;
+  justify-content: start;
+  margin-top: 5px;
+  margin-left: 70px;
 }
 
 /* 차트 섹션 */

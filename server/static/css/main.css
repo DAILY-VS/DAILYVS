@@ -8,6 +8,7 @@
 .main-greeting {
   margin-top: 20px;
 }
+
 /* carousel */
 .main-carousel-title {
   margin: 5px auto;
@@ -151,7 +152,7 @@
 .card-img img {
   max-width: 100%;
   width: 20rem;
-  height: 300px;
+  height: 280px;
   border-radius: 10px 10px 0 0;
   object-fit: cover;
 }
@@ -165,12 +166,20 @@
 .card-content-title {
   font-family: "GongGothicMedium";
   font-size: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .card-content-paragraph {
   margin-top: 5px;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+  max-width: 100%; /* 가로 너비가 부모 요소에 맞게 조절 */
 }
 
 /* main-grid */
