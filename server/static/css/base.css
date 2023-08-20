@@ -24,11 +24,10 @@ body {
 }
 
 nav {
-  display: fixed;
   position: sticky;
   width: 500px;
   height: 10vh;
-  background-color: var(--purple-bg-color);
+  background: linear-gradient(to right, #f9fcff, #f8f8ff);
 }
 
 .nav-list {
@@ -56,11 +55,24 @@ nav {
   padding-left: 5px;
   font-weight: bolder;
   color: var(--darkblue-primary-color);
+  
 }
 
 .login-word:hover {
-  color: var(--redpink-primary-color);
+  color: var(--darkblue-primary-color);
 }
+
+.nav-fortune img {
+  width: 50px;
+  transition: transform 0.5s ease;
+  transition-property: width;
+  transition-duration: 1s;
+}
+
+.nav-fortune img:hover {
+  width: 57px;
+}
+
 
 .nav-list a:hover {
   cursor: pointer;
@@ -82,8 +94,15 @@ nav {
 
 .nav-login-btn img {
   margin-left: 10px;
+  width: 25px;
+  transition-property: width;
+  transition-duration: 1s;
 }
 
+.nav-login-btn img:hover {
+  width: 28px;
+  color: var(--darkblue-primary-color)
+}
 .nav-ham-btn {
   margin-left: auto;
 }
@@ -91,10 +110,13 @@ nav {
 .nav-ham-btn img {
   margin-right: 20px;
   transition: transform 0.5s ease;
+  width: 40px;
+  transition-property: width;
+  transition-duration: 1s;
 }
-/* .nav-ham-btn img:hover {
-  transform: rotate(90deg);
-} */
+.nav-ham-btn img:hover {
+  width: 43px
+}
 
 .base-block-container {
   display: flex;
@@ -107,12 +129,15 @@ nav {
 
 #logo img {
   width: 145px;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
+  transition-property: width;
+  transition-duration: 1s;
   margin-left: 10px;
 }
 
 #logo img:hover {
   cursor: pointer;
+  width: 150px;
 }
 
 

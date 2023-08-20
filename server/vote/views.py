@@ -53,17 +53,26 @@ def main(request):
     polls = Poll.objects.all()
 
     if polls:
-        # Retrieve the last poll using the .last() method
+        
         today_poll = polls.last()
     else:
         today_poll = None
-        
+    
+    phrases = [
+        "투표하는 즐거움",
+        "나의 투표를 가치있게",
+        "나의 취향을 분석적으로",
+        "mbti와 통계를 통한 투표 겨루기"
+    ]
+
+    random_phrase = random.choice(phrases)
     context = {
         "polls": polls,
         "page_obj": page_obj,
         "paginator": paginator,
         "promotion_polls": promotion_polls,
         "today_poll": today_poll,
+        "random_phrase": random_phrase
     }
 
     return render(request, "vote/main.html", context)

@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.addEventListener("scroll", function () {
       const scrollY = window.scrollY;
-
       // 스크롤 위치에 따라 배경색 변경
       if (scrollY >= 0 && scrollY < 500) {
         resultContainer.style.backgroundColor = pinkBgColor;

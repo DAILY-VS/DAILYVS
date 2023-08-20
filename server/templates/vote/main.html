@@ -1,9 +1,18 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
-<section class="main-container">
-  <p class="main-greeting">
-    {% if user.is_authenticated %} 안녕하세요,
-    <span class="user-nickname">{{user.nickname}}</span> 님!
-  </p>
+<section class="main-section-container">
+  {% if user.is_authenticated %}
+  <div class="main-greeting">
+    <strong>오늘도 소중한 <i>한표!</i> </strong>
+    <div class="greeting-start"><span class="user-nickname">{{user.nickname}}</span> 님!!</div>
+  </div>
+    {% else %}
+    <div class="main-section-phrase">
+      <div class="main-text-phrase">
+        <h1 id="main-title-phrase">매일 매일</h1>
+        <h2 id="sub-title-phrase">{{random_phrase}}</h2>
+        <h3 id="third-title-phrase">Daily VS</h3>
+      </div>
+    </div>
   {% endif %}
   <div class="carousel-container">
     {% include 'vote/main/main-carousel.html' %}
@@ -14,4 +23,3 @@
   <div class="vote-list-container">{% include 'vote/main/main-grid.html'%}</div>
 </section>
 {% endblock %}
-<script src="{% static 'js/scroll2.js' %}"></script>
