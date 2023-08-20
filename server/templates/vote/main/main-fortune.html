@@ -9,10 +9,9 @@
     <div class="fortune-modal">
         <div id="capture" class="fortune-modal-content">
           <span class="modal-close-icon" id="fortune-modal-close">&times;</span>
-          <div class="fortune-img-wrap">
-            <img class="modal-logo" src="{% static 'img/Only_Text.png' %}" alt="logo">
+            <img class="modal-logo-pic" src="{% static 'img/Only_Text.png' %}" alt="logo">
             <img class="fortune-open-img" src="{% static 'img/slide/BrokenCookie.png' %}" alt="fortune-cookie-open">
-            <p class="fortune-text">
+            <div class="fortune-text">
               <span id="fortune-result typing-line2">
                 {% if user.is_authenticated %}
                     <span class="fortune-reload"><span class="fortune-mbti">{{ user.mbti }}</span><span class="typing-text3"></span></span>
@@ -20,12 +19,10 @@
                     <span class="fortune-reload"><span class="typing-text4"></span></span>
                 {% endif %}
                 </div>
-              </span>
-            </p>
-          </div>
           <div class="fortune-btns">
             <button id="capBtn" style="border: none">캡처하기</button> 
             <button id="fortune-retry">다시뽑기</button>
+          </div>
           </div>
         </div>
     </div>

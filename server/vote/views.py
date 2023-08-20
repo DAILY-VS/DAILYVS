@@ -1,6 +1,6 @@
 import json
-import numpy as np
 import random
+import numpy as np
 from .models import *
 from vs_account.forms import *
 from vs_account.models import *
@@ -50,14 +50,20 @@ def main(request):
         page = paginator.num_pages
         page_obj = paginator.page(page)
 
-    random_poll = random.choice(polls) if polls.exists() else None
-    
+    polls = Poll.objects.all()
+
+    if polls:
+        # Retrieve the last poll using the .last() method
+        today_poll = polls.last()
+    else:
+        today_poll = None
+        
     context = {
         "polls": polls,
         "page_obj": page_obj,
         "paginator": paginator,
         "promotion_polls": promotion_polls,
-        "random_poll": random_poll,
+        "today_poll": today_poll,
     }
 
     return render(request, "vote/main.html", context)

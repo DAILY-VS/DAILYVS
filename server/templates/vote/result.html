@@ -1,7 +1,9 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section class="result-container" data-color="pink">
   <div id="capture2" class="capture-container">
-      <div class="result-title">{{poll.title}}</div>
+      <div class="result-title-row">
+        <div class="result-title">{{poll.title}}</div>
+      </div>
       <div class="result-graph-content">{{poll.content}}</div>
       <div class="graph-information-container">
         {% include 'vote/result/graph-information.html' %}
@@ -54,7 +56,7 @@
     {% include 'vote/result/category-PJmbtianalysis.html' %}
     {% endif %}
     <div class="water-mark">
-      <img src="{% static 'img/Logo.png' %}" style="width: 60px"/>
+      <img src="{% static 'img/icon/Red_logo.png' %}" style="width: 220px"/>
     </div>
   </div>
     <div class="btns-not-bts">
@@ -239,7 +241,7 @@ const incrementInterval2 = setInterval(() => {
                     loadingTextElement.textContent = '분석완료!';
                     loadingicon.style.display = 'none';
                 }
-            }, 4000);
+            }, 4500);
         });
 </script>
 <script>
@@ -247,10 +249,10 @@ const incrementInterval2 = setInterval(() => {
     $("#capBtn2").on("click", function(){
       var captureContainer = document.querySelector("#capture2");
       captureContainer.classList.add("capture-logo-visible");
-
+      captureContainer.classList.add("pink-background");
       setTimeout(function() {
         captureContainer.classList.remove("capture-logo-visible")
-      }, 1000);
+      }, 10);
       // 캡쳐할 영역을 html2canvas로 캡쳐하여 canvas로 변환
       html2canvas(document.querySelector("#capture2")).then(canvas => {
         // 캡쳐된 이미지를 저장
@@ -271,5 +273,29 @@ const incrementInterval2 = setInterval(() => {
       } 
     }
   });
+</script>
+<script>
+ window.onload = function() {
+  // 버튼 요소를 가져옵니다.
+  var capBtn2 = document.getElementById("capBtn2");
+  var copyUrlBtn = document.getElementById("copy-url-btn");
+  var capBtn1 = document.getElementById("capBtn");
+
+  capBtn1.style.backgroundColor = '#d4d4d4'
+  capBtn2.style.backgroundColor = '#d4d4d4'
+  // 버튼들을 초기에 비활성화 상태로 만듭니다.
+  capBtn1.disabled = true;
+  capBtn2.disabled = true;
+  copyUrlBtn.disabled = true;
+
+
+  setTimeout(function() {
+    capBtn1.disabled = false;
+    capBtn2.disabled = false;
+    copyUrlBtn.disabled = false;
+    capBtn1.style.backgroundColor = '#17355a';
+    capBtn2.style.backgroundColor = '#17355a';
+  }, 4800);
+};
 </script>
 {% endblock %}
