@@ -985,3 +985,15 @@ def fortune(request):
         random_fortune = get_random_fortune('nonuser')
 
     return render(request, "vote/main/main-fortune.html", {"random_fortune": random_fortune})
+
+
+def community(request):
+    
+    comments = Comment.objects.all()
+    
+    ctx = {
+
+    "comments": comments,
+
+    }
+    return render(request, "vote:main/community.html")
