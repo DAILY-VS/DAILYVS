@@ -44,15 +44,32 @@
   font-family: "GongGothicMedium";
 }
 
+.water-mark, .water-mark2, .water-mark3 {
+  display:none;
+}
+
 .water-mark {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
+  margin-right: 10px;
+  margin-top: -20px;
+  margin-bottom: 20px;
+}
+
+
+.water-mark3 {
+  margin-top: 10px;
+  margin-bottom: -5px;
 }
 
 .capture-container.capture-logo-visible .water-mark {
-  top: 80px;
-  left: 20px;
+  display: block;
+}
+
+.capture-container.capture-logo-visible .water-mark2 {
+  display: block;
+}
+
+.capture-container.capture-logo-visible .water-mark3 {
+  display: block;
 }
 
 #EImbtiToggle,
@@ -72,4 +89,15 @@
 #mbtiToggle,
 #genderToggle {
   margin-left: 20px;
+}
+
+.result-title-row {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.pink-background {
+  background-color: #fff9f9;
 }

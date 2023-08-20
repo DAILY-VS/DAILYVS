@@ -39,6 +39,10 @@
   padding: 0px;
 }
 
+textarea {
+  outline: none;
+}
+
 ul,
 ol {
   list-style: none;

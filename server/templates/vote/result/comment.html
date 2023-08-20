@@ -281,10 +281,35 @@ $(document).ready(function () {
     
     likeCountElement.text(commentLikeCount);
   });
-    //댓글 달기
+
+   // 댓글 작성 버튼 클릭 시 처리
   $("#comment_write").click(function () {
+    content = $(".replyContent").val(); // 댓글 내용 가져오기
+    if (content.trim() !== "") {
+      submitComment();
+    } else {
+      alert("댓글을 입력해주세요.");
+    }
+  });
+
+
+  $(".replyContent").on("keypress", function (event) {
+    if (event.which === 13 && !event.shiftKey) { 
+      event.preventDefault(); 
+
+      content = $(".replyContent").val(); 
+      if (content.trim() !== "") {
+        submitComment();
+      } else {
+        alert("댓글을 입력해주세요.");
+      }
+    }
+  });
+
+    
+  //댓글 달기
+  function submitComment(content) {
     var content = $(".replyContent").val();
-    // 로그인 여부 확인
     var isAuthenticated = "{{ user.is_authenticated }}";
     if (isAuthenticated === "True") {
       $.ajax({
@@ -302,7 +327,6 @@ $(document).ready(function () {
           btnReply = document.createElement('button');
           btnReply.className = "reply-toggle-btn";
           btnReply.id = `reply-toggle-btn-${response.comment_id}`;
-          //btnReplay.setAttribute('data-comment-id', `${response.comment_id}`);
           btnReply.innerHTML = `
           답글 <span id="nestedCount${response.comment_id}" data-comment-id="${response.comment_id}"></span>`;
 
@@ -387,12 +411,9 @@ $(document).ready(function () {
       if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
         var loginUrl = "/account/login/";
         window.location.href = loginUrl;  // 로그인 페이지 URL로 이동
-    }
-    }
-    
-  });
-
-
+      }
+    }  
+  }
 
   // 대댓글 달기
   $(document).on("click", ".btnNestedReply", function () {
