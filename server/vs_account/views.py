@@ -40,6 +40,7 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.custom_active=False
             auth.login(request, user)
             pk=str(user.pk)
             return redirect(f'/account/email_verification/{user.pk}/')
@@ -154,7 +155,7 @@ def call(request):
     code = request.POST.get('code')  # Get the code from the form submission
     token = request.POST.get('token')
     if token == code:
-            request.user.is_active = True
+            request.user.custom_active = True
             request.user.save()
             return redirect("/")  # Redirect to login page after successful verification
     else:
