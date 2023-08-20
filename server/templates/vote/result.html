@@ -1,13 +1,10 @@
 {% extends 'vote/base.html' %} {% load static %} {% block content %}
 <section class="result-container" data-color="pink">
   <div id="capture2" class="capture-container">
-        <div class="water-mark3">
-          <img src="{% static 'img/icon/Only_Pic.png' %}" style="width: 50px"/>
-        </div>
       <div class="result-title-row">
         <div class="result-title">{{poll.title}}</div>
       </div>
-      <!-- <div class="result-graph-content">{{poll.content}}</div> -->
+      <div class="result-graph-content">{{poll.content}}</div>
       <div class="graph-information-container">
         {% include 'vote/result/graph-information.html' %}
       </div>
@@ -284,7 +281,7 @@ const incrementInterval2 = setInterval(() => {
   var copyUrlBtn = document.getElementById("copy-url-btn");
   var capBtn1 = document.getElementById("capBtn");
 
-  capBten1.style.backgroundColor = '#d4d4d4'
+  capBtn1.style.backgroundColor = '#d4d4d4'
   capBtn2.style.backgroundColor = '#d4d4d4'
   // 버튼들을 초기에 비활성화 상태로 만듭니다.
   capBtn1.disabled = true;

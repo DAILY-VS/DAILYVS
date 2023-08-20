@@ -35,7 +35,7 @@
 .mypage-nickname-wrap {
   display: flex;
   flex-direction: row;
-  width: 200px;
+  /* width: 200px; */
   margin-left: 10px;
   align-items: center;
 }
@@ -111,6 +111,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   margin-top: 20px;
 }
 
@@ -247,18 +248,45 @@
 
 .modify-btns {
   display:flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
 .modify-btns a {
-  margin: 50px;
+  margin: 20px;
+}
+
+#modify-pw {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--redpink-primary-color);
+  text-decoration: none;
+  color: white;
+  width: 300px;
+  height: 50px;
+  font-size: 24px;
+  border-radius: 5px;
 }
 
 .mypage-update-container button{
   margin-top: 20px;
+  background-color: var(--darkblue-primary-color);
+  color: white;
+  width: 300px;
+  height: 50px;
+  font-size: 24px;
+  border: none;
+  border-radius: 5px;
+  margin-
+
 }
 
 .voted-list-container {
   width: 420px;
+}
+
+.modify-information-title {
+  font-size: 32px;
+  font-family: "GongGothicMedium";
+  color: var(--darkblue-primary-color);
 }

@@ -72,6 +72,10 @@
   display: block;
 }
 
+.capture-container.capture-logo-visible .result-graph-content {
+ display: none;
+}
+
 #EImbtiToggle,
 #SNmbtiToggle,
 #TFmbtiToggle,
