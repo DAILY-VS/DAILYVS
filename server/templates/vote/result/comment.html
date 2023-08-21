@@ -106,7 +106,7 @@
               <div class="nested-reply-container" data-parent-id="{{ comment.id }}" style="display:none">
                   <!-- 대댓글 표시 영역 -->
                   <div class="nested-replyTody">
-                    {% for child_comment in comments reversed %}
+                    {% for child_comment in comments%}
                       {% if child_comment.parent_comment_id == comment.id %}
                         <div class="nested-replyTr{{ child_comment.id }}">
                           <div class="nested-row">
