@@ -104,8 +104,9 @@ document.addEventListener("DOMContentLoaded", () => {
   captureBtnF.addEventListener("click", captureElementF);
 
   function captureElementF() {
-    const fortuneContainer = document.getElementById("capture");
+    const fortuneContainer = document.querySelector(".fortune-modal-content");
     fortuneContainer.classList.add("capture-btn-invisible"); // 캡처 시작 시 클래스 추가
+    fortuneContainer.classList.add("pink-background2");
 
     domtoimage.toPng(fortuneContainer)
       .then(dataUrl => {
@@ -113,7 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
         link.download = 'dailyfortune.png';
         link.href = dataUrl;
         link.click();
-        fortuneContainer.classList.remove("capture-btn-invisible"); // 캡처 끝난 후 클래스 제거
+        fortuneContainer.classList.remove("capture-btn-invisible");
+        fortuneContainer.classList.remove("pink-background2"); // 캡처 끝난 후 클래스 제거
       });
   }
 </script>
