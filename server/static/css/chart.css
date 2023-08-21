@@ -102,3 +102,26 @@
 .pink-background {
   background-color: #fff9f9;
 }
+
+.pink-background2 {
+  background-color: var(--blue-bg-color);
+
+}
+
+.pink-background2 .fortune-text{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.pink-background2 img {
+  margin-right: 20px;
+}
+
+.pink-background2 #fortune-result {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 15px;
+}
