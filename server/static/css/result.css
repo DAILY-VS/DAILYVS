@@ -7,10 +7,13 @@
 }
 
 .result-title {
-  font-family: "GongGothicMedium";
-  font-size: 34px;
-  margin: 10px auto;
-  color: var(--darkblue-primary-color);
+    display: flex;
+    text-align: center;
+    font-family: "GongGothicMedium";
+    font-size: 34px;
+    margin: 10px 10px;
+    color: var(--darkblue-primary-color);
+    word-break: keep-all;
 }
 
 .graph-information {
