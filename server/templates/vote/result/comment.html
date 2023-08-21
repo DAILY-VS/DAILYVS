@@ -481,7 +481,7 @@ $(document).ready(function () {
 
           updateNestedCount(comment_id);
           // 선택한 부모 댓글 바로 하단에 추가
-          $(".nested-reply-container[data-parent-id='" + comment_id + "']").prepend(newNestedComment);
+          $(".nested-reply-container[data-parent-id='" + comment_id + "']").append(newNestedComment);
           $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
           savedCommentId = response.comment_id;
           savedCommentIds.push(savedCommentId);
