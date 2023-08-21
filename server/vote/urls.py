@@ -43,7 +43,7 @@ urlpatterns = [
         name="nonuserfinal",
     ),
     path(
-        "fortune",
+        "fortune/",
         views.fortune,
         name="fortune",
     ),
