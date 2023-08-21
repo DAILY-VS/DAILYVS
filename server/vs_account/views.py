@@ -13,6 +13,7 @@ from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import User
 from django.urls import reverse
+from decouple import config
 
 
 import random
@@ -195,10 +196,10 @@ def send_password_reset_email(email, reset_url):
     try:
         smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.starttls()
-
-        EMAIL_HOST_USER = 'dailyvsofficial@gmail.com'
-        EMAIL_HOST_PASSWORD = 'qousltfgowhagxab'
-
+        
+        EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+        EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+        
         smtp_server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
         smtp_server.sendmail(sender_email, recipient_email, msg.encode('utf-8'))
 
