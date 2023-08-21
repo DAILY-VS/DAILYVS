@@ -3,12 +3,12 @@
   <div class="choice-percentage-result">
     <span class="choice-circle darkblue-circle"></span>
     <span id="percentage1">0 %</span>
-    <span>{{ poll.choice_set.all.0.choice_text }}</span>
+    <span class="darkblue-choice">{{ poll.choice_set.all.0.choice_text }}</span>
   </div>
   <div class="choice-percentage-result">
     <span class="choice-circle redpink-circle"></span>
     <span id="percentage2">0 %</span>
-    <span>{{ poll.choice_set.all.1.choice_text }}</span>
+    <span class="redpink-choice">{{ poll.choice_set.all.1.choice_text }}</span>
   </div>
   {% endblock %}
 </div>

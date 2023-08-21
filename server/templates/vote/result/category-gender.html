@@ -9,7 +9,7 @@
     >
       <img
         src="{% static 'img/icon/chevron_up.png'%}"
-        style="width: 30px"
+        style="width: 30px; transform: rotate(180deg);"
         class="chevron1"
       />
       성별
@@ -17,7 +17,7 @@
     <div class="result-category-chart" id="genderChart">
       <div class="gender-result">
         <div class="result-man-chart">
-          <div class="small-choice-title">남성</div>
+          <div class="small-choice-title">남</div>
           <div id="manChart"></div>
           <div>
             <span class="small-choice-title"
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="result-woman-chart">
-          <div class="small-choice-title">여성</div>
+          <div class="small-choice-title">여</div>
           <div id="womanChart"></div>
           <div>
             <span class="small-choice-title"
@@ -135,9 +135,9 @@
     const chevron1 = document.querySelector(".chevron1");
 
     if (isRotated1) {
-      chevron1.style.transform = "rotate(0deg)";
-    } else {
       chevron1.style.transform = "rotate(180deg)";
+    } else {
+      chevron1.style.transform = "rotate(0deg)";
     }
 
     isRotated1 = !isRotated1;

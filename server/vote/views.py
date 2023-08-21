@@ -1,24 +1,36 @@
 import json
-import numpy as np
 import random
+import numpy as np
 from .models import *
-from account.forms import *
-from account.models import *
+from vs_account.forms import *
+from vs_account.models import *
+from .fortunes import fortunes
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.models import AnonymousUser
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # 메인페이지
 def main(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     polls = Poll.objects.all()
+    polls = polls.order_by("-id")
     sort = request.GET.get("sort")
-    promotion_polls = Poll.objects.filter(active=True).order_by("-pub_date")[:3]
+    promotion_polls = Poll.objects.filter(active=True).order_by("-views_count")[:3]
+
     if sort == "popular":
         polls = polls.order_by("-views_count")  # 인기순
     elif sort == "latest":
@@ -27,8 +39,9 @@ def main(request):
         polls = polls.order_by("id")  # 등록순
 
     page = request.GET.get("page")
-    random_poll = random.choice(polls) if polls.exists() else None    
+    random_poll = random.choice(polls) if polls.exists() else None
     paginator = Paginator(polls, 4)
+
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -37,12 +50,30 @@ def main(request):
     except EmptyPage:
         page = paginator.num_pages
         page_obj = paginator.page(page)
+
+    polls = Poll.objects.all()
+
+    if polls:
+        
+        today_poll = polls.last()
+    else:
+        today_poll = None
+    
+    phrases = [
+        "투표하는 즐거움",
+        "나의 투표를 가치있게",
+        "나의 취향을 분석적으로",
+        "mbti와 통계를 통한 투표 겨루기"
+    ]
+
+    random_phrase = random.choice(phrases)
     context = {
         "polls": polls,
         "page_obj": page_obj,
         "paginator": paginator,
         "promotion_polls": promotion_polls,
-        "random_poll": random_poll,
+        "today_poll": today_poll,
+        "random_phrase": random_phrase
     }
 
     return render(request, "vote/main.html", context)
@@ -50,11 +81,19 @@ def main(request):
 
 # 투표 디테일 페이지
 def poll_detail(request, poll_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     user = request.user
     poll = get_object_or_404(Poll, id=poll_id)
 
     if user.is_authenticated and user.voted_polls.filter(id=poll_id).exists():
-        calcstat_url = reverse("vote:calcstat", args=[poll_id])
+        uservote = UserVote.objects.filter(poll_id=poll_id).get(user=user)
+        calcstat_url = reverse("vote:calcstat", args=[poll_id, uservote.id, 0])
         return redirect(calcstat_url)
     else:
         poll.increase_views()  # 게시글 조회 수 증가
@@ -86,19 +125,25 @@ def get_like_status(request, poll_id):
 
 
 # 투표 게시글 좋아요
-@login_required
 def poll_like(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         req = json.loads(request.body)
         poll_id = req["poll_id"]
-
         try:
             poll = Poll.objects.get(id=poll_id)
         except Poll.DoesNotExist:
             return JsonResponse({"error": "해당 투표가 존재하지 않습니다."}, status=404)
 
-        user = request.user
+        
         if request.user.is_authenticated:
+            user = request.user
             if poll.poll_like.filter(id=user.id).exists():
                 poll.poll_like.remove(user)
                 message = "좋아요 취소"
@@ -115,19 +160,66 @@ def poll_like(request):
                 "user_likes_poll": user_likes_poll,
             }
             return JsonResponse(context)
+        else:
+            return JsonResponse({"error": "로그인이 필요합니다."}, status=401)
+
+# 댓글 좋아요
+@login_required
+def comment_like(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
+    if request.method == "POST":
+        req = json.loads(request.body)
+        comment_id = req["comment_id"]
+
+        try:
+            comment = Comment.objects.get(id=comment_id)
+        except Comment.DoesNotExist:
+            return JsonResponse({"error": "해당 댓글이 존재하지 않습니다."}, status=404)
+
+        user = request.user
+        user_likes_comment = False
+        
+        if request.user.is_authenticated:
+            user_id = user.id
+            user_likes_comment = User.objects.get(id=user_id).comment_like.filter(id=comment.id).exists()
+
+            if user_likes_comment:
+                comment.comment_like.remove(user)
+                message = "좋아요 취소"
+            else:
+                comment.comment_like.add(user)
+                message = "좋아요"
+
+            like_count = comment.comment_like.count()
+            context = {
+                "like_count": like_count,
+                "message": message,
+                "user_likes_comment": not user_likes_comment,
+            }
+            return JsonResponse(context)
         return redirect("/")
 
-
-# 유저 마이페이지
 @login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     polls = Poll.objects.all()
     page = request.GET.get("page")
-
-    paginator = Paginator(polls, 4)
     uservotes = UserVote.objects.filter(user=request.user)
+    paginator = Paginator(uservotes, 4)
     polls_like = Poll.objects.filter(poll_like=request.user)
-
+    length_polls_like = len(polls_like)
     try:
         page_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -142,6 +234,7 @@ def mypage(request):
         "polls_like": polls_like,
         "page_obj": page_obj,
         "paginator": paginator,
+        "length_polls_like": length_polls_like,
     }
     return render(request, "vote/mypage.html", context)
 
@@ -149,11 +242,15 @@ def mypage(request):
 # 마이페이지 정보 수정
 @login_required(login_url="/account/login/")  # 비로그인시 mypage/update 막음
 def mypage_update(request):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
     if request.method == "POST":
         form = UserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("vote:mypage")
+            return redirect("/")
     else:
         form = UserChangeForm(instance=request.user)
     context = {"form": form}
@@ -163,10 +260,26 @@ def mypage_update(request):
 # 댓글 쓰기
 @login_required
 def comment_write_view(request, poll_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     poll = get_object_or_404(Poll, id=poll_id)
     user_info = request.user  # 현재 로그인한 사용자
     content = request.POST.get("content")
     parent_comment_id = request.POST.get("parent_comment_id")
+    
+    try:
+        user_vote = UserVote.objects.get(user=request.user, poll=poll)  # uservote에서 선택지 불러옴
+        choice_text = user_vote.choice.choice_text
+
+    except UserVote.DoesNotExist:
+            user_vote = None
+            choice_text = ""  # 또는 다른 기본값 설정
+            
     if content:
         if parent_comment_id:  # 대댓글인 경우
             parent_comment = get_object_or_404(Comment, pk=parent_comment_id)
@@ -175,8 +288,8 @@ def comment_write_view(request, poll_id):
                 content=content,
                 user_info=user_info,
                 parent_comment=parent_comment,
+                
             )
-
             parent_comment_data = {
                 "nickname": parent_comment.user_info.nickname,
                 "mbti": parent_comment.user_info.mbti,
@@ -192,21 +305,10 @@ def comment_write_view(request, poll_id):
                 user_info=user_info,
             )
             parent_comment_data = None
-
-        poll.update_comments_count()  # 댓글 수 업데이트
+        comments = Comment.objects.filter(poll_id=poll_id)
+        poll.comments = comments.count()
         poll.save()
-
-        try:
-            user_vote = UserVote.objects.get(
-                user=request.user, poll=poll
-            )  # uservote에서 선택지 불러옴
-            choice_text = user_vote.choice.choice_text
-        except UserVote.DoesNotExist:
-            user_vote = None
-            choice_text = ""  # 또는 다른 기본값 설정
-
-        comment_id = comment.pk
-
+        comment_id =Comment.objects.last().pk
         data = {
             "nickname": user_info.nickname,
             "mbti": user_info.mbti,
@@ -215,7 +317,11 @@ def comment_write_view(request, poll_id):
             "created_at": comment.created_at.strftime("%Y년 %m월 %d일"),
             "comment_id": comment_id,
             "choice": choice_text,
+            "new_comment_count": poll.comments,
         }
+        
+        comment.choice = user_vote.choice
+        comment.save()
         if parent_comment_data:
             data["parent_comment"] = parent_comment_data
 
@@ -227,14 +333,23 @@ def comment_write_view(request, poll_id):
 # 댓글 삭제
 @login_required
 def comment_delete_view(request, pk):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     poll = get_object_or_404(Poll, id=pk)
     comment_id = request.POST.get("comment_id")
     target_comment = Comment.objects.get(pk=comment_id)
-
     if request.user == target_comment.user_info:
         target_comment.delete()
+        comments = Comment.objects.filter(poll_id=pk)
+        poll.comments = comments.count()
         poll.save()
-        data = {"comment_id": comment_id, "success": True}
+        data = {"comment_id": comment_id, "success": True,
+                "new_comment_count": poll.comments,}
     else:
         data = {"success": False, "error": "본인 댓글이 아닙니다."}
     return HttpResponse(
@@ -244,12 +359,26 @@ def comment_delete_view(request, pk):
 
 # 대댓글 수 파악
 def calculate_nested_count(request, comment_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     nested_count = Comment.objects.filter(parent_comment_id=comment_id).count()
     return JsonResponse({"nested_count": nested_count})
 
 
 # 투표 시 회원, 비회원 구분 (비회원일시 성별 기입)
 def classifyuser(request, poll_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     if request.method == "POST":
         poll = get_object_or_404(Poll, pk=poll_id)
         choice_id = request.POST.get("choice")  # 뷰에서 선택 불러옴
@@ -262,42 +391,82 @@ def classifyuser(request, poll_id):
                 user.voted_polls.add(poll_id)
                 poll_result, created = Poll_Result.objects.get_or_create(
                     poll_id=poll_id
-                )
+                )   
                 poll_result.total += 1
                 if user.gender == "M":
-                    poll_result.choice1_man += 1 if int(choice_id) == 1 else 0
-                    poll_result.choice2_man += 1 if int(choice_id) == 2 else 0
+                    poll_result.choice1_man += (
+                        1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                    )
+                    poll_result.choice2_man += (
+                        1 if int(choice_id) == 2 * (poll_id) else 0
+                    )
                     print(str(poll_result.choice1_man))
                 elif user.gender == "W":
-                    poll_result.choice1_woman += 1 if int(choice_id) == 1 else 0
-                    poll_result.choice2_woman += 1 if int(choice_id) == 2 else 0
+                    poll_result.choice1_woman += (
+                        1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                    )
+                    poll_result.choice2_woman += (
+                        1 if int(choice_id) == 2 * (poll_id) else 0
+                    )
                 for letter in user.mbti:
                     if letter == "E":
-                        poll_result.choice1_E += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_E += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_E += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_E += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                     elif letter == "I":
-                        poll_result.choice1_I += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_I += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_I += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_I += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                     elif letter == "S":
-                        poll_result.choice1_S += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_S += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_S += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_S += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                     elif letter == "N":
-                        poll_result.choice1_N += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_N += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_N += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_N += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                     elif letter == "T":
-                        poll_result.choice1_T += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_T += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_T += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_T += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                     elif letter == "F":
-                        poll_result.choice1_F += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_F += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_F += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_F += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                     elif letter == "J":
-                        poll_result.choice1_J += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_J += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_J += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_J += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                     elif letter == "P":
-                        poll_result.choice1_P += 1 if int(choice_id) == 1 else 0
-                        poll_result.choice2_P += 1 if int(choice_id) == 2 else 0
+                        poll_result.choice1_P += (
+                            1 if int(choice_id) == 2 * (poll_id) - 1 else 0
+                        )
+                        poll_result.choice2_P += (
+                            1 if int(choice_id) == 2 * (poll_id) else 0
+                        )
                 poll_result.save()
-                calcstat_url = reverse("vote:calcstat", args=[poll_id])
+                calcstat_url = reverse("vote:calcstat", args=[poll_id, vote.id, 0])
                 return redirect(calcstat_url)
             except ValueError:
                 vote = NonUserVote(poll=poll, choice=choice)
@@ -316,14 +485,50 @@ def classifyuser(request, poll_id):
 
 
 # 회원/비회원 투표 통계 계산 및 결과 페이지
-def calcstat(request, poll_id):
+def calcstat(request, poll_id, uservote_id, nonuservote_id):
+    user= request.user
+    if user.is_authenticated and user.custom_active==False:
+        authentication_url = reverse("vs_account:email_verification", args=[user.id])
+        return redirect(authentication_url)
+    if user.is_authenticated :
+        if user.gender== "" or user.mbti=="":
+            return redirect("vote:update")
     poll = get_object_or_404(Poll, pk=poll_id)
     comments = Comment.objects.filter(poll_id=poll_id)
-    if request.user.is_authenticated:
-        user_votes = UserVote.objects.filter(user=request.user)
-    else:
-        user_votes = None  # 또는 user_votes = UserVote.objects.none()
+    poll.comments = comments.count()
+    # 댓글
+    choices=Choice.objects.filter(poll_id=poll_id)
+    comments = Comment.objects.filter(poll_id=poll_id)
+    uservotes = UserVote.objects.filter(poll_id=poll_id)
+    choice_filter = request.GET.get("choice_filter")  # 새로 추가된 부분
+    choice1 = choices[0].choice_text
+    choice2 = choices[1].choice_text
 
+    sort = request.GET.get("sort")
+    
+    if choice_filter == choice1:
+        comments = Comment.objects.filter(poll_id=poll_id, choice__choice_text=choice1)
+    elif choice_filter == choice2:
+        comments = Comment.objects.filter(poll_id=poll_id, choice__choice_text=choice2)
+        
+    if sort == "likes":
+        comments = comments.annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')
+    elif sort == "latest":
+        comments = comments.order_by('created_at')    
+
+    if sort == "likes" and choice_filter == choice1:
+        comments = comments.filter(choice__choice_text=choice1).annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')
+    elif sort == "likes" and choice_filter == choice2:
+        comments = comments.filter(choice__choice_text=choice2).annotate(like_count=Count('comment_like')).order_by('like_count', 'created_at')
+
+    
+
+    now = datetime.now()
+    for comment in comments:
+        time_difference = now - comment.created_at
+        comment.time_difference = time_difference.total_seconds() / 3600  # 시간 단위로 변환하여 저장
+    
+    
     poll_result = Poll_Result.objects.get(poll_id=poll_id)
 
     total_count = poll_result.total
@@ -346,7 +551,7 @@ def calcstat(request, poll_id):
         if (poll_result.choice1_man + poll_result.choice2_man) != 0
         else 0
     )
-    choice2_man_percentage = (
+    choice2_man_percentage =  (
         (
             np.round(
                 poll_result.choice2_man
@@ -563,6 +768,113 @@ def calcstat(request, poll_id):
         else 0
     )
 
+    dict = {}
+    try:
+        uservote = UserVote.objects.get(id=uservote_id)
+        user = uservote.user
+        if uservote.choice.id == 2*poll_id - 1:
+            if user.gender == "M":
+                dict["남성"] = choice1_man_percentage
+            elif user.gender == "W":
+                dict["여성"] = choice1_woman_percentage
+            for letter in user.mbti:
+                if letter == "E":
+                    dict["E"] = e_choice1_percentage
+                elif letter == "I":
+                    dict["I"] = i_choice1_percentage
+                elif letter == "S":
+                    dict["S"] = s_choice1_percentage
+                elif letter == "N":
+                    dict["N"] = n_choice1_percentage
+                elif letter == "T":
+                    dict["T"] = t_choice1_percentage
+                elif letter == "F":
+                    dict["F"] = f_choice1_percentage
+                elif letter == "P":
+                    dict["P"] = p_choice1_percentage
+                elif letter == "J":
+                    dict["J"] = j_choice1_percentage
+        if uservote.choice.id == 2*poll_id :
+            if user.gender == "M":
+                dict["남성"] = choice2_man_percentage
+            elif user.gender == "W":
+                dict["여성"] = choice2_woman_percentage
+            for letter in user.mbti:
+                if letter == "E":
+                    dict["E"] = e_choice2_percentage
+                elif letter == "I":
+                    dict["I"] = i_choice2_percentage
+                elif letter == "S":
+                    dict["S"] = s_choice2_percentage
+                elif letter == "N":
+                    dict["N"] = n_choice2_percentage
+                elif letter == "T":
+                    dict["T"] = t_choice2_percentage
+                elif letter == "F":
+                    dict["F"] = f_choice2_percentage
+                elif letter == "P":
+                    dict["P"] = p_choice2_percentage
+                elif letter == "J":
+                    dict["J"] = j_choice2_percentage
+    except ObjectDoesNotExist:
+        nonuservote = NonUserVote.objects.get(id=nonuservote_id)
+        nonuser_gender = nonuservote.gender
+        nonuser_mbti = nonuservote.MBTI
+        if nonuservote.choice.id == 2*poll_id - 1:
+            if nonuser_gender == "M":
+                dict["남성"] = choice1_man_percentage
+            elif nonuser_gender == "W":
+                dict["여성"] = choice1_woman_percentage
+            for letter in nonuser_mbti:
+                if letter == "E":
+                    dict["E"] = e_choice1_percentage
+                elif letter == "I":
+                    dict["I"] = i_choice1_percentage
+                elif letter == "S":
+                    dict["S"] = s_choice1_percentage
+                elif letter == "N":
+                    dict["N"] = n_choice1_percentage
+                elif letter == "T":
+                    dict["T"] = t_choice1_percentage
+                elif letter == "F":
+                    dict["F"] = f_choice1_percentage
+                elif letter == "P":
+                    dict["P"] = p_choice1_percentage
+                elif letter == "J":
+                    dict["J"] = j_choice1_percentage
+        if nonuservote.choice.id == 2*poll_id :
+            if nonuser_gender == "M":
+                dict["남성"] = choice2_man_percentage
+            elif nonuser_gender == "W":
+                dict["여성"] = choice2_woman_percentage
+            for letter in nonuser_mbti:
+                if letter == "E":
+                    dict["E"] = e_choice2_percentage
+                elif letter == "I":
+                    dict["I"] = i_choice2_percentage
+                elif letter == "S":
+                    dict["S"] = s_choice2_percentage
+                elif letter == "N":
+                    dict["N"] = n_choice2_percentage
+                elif letter == "T":
+                    dict["T"] = t_choice2_percentage
+                elif letter == "F":
+                    dict["F"] = f_choice2_percentage
+                elif letter == "P":
+                    dict["P"] = p_choice2_percentage
+                elif letter == "J":
+                    dict["J"] = j_choice2_percentage
+    print(dict)
+    minimum_key = min(dict, key=dict.get)
+    minimum_value = dict[min(dict, key=dict.get)]
+    maximum_key = max(dict, key=dict.get)
+    maximum_value = dict[max(dict, key=dict.get)]
+    if 100 - minimum_value >= maximum_value:
+        key = minimum_key
+    else : 
+        key = maximum_key
+    #key="남성"
+
     ctx = {
         "total_count": total_count,
         # "choice1_count": total_choice1_count,
@@ -600,8 +912,20 @@ def calcstat(request, poll_id):
         "j_choice2_percentage": j_choice2_percentage,
         "poll": poll,
         "comments": comments,
-        "user_votes": user_votes,
+        "comments_count":comments.count(),
+        "uservotes": uservotes,
+        "minimum_key": minimum_key,
+        "minimum_value": 100 - minimum_value,
+        "maximum_key": maximum_key,
+        "maximum_value": maximum_value,
+        "sort": sort,
+        "key": key,
+        "choices": choices,
+        "choice_filter":choice_filter,
+        "new_comment_count": poll.comments,
     }
+    ##################################################################################
+
     return render(request, template_name="vote/result.html", context=ctx)
 
 
@@ -642,38 +966,94 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
         poll_result, created = Poll_Result.objects.get_or_create(poll_id=poll_id)
         poll_result.total += 1
         if nonuservote.gender == "M":
-            poll_result.choice1_man += 1 if nonuservote.choice_id == 1 else 0
-            poll_result.choice2_man += 1 if nonuservote.choice_id == 2 else 0
+            poll_result.choice1_man += (
+                1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+            )
+            poll_result.choice2_man += (
+                1 if nonuservote.choice_id == 2 * (poll_id) else 0
+            )
         elif nonuservote.gender == "W":
-            poll_result.choice1_woman += 1 if nonuservote.choice_id == 1 else 0
-            poll_result.choice2_woman += 1 if nonuservote.choice_id == 2 else 0
+            poll_result.choice1_woman += (
+                1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+            )
+            poll_result.choice2_woman += (
+                1 if nonuservote.choice_id == 2 * (poll_id) else 0
+            )
         for letter in selected_mbti:
             if letter == "E":
-                poll_result.choice1_E += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_E += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_E += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_E += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
             elif letter == "I":
-                poll_result.choice1_I += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_I += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_I += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_I += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
             elif letter == "S":
-                poll_result.choice1_S += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_S += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_S += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_S += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
             elif letter == "N":
-                poll_result.choice1_N += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_N += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_N += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_N += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
             elif letter == "T":
-                poll_result.choice1_T += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_T += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_T += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_T += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
             elif letter == "F":
-                poll_result.choice1_F += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_F += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_F += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_F += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
             elif letter == "J":
-                poll_result.choice1_J += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_J += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_J += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_J += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
             elif letter == "P":
-                poll_result.choice1_P += 1 if nonuservote.choice_id == 1 else 0
-                poll_result.choice2_P += 1 if nonuservote.choice_id == 2 else 0
+                poll_result.choice1_P += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) - 1 else 0
+                )
+                poll_result.choice2_P += (
+                    1 if nonuservote.choice_id == 2 * (poll_id) else 0
+                )
         poll_result.save()
-        calcstat_url = reverse("vote:calcstat", args=[poll_id])
+        calcstat_url = reverse("vote:calcstat", args=[poll_id, 0, nonuservote_id])
         return redirect(calcstat_url)
     else:
         return redirect("/")
+
+
+def get_random_fortune(mbti):
+    default_fortune = "일시적인 오류입니다! 다음에 시도해주세요."
+
+    selected_fortunes = fortunes.get(mbti, [])
+    return random.choice(selected_fortunes) if selected_fortunes else default_fortune
+    
+def fortune(request):
+    user = request.user
+    if user.is_authenticated:
+        random_fortune = get_random_fortune(user.mbti)
+    else:
+        random_fortune = get_random_fortune('nonuser')
+
+    return render(request, "vote/main/main-fortune.html", {"random_fortune": random_fortune})

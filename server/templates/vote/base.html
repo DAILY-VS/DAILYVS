@@ -3,60 +3,46 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta property="og:title" content="내 사이트의 제목" />
-    <meta property="og:description" content="보고 있는 페이지의 내용 요약" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0" />   
+    <!-- 메타태그 -->
+    <meta property="og:url" content="https://daily-vs.com/">
+    <meta property="og:title" content="DAILY VS">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://ifh.cc/g/jrVAyz.png">
+    <meta property="og:description" content="INTP인 그 사람은 뭘 골랐을까? MBTI에 따른 밸런스 게임 통계 사이트">
+    <title>Daily VS</title>
+
     <link rel="stylesheet" href="{%static 'css/style.css'%}?after" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Daily VS</title>
+    
   </head>
   <body>
     <div class="main-container">
       <div id="base-container">
         <nav class="nav-list">
           {% if user.is_authenticated %}
-          <a href="{% url 'account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
+          <a href="{% url 'vs_account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" /><span class="login-word">로그아웃</span></a>
           {% else %}
-          <a href="{% url 'account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
+          <a href="{% url 'vs_account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" /><span class="login-word">로그인</span></a>
           {% endif %}
             <a href="/" id="logo"
-              ><img src="{% static 'img/Row.png' %}"/></a>
-            <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/icon/my-page.png'%}" style="width:40px" id="hamburger-icon" /></a>
-          </ul>
-          <!-- <div id="sidebar" class="hidden">
-            <span id="hide-sidebar-icon"><img src="{% static 'img/icon/right_round.png' %}" style="width: 35px" /></span>
-            <div class="ham-user-info">
-              <img src="{% static 'img/user.png'%}" style="width:80px" />
-              <div class="ham-user-name">
-                <span class="ham-logged-user-name">
-                  {% if user.is_authenticated %}
-                    {{ user.username }} <span class="ham-user-nim">님</span>
-                  {% else %}
-                    로그인을 해주세요
-                  {% endif %}
-                </span>
-              </div>
+              ><img src="{% static 'img/Row.png' %}" class="base-logo"/></a>
+            <div class="nav-right">
+              <a href="{% url 'vote:fortune' %}" class="nav-fortune"> <img src="{% static 'img/Cookie.png' %}"/></a>
+              {% if user.is_authenticated %}
+              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Logged.png'%}" class="hamburger-icon" /></a>
+              {% else %}
+              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Unlogged.png'%}" class="hamburger-icon" /></a>
+              {% endif %}
             </div>
-            <ul class="ham-navigator">
-              <li><span><img src="{% static 'img/icon/dark-mode-blue.png' %}" style="width:30px"/></span><span>다크모드</span></li>
-              <li><span><img src="{% static 'img/icon/routine-blue.png' %}" style="width:30px"/></span><span>최근 투표한 컨텐츠</span></li>
-              <li><a href={% url 'vote:mypage' %}><span><img src="{% static 'img/icon/home-blue.png' %}" style="width:30px"/></span><span>마이페이지</span></a></li>
-              <li><a href={% url 'vote:update' %}><span><img src="{% static 'img/icon/settings-blue.png' %}" style="width:30px"/></span><span>회원정보 수정</span></a></li>
-            </ul>
-            <div class="ham-footer">
-              <div>made by Team VS</div>
-              <div>social community</div>
-              <div>dev</div>
-              <div>김정곤 | 곽민경 | 조성민 | 송우진 | 왕한솔</div>
-          </div> -->
+          </ul>
         </nav>
         <div class="base-block-container">{% block content %} {% endblock %}</div>
       </div>
-      
-  </div>
+    </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{% static 'js/base.js' %}"></script>
 </html>

@@ -6,9 +6,14 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 
 class SignupForm(UserCreationForm):
+    email = forms.EmailField(
+        label="이메일",
+        max_length=30,
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}),
+    )
     username = forms.CharField(
         label="아이디",
-        max_length=100,
+        max_length=10,
         min_length=5,
         validators=[
             RegexValidator(
@@ -17,20 +22,20 @@ class SignupForm(UserCreationForm):
             )
         ],
         widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "아이디를 입력하세요"}
+            attrs={"class": "form-control", "placeholder": "아이디 (5자 이상 10자 이하)"}
         ),
     )
     password1 = forms.CharField(
         label="비밀번호",
-        max_length=50,
+        max_length=15,
         min_length=5,
         widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "비밀번호"}
+            attrs={"class": "form-control", "placeholder": "비밀번호 (8자 이상 15자 이하)"}
         ),
     )
     password2 = forms.CharField(
         label="확인 비밀번호",
-        max_length=50,
+        max_length=15,
         min_length=5,
         widget=forms.PasswordInput(
             attrs={"class": "form-control", "placeholder": "비밀번호 확인"}
@@ -66,16 +71,22 @@ class SignupForm(UserCreationForm):
         if User.objects.filter(nickname=nickname).exists():
             raise forms.ValidationError("이미 사용 중인 닉네임입니다.")
         return nickname
-
+    
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("이미 사용 중인 이메일입니다.")
+        return email
+    
     class Meta:
         model = User
-        fields = ["username", "password1", "password2", "mbti", "nickname", "gender"]
+        fields = ["email", "username", "password1", "password2", "mbti", "nickname", "gender"]
         widgets = {
             "mbti": forms.Select(
                 attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
             ),
             "nickname": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "별명을 입력하세요"}
+                attrs={"class": "form-control", "placeholder": "닉네임 (2자 이상 10자 이하)"}
             ),
         }
 
@@ -118,7 +129,7 @@ class UserChangeForm(UserChangeForm):
     
     class Meta:
         model = User
-        fields = ["username","mbti", "nickname", "gender"]
+        fields = ["mbti", "nickname", "gender"]
         widgets = {
             "mbti": forms.Select(
                 attrs={"class": "form-control", "placeholder": "MBTI (대문자로 ex.INFP)"}
@@ -133,3 +144,28 @@ class UserDeleteForm(forms.ModelForm):
     class Meta:
         model = User
         fields = []
+
+
+class EmailForm(forms.Form):
+    email = forms.EmailField(label="이메일", max_length=30, widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "이메일 주소"}))
+
+
+
+class PasswordResetForm(forms.Form):
+    new_password = forms.CharField(
+        label='비밀번호',
+        max_length=15,
+        min_length=5,
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "비밀번호 (5자 이상 15자 이하)"}
+        ),       
+        )
+    confirm_new_password = forms.CharField(
+        label='새 비밀번호',
+        max_length=15,
+        min_length=5,
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "비밀번호 확인"}
+        ),       
+        )
+ 
