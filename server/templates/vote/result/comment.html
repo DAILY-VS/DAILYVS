@@ -117,7 +117,7 @@
                               <div class="user-sub-info">{{ child_comment.user_info.gender}}</div>
                               <div class="user-sub-info choice-color">                                              
                                   {% for uservote in uservotes %}
-                                  {%if uservote.user == comment.user_info %}
+                                  {%if uservote.user == child_comment.user_info %}
                                     {{uservote.choice.choice_text}}
                                   {% endif %}
                                 {% endfor %}
