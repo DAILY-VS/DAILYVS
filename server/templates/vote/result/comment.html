@@ -106,7 +106,7 @@
               <div class="nested-reply-container" data-parent-id="{{ comment.id }}" style="display:none">
                   <!-- 대댓글 표시 영역 -->
                   <div class="nested-replyTody">
-                    {% for child_comment in comments%}
+                    {% for child_comment in comments %}
                       {% if child_comment.parent_comment_id == comment.id %}
                         <div class="nested-replyTr{{ child_comment.id }}">
                           <div class="nested-row">
@@ -140,7 +140,8 @@
                       {% endif %}
                     {% endfor %}
                   </div>
-                  <!-- 대댓글 작성 영역 -->
+              
+                <!-- 대댓글 작성 영역 -->
                   {% if not comment.parent_comment %}
                   <div class="nested-reply-input-container">
                     <textarea
@@ -151,7 +152,7 @@
                     <button class="btnNestedReply" data-comment-id="{{ comment.id }}" data-parent-id="{{ parent_comment_id }}">등록</button>
                   </div>        
                   {% endif %}
-                </div>
+              </div>
               {% endif %}
               {% endfor %}
               {% if new_comment_count > 6 %}
@@ -479,10 +480,30 @@ $(document).ready(function () {
             '</div>' +
             '</div>' ;
 
-          updateNestedCount(comment_id);
-          // 선택한 부모 댓글 바로 하단에 추가
-          $(".nested-reply-container[data-parent-id='" + comment_id + "']").append(newNestedComment);
-          $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
+          $("#nested_content_id_" + comment_id).val("");
+
+          var nestedReplyContainer = $(".nested-reply-container[data-parent-id='" + comment_id + "']");
+          var nestedReplyInputContainer = nestedReplyContainer.find('.nested-reply-input-container');
+          
+          // 새 대댓글 이동
+          nestedReplyContainer.append(newNestedComment);
+
+          // 입력창 이동
+          nestedReplyInputContainer.detach();
+          nestedReplyContainer.append(nestedReplyInputContainer);
+
+          // 대댓글 시간순 정렬
+          var nestedReplies = nestedReplyContainer.children('.nested-replyTr');
+          var sortedReplies = nestedReplies.toArray().sort(function (a, b) {
+            var timeA = $(a).find('.time-line').text();
+            var timeB = $(b).find('.time-line').text();
+            return new Date(timeA) - new Date(timeB);
+          });
+
+          // 대댓글을 정렬된 순서로 다시 배치
+          nestedReplies.detach();
+          nestedReplyContainer.prepend(sortedReplies);
+
           savedCommentId = response.comment_id;
           savedCommentIds.push(savedCommentId);
           console.log(savedCommentIds)
