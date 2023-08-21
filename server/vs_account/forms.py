@@ -30,7 +30,7 @@ class SignupForm(UserCreationForm):
         max_length=15,
         min_length=5,
         widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "비밀번호 (5자 이상 15자 이하)"}
+            attrs={"class": "form-control", "placeholder": "비밀번호 (8자 이상 15자 이하)"}
         ),
     )
     password2 = forms.CharField(

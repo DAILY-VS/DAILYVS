@@ -7,7 +7,7 @@ $(function(){
             fortuneContainer.classList.remove("capture-btn-invisible");
             },10);
              html2canvas(document.querySelector("#capture")).then(canvas => {
-                saveImg(canvas.toDataURL('image/png'), "dailyVS-fortune.png");
+                saveImg(canvas.toDataURL('image/jpg'), "dailyVS-fortune.jpg");
         });
     });
 

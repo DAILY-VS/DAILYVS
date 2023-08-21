@@ -7,10 +7,13 @@
 }
 
 .result-title {
-  font-family: "GongGothicMedium";
-  font-size: 34px;
-  margin: 10px auto;
-  color: var(--darkblue-primary-color);
+    display: flex;
+    text-align: center;
+    font-family: "GongGothicMedium";
+    font-size: 34px;
+    margin: 10px 10px;
+    color: var(--darkblue-primary-color);
+    word-break: keep-all;
 }
 
 .graph-information {
@@ -337,4 +340,30 @@ text {
 
 .result-like-recommend img {
   margin-right: 20px;
+}
+
+.to-main-page {
+  font-family: "TheJamsil5Bold";
+  background-color: #ececfd;
+  height: 70px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+.to-main-page span {
+  margin-right: auto;
+}
+
+.to-mp-word {
+    font-family: "TheJamsil5Bold";
+    text-decoration: none;
+    color: black;
+    border: none;
+}
+
+.another-vote-container a{
+  text-decoration: none;
 }

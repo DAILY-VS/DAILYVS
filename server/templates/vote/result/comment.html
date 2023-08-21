@@ -106,7 +106,7 @@
               <div class="nested-reply-container" data-parent-id="{{ comment.id }}" style="display:none">
                   <!-- 대댓글 표시 영역 -->
                   <div class="nested-replyTody">
-                    {% for child_comment in comments reversed %}
+                    {% for child_comment in comments %}
                       {% if child_comment.parent_comment_id == comment.id %}
                         <div class="nested-replyTr{{ child_comment.id }}">
                           <div class="nested-row">
@@ -140,7 +140,8 @@
                       {% endif %}
                     {% endfor %}
                   </div>
-                  <!-- 대댓글 작성 영역 -->
+              
+                <!-- 대댓글 작성 영역 -->
                   {% if not comment.parent_comment %}
                   <div class="nested-reply-input-container">
                     <textarea
@@ -151,7 +152,7 @@
                     <button class="btnNestedReply" data-comment-id="{{ comment.id }}" data-parent-id="{{ parent_comment_id }}">등록</button>
                   </div>        
                   {% endif %}
-                </div>
+              </div>
               {% endif %}
               {% endfor %}
               {% if new_comment_count > 6 %}
@@ -164,28 +165,6 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/comment.js' %}"></script>
-
-<script>
-  // 이전 스크롤 위치를 localStorage에서 가져옵니다.
-  var scrollPosition = localStorage.getItem('scrollPosition') || 0;
-
-  // 페이지가 로드될 때 스크롤 위치를 설정합니다.
-  window.onload = function () {
-      window.scrollTo(0, scrollPosition);
-      localStorage.setItem('scrollPosition', 0)
-      scrollPosition = 0
-  };
-  
-  // 정렬 또는 필터링 옵션을 선택할 때마다 스크롤 위치를 저장합니다.
-  document.getElementById('selectSort').addEventListener('change', function () {
-      localStorage.setItem('scrollPosition', window.scrollY);
-  });
-  
-  document.getElementById('selectChoice').addEventListener('change', function () {
-      localStorage.setItem('scrollPosition', window.scrollY);
-  });
-  </script>
-
 <script>
 // 좋아요
 function handleLikeButton(likeButton) {
@@ -480,10 +459,30 @@ $(document).ready(function () {
             '</div>' +
             '</div>' ;
 
-          updateNestedCount(comment_id);
-          // 선택한 부모 댓글 바로 하단에 추가
-          $(".nested-reply-container[data-parent-id='" + comment_id + "']").prepend(newNestedComment);
-          $("#nested_content_id_" + comment_id).val(""); // 입력창 비우기
+          $("#nested_content_id_" + comment_id).val("");
+
+          var nestedReplyContainer = $(".nested-reply-container[data-parent-id='" + comment_id + "']");
+          var nestedReplyInputContainer = nestedReplyContainer.find('.nested-reply-input-container');
+          
+          // 새 대댓글 이동
+          nestedReplyContainer.append(newNestedComment);
+
+          // 입력창 이동
+          nestedReplyInputContainer.detach();
+          nestedReplyContainer.append(nestedReplyInputContainer);
+
+          // 대댓글 시간순 정렬
+          var nestedReplies = nestedReplyContainer.children('.nested-replyTr');
+          var sortedReplies = nestedReplies.toArray().sort(function (a, b) {
+            var timeA = $(a).find('.time-line').text();
+            var timeB = $(b).find('.time-line').text();
+            return new Date(timeA) - new Date(timeB);
+          });
+
+          // 대댓글을 정렬된 순서로 다시 배치
+          nestedReplies.detach();
+          nestedReplyContainer.prepend(sortedReplies);
+
           savedCommentId = response.comment_id;
           savedCommentIds.push(savedCommentId);
           console.log(savedCommentIds)

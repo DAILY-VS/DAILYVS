@@ -107,7 +107,15 @@
       투표 좋아요 눌러주기 <img src="{% static 'img/icon/right-arrow.png' %}" style="width: 50px"/>
     </div>
     <div class="detail-like-container">{% include 'vote/result/like.html' %}</div></div>
-  <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
+  <div class="comment-container">{% include 'vote/result/comment.html' %}
+    <div>
+      <div class="another-vote-container">
+        <a href="/"><div class="to-main-page">
+          <span><img src="{% static 'img/icon/left_page.png' %}" style="width: 50px"/></span>
+          <span class="to-mp-word">메인 페이지로 돌아가기</span></div></a>
+      </div>
+    </div>
+  </div>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
 <script>
@@ -275,25 +283,46 @@ $(function(){
 
 </script> -->
 <script>
- window.onload = function() {
-  // 버튼 요소를 가져옵니다.
+var scrollPosition = localStorage.getItem('scrollPosition') || 0;
+window.onload = function() {
+
   var capBtn2 = document.getElementById("capBtn2");
   var copyUrlBtn = document.getElementById("copy-url-btn");
 
-
-  capBtn2.style.backgroundColor = '#d4d4d4'
-  // 버튼들을 초기에 비활성화 상태로 만듭니다.
+  capBtn2.style.backgroundColor = '#d4d4d4';
 
   capBtn2.disabled = true;
   copyUrlBtn.disabled = true;
-
 
   setTimeout(function() {
     capBtn2.disabled = false;
     copyUrlBtn.disabled = false;
     capBtn2.style.backgroundColor = '#17355a';
   }, 4800);
+
+
+  document.getElementById('selectSort').addEventListener('change', function () {
+    localStorage.setItem('scrollPosition', window.scrollY);
+  });
+
+  document.getElementById('selectChoice').addEventListener('change', function () {
+    localStorage.setItem('scrollPosition', window.scrollY);
+    console.log("Scroll position:", scrollPosition);
+  });
+
+  window.scrollTo(0, scrollPosition);
+  localStorage.setItem('scrollPosition', 0);
+  scrollPosition = 0;
 };
+
+document.getElementById('selectSort').addEventListener('change', function () {
+      localStorage.setItem('scrollPosition', window.scrollY);
+  });
+  
+  document.getElementById('selectChoice').addEventListener('change', function () {
+      localStorage.setItem('scrollPosition', window.scrollY);
+  });
+
 </script>
 <script>
   const captureBtn = document.getElementById("capBtn2");
@@ -313,5 +342,5 @@ $(function(){
         captureContainer.classList.remove("capture-logo-visible"); // 캡처 끝난 후 클래스 제거
       });
   }
-</script>
+</>
 {% endblock %}
