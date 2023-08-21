@@ -173,6 +173,7 @@
   window.onload = function () {
       window.scrollTo(0, scrollPosition);
       localStorage.setItem('scrollPosition', 0)
+      scrollPosition = 0
   };
   
   // 정렬 또는 필터링 옵션을 선택할 때마다 스크롤 위치를 저장합니다.
@@ -183,7 +184,7 @@
   document.getElementById('selectChoice').addEventListener('change', function () {
       localStorage.setItem('scrollPosition', window.scrollY);
   });
-</script>
+  </script>
 
 <script>
 // 좋아요
