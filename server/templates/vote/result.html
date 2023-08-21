@@ -107,7 +107,15 @@
       투표 좋아요 눌러주기 <img src="{% static 'img/icon/right-arrow.png' %}" style="width: 50px"/>
     </div>
     <div class="detail-like-container">{% include 'vote/result/like.html' %}</div></div>
-  <div class="comment-container">{% include 'vote/result/comment.html' %}</div>
+  <div class="comment-container">{% include 'vote/result/comment.html' %}
+    <div>
+      <div class="another-vote-container">
+        <a href="/"><div class="to-main-page">
+          <span><img src="{% static 'img/icon/left_page.png' %}" style="width: 50px"/></span>
+          <span class="to-mp-word">메인 페이지로 돌아가기</span></div></a>
+      </div>
+    </div>
+  </div>
 </section>
 <script src="{% static 'js/result.js' %}"></script>
 <script>
