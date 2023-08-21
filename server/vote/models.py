@@ -30,7 +30,10 @@ class Poll(models.Model):
 class Choice(models.Model) :
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=255)
-    image = models.ImageField() 
+    image = models.ImageField()
+    
+    def __str__(self):
+        return self.choice_text
 
 #회원투표 DB
 class UserVote(models.Model):
