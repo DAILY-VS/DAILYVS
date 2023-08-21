@@ -24,32 +24,25 @@
       <div id="base-container">
         <nav class="nav-list">
           {% if user.is_authenticated %}
-          <a href="{% url 'vs_account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" style="width: 25px" /><span class="login-word">로그아웃</span></a>
+          <a href="{% url 'vs_account:logout' %}" class="nav-login-btn"><img src="{% static 'img/icon/logout.png' %}" /><span class="login-word">로그아웃</span></a>
           {% else %}
-          <a href="{% url 'vs_account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" style="width: 25px" /><span class="login-word">로그인</span></a>
+          <a href="{% url 'vs_account:login' %}" class="nav-login-btn"><img src="{% static 'img/icon/login.png' %}" /><span class="login-word">로그인</span></a>
           {% endif %}
             <a href="/" id="logo"
-              ><img src="{% static 'img/Row.png' %}"/></a>
+              ><img src="{% static 'img/Row.png' %}" class="base-logo"/></a>
             <div class="nav-right">
-              <a href="{% url 'vote:fortune' %}"> <img src="{% static 'img/Cookie.png' %}" style="width: 50px"/></a>
+              <a href="{% url 'vote:fortune' %}" class="nav-fortune"> <img src="{% static 'img/Cookie.png' %}"/></a>
               {% if user.is_authenticated %}
-              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Logged.png'%}" style="width:40px" class="hamburger-icon" /></a>
+              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Logged.png'%}" class="hamburger-icon" /></a>
               {% else %}
-              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Unlogged.png'%}" style="width:40px" class="hamburger-icon" /></a>
+              <a href="{% url 'vote:mypage' %}" class="nav-ham-btn"><img src="{% static 'img/Unlogged.png'%}" class="hamburger-icon" /></a>
               {% endif %}
             </div>
           </ul>
         </nav>
-        <!-- <div class="ham-footer">
-          <div>made by Team VS</div>
-          <div>social community</div>
-          <div>dev</div>
-          <div>김정곤 | 곽민경 | 조성민 | 송우진 | 왕한솔</div>
-        </div> -->
         <div class="base-block-container">{% block content %} {% endblock %}</div>
       </div>
-      
-  </div>
+    </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </html>

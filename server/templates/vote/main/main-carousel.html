@@ -44,7 +44,7 @@
         </div>
         <div class="carousel-caption d-md-block">
           <h5 class="carousel-poll-title">{{ poll.title }}</h5>
-          <text class="carousel-poll-content">{{ poll.content }}</ㅅ>
+          <text class="carousel-poll-content">{{ poll.content }}</text>
         </div>
       </a>
     </div>
@@ -71,9 +71,19 @@
   </button>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     var myCarousel = document.querySelector("#carouselExampleDark");
     var carousel = new bootstrap.Carousel(myCarousel);
+
+    var textContainers = document.querySelectorAll(".carousel-poll-content");
+    var maxLength = 52; // 최대 길이
+    var ellipsis = "..."; // 생략 부호
+
+    textContainers.forEach(function (textContainer) {
+      if (textContainer.textContent.length > maxLength) {
+        textContainer.textContent = textContainer.textContent.substring(0, maxLength) + ellipsis;
+      }
+    });
   });
 </script>
 {% endblock %}

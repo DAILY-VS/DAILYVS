@@ -2,12 +2,12 @@
 
 <div>
   <div class="mypage-container">
-    <p class="mypage-greeting">
+    <div class="mypage-greeting">
       안녕하세요,
-      <strong class="mypage-real-username1">{{user.nickname}}</strong>&nbsp님!
-    </p>
+      <div class="mypage-greet-name"><strong class="mypage-real-username1">{{user.nickname}}</strong><span>님!</span></div>
+    </div>
     <div class="mypage-prof-container">
-      <img src="https://picsum.photos/100/100" alt="" />
+      <img src="{% static 'img/Logged.png'%}" alt="" style="width: 80px"/>
       <div class="mypage-info-wrap">
         <div class="mypage-nickname-wrap">
           <span class="mypage-blue">{{user.nickname}}&nbsp</span>

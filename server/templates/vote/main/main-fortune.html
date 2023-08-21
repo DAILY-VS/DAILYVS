@@ -27,6 +27,7 @@
         </div>
     </div>
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   function typeFortuneCookie(text, typingTextElement) {
@@ -95,6 +96,44 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="../../static/js/html2canvas.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<!-- <script src="../../static/js/html2canvas.js"></script> -->
+<!-- <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
+<script>
+  const captureBtnF = document.getElementById("capBtn");
+  captureBtnF.addEventListener("click", captureElementF);
+
+  function captureElementF() {
+    const fortuneContainer = document.getElementById("capture");
+    fortuneContainer.classList.add("capture-btn-invisible"); // 캡처 시작 시 클래스 추가
+
+    domtoimage.toPng(fortuneContainer)
+      .then(dataUrl => {
+        const link = document.createElement('a');
+        link.download = 'dailyfortune.png';
+        link.href = dataUrl;
+        link.click();
+        fortuneContainer.classList.remove("capture-btn-invisible"); // 캡처 끝난 후 클래스 제거
+      });
+  }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const capBtn = document.getElementById("capBtn");
+    const fortuneRetryBtn = document.getElementById("fortune-retry");
+    capBtn.disabled = true;
+    fortuneRetryBtn.disabled = true;
+
+    capBtn.style.backgroundColor = "#d4d4d4";
+    fortuneRetryBtn.style.backgroundColor = "#d4d4d4";
+
+    setTimeout(function() {
+      capBtn.disabled = false;
+      fortuneRetryBtn.disabled = false;
+
+      capBtn.style.backgroundColor = "";
+      fortuneRetryBtn.style.backgroundColor = "";
+    }, 3500);
+  });
+</script>
 {% endblock %}
