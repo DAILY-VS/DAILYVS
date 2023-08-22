@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
@@ -204,6 +203,7 @@ def comment_like(request):
             return JsonResponse(context)
         return redirect("/")
 
+#마이페이지
 @login_required(login_url="/account/login/")  # 비로그인시 /mypage 막음
 def mypage(request):
     user= request.user
@@ -1041,13 +1041,14 @@ def poll_nonuserfinal(request, poll_id, nonuservote_id):
     else:
         return redirect("/")
 
-
+# mbti별 포춘쿠키 랜덤 함수
 def get_random_fortune(mbti):
     default_fortune = "일시적인 오류입니다! 다음에 시도해주세요."
 
     selected_fortunes = fortunes.get(mbti, [])
     return random.choice(selected_fortunes) if selected_fortunes else default_fortune
-    
+
+# 포춘쿠키 페이지 
 def fortune(request):
     user = request.user
     if user.is_authenticated:
