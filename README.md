@@ -2,7 +2,21 @@
 
 매일매일 투표와 통계로 느끼는 재미
 
-guideline </br>
+#  Developers 
+
+## Back-End Developers 
+| 김정곤 (PM)| 왕한솔 (배포)| 송우진 (마케팅)|
+| :--: | :--: | :--: |
+| [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/Jeonggon-Kim) | [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/hasoleee) | [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/song-jin-jin) |
+
+
+## Front-End Developsers
+| 곽민경 (디자인)| 조성민 (기획) |
+| :--: | :--: |
+| [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/mikio999) | [<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>](https://github.com/noviceo) |
+
+
+# guideline </br>
 0. pip install -r requirements.txt </br>
 1. db.sqlite3 파일 받기. </br>
 2. 메인페이지 </br>
