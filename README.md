@@ -1,5 +1,6 @@
 # 🔴Daily VS🔵
 ### 매일매일 투표와 통계로 느끼는 재미 [👉 DailyVS 사이트로 이동하기](https://daily-vs.com/)
+![IMG_48E8FC53342A-1](https://github.com/DAILY-VS/DAILYVS/assets/96870855/138eff77-4b17-41e9-bab2-ba10acb3906a)
 
 #  Developers 
 
