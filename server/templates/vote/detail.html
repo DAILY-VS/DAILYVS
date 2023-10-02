@@ -19,7 +19,7 @@
   </div>
   <div class="option-container">
     <div>
-      <form action="{% url 'vote:classifyuser' poll.id %}" method="POST">
+      <form action="{% url 'vote:poll_classifyuser' poll.id %}" method="POST">
         {% csrf_token %} {% for choice in poll.choice_set.all %}
         <div
           class="detail-option"

@@ -48,6 +48,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'django.contrib.auth.middleware.AuthenticationMiddleware', #
     'django.contrib.auth.middleware.RemoteUserMiddleware', #
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -147,7 +148,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_REDIRECT_URL = '/'   # social login redirect
-ACCOUNT_LOGOUT_REDIRECT_URL = 'https://daily-vs.com/accounts/kakao/login/callback/'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/kakao/login/callback/'
 AUTH_USER_MODEL = "vs_account.User"  ##
 
 
